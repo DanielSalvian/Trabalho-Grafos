@@ -1,0 +1,2 @@
+Daniel - {Data} - {Não sei o que foi feito}
+Yago -  17/10 - Criação da classe grafo (Base), contendo arestas,vertices e as opções de adicionar e remover.

@@ -5,6 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        /*
         int V = 4; 
         int[,] adjMatrix = new int[V, V];  
 
@@ -20,5 +21,21 @@ class Program
 
       
         MatrizdeAdj.mostrarMatriz(adjMatrix, V);
+        */
+        testeGrafo();
+    }
+
+    public static void testeGrafo()
+    {
+        GrafoNaoDirecionado teste = new GrafoNaoDirecionado();
+        Console.Clear();
+        teste.adicionarVertice("VA", "1");
+        teste.adicionarVertice("VB", "2");
+        teste.adicionarVertice("VC", "3");
+
+        teste.adicionarAresta("AA", "1", teste.encontrarVertice("VA"), teste.encontrarVertice("VC"));
+        teste.adicionarAresta("AB", "2", teste.encontrarVertice("VA"), teste.encontrarVertice("VB"));
+
+        teste.imprimirDados();
     }
 }
