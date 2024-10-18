@@ -36,6 +36,9 @@ class Program
         teste.adicionarAresta("AA", "1", teste.encontrarVertice("VA"), teste.encontrarVertice("VC"));
         teste.adicionarAresta("AB", "2", teste.encontrarVertice("VA"), teste.encontrarVertice("VB"));
 
+        //teste.removerAresta("AA",teste.encontrarVertice("VA"));
+        teste.removerVertice("VA");
+
         teste.imprimirDados();
     }
 }
