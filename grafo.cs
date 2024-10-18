@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace biblioteca
 {
@@ -68,6 +69,7 @@ namespace biblioteca
 
         }
 
+        //Busca pelo nome e a partir de uma aresta
         public Aresta buscarAresta(string _nome, Aresta aresta)
         {
             if (aresta.nome == _nome)
@@ -82,6 +84,31 @@ namespace biblioteca
             {
                 return null;
             }
+        }
+
+        //Busca pelo nome e em todos os vertices
+        public Aresta buscarAresta(string _nome, Vertice _ultimoVerticeAdicionado)
+        {
+            Aresta retorno = null;
+            Vertice emAnalise = _ultimoVerticeAdicionado;
+
+            while (emAnalise != null && retorno == null)
+            {
+                if (emAnalise.arestas != null)
+                {
+                    retorno = buscarAresta(_nome, emAnalise.arestas);
+                }
+
+                if (emAnalise.anterior != null)
+                {
+                    emAnalise = emAnalise.anterior;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return retorno;
         }
 
         public void removerVertice(string _nome)
@@ -141,7 +168,8 @@ namespace biblioteca
                         {
                             _origem.arestas = alvo.anterior;
                         }
-                        else{
+                        else
+                        {
                             _origem.arestas = null;
                         }
                     }
@@ -166,7 +194,8 @@ namespace biblioteca
                         {
                             alvo.destino.arestasQueChegam = alvo.anteriorNoDestino;
                         }
-                        else{
+                        else
+                        {
                             alvo.destino.arestasQueChegam = null;
                         }
                     }
@@ -180,6 +209,71 @@ namespace biblioteca
 
 
         }
+
+
+        //Faz a verificação do A para o B e do B para o A também (A: origem B:Destino)
+        public bool adjacenciaEntreVertices(string nomeVerticeA, string nomeVerticeB)
+        {
+            Vertice origem = buscarVertice(nomeVerticeA, ultimoVerticeAdicionado);
+            Vertice destino = buscarVertice(nomeVerticeB, ultimoVerticeAdicionado);
+
+            if (origem != null && destino != null)
+            {
+
+                Aresta arestaEmAnalise = origem.arestas;
+                Aresta referenciaDestino = destino.arestas;
+
+                while (arestaEmAnalise != null)
+                {
+                    if ((arestaEmAnalise.origem.nome == nomeVerticeA || arestaEmAnalise.origem.nome == nomeVerticeB) && (arestaEmAnalise.destino.nome == nomeVerticeA || arestaEmAnalise.destino.nome == nomeVerticeB))
+                    {
+                        return true;
+                    }
+
+                    arestaEmAnalise = arestaEmAnalise.anterior;
+                }
+
+                while (referenciaDestino != null)
+                {
+                    if ((referenciaDestino.origem.nome == nomeVerticeA || referenciaDestino.origem.nome == nomeVerticeB) && (referenciaDestino.destino.nome == nomeVerticeA || referenciaDestino.destino.nome == nomeVerticeB))
+                    {
+                        return true;
+                    }
+                    referenciaDestino = referenciaDestino.anterior;
+                }
+
+                return false;
+            }
+
+
+            return false;
+        }
+
+        public bool adjacenciaEntreArestas(string nomeArestaA, string nomeArestaB)
+        {
+            Aresta arestaA = buscarAresta(nomeArestaA, ultimoVerticeAdicionado);
+            Aresta arestaB = buscarAresta(nomeArestaB, ultimoVerticeAdicionado);
+
+            if (arestaA != null && arestaB != null)
+            {
+                if (arestaA.origem == arestaB.origem || arestaA.origem == arestaB.destino)
+                {
+                    return true;
+                }
+                else if (arestaA.destino == arestaB.origem || arestaA.destino == arestaB.destino)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void gerarGrafo()//sendo feito
+        {
+
+        }
+
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()

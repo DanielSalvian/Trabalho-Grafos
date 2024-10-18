@@ -36,9 +36,14 @@ class Program
         teste.adicionarAresta("AA", "1", teste.encontrarVertice("VA"), teste.encontrarVertice("VC"));
         teste.adicionarAresta("AB", "2", teste.encontrarVertice("VA"), teste.encontrarVertice("VB"));
 
-        //teste.removerAresta("AA",teste.encontrarVertice("VA"));
-        teste.removerVertice("VA");
+        // teste.buscarAresta("AA", teste.ultimoVerticeAdicionado);
+        // teste.buscarAresta("AZ", teste.ultimoVerticeAdicionado);
 
-        teste.imprimirDados();
+        //teste.removerAresta("AA",teste.encontrarVertice("VA"));
+        //teste.removerVertice("VA");
+        Console.WriteLine("Adj vertice: " + teste.adjacenciaEntreVertices("VA", "VC"));
+        Console.WriteLine("Adj aresta: " + teste.adjacenciaEntreArestas("AA", "AB"));
+
+        //teste.imprimirDados();
     }
 }
