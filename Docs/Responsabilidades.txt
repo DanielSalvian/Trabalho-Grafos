@@ -1,2 +1,5 @@
 Daniel - {Data} - {Não sei o que foi feito}
-Yago -  17/10 - Criação da classe grafo (Base), contendo arestas,vertices e as opções de adicionar e remover.
+Yago -  17/10 - Criação da classe grafo (Base), contendo arestas,vertices e a opção de adicionar esse elemento.
+Yago - 18/10 - Criação das funções (dentro da classe Grafo) que permitem chegar adjacencia de vertices, adjacencia de arestas,
+existencia de uma aresta, remoção de arestas e vertices, checagem da quantidade de vertices e arestas e a ponderação dos mesmo
+foi feita junto a riação da classe Grafo no dia 17 (foi feito indiretamente).
