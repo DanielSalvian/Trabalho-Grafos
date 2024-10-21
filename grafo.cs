@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.AccessControl;
 
 namespace biblioteca
 {
@@ -269,6 +270,21 @@ namespace biblioteca
             return false;
         }
 
+//Quant de vertices do não direcionado (falta direcionado)
+         public int ChecarQuantidadedeVert(int numVertices){
+
+        return numVertices;
+
+
+        }
+
+////Quant de arestas do não direcionado (falta direcionado)
+        public int ChecarQuantdeArestas(int numArestas){
+ 
+        return numArestas;
+    
+        }
+
         public void gerarGrafo()//sendo feito
         {
 
@@ -327,7 +343,7 @@ namespace biblioteca
         }
 
 
-    }
+    }}
 
     public class Vertice
     {
@@ -512,4 +528,4 @@ namespace biblioteca
             }
         }
     }
-}
+
