@@ -285,6 +285,42 @@ namespace biblioteca
     
         }
 
+// ver se só isso tá certo depois
+        public bool vazio(){
+
+        return numArestas == 0;
+        
+        }
+
+//Verificação de completo, olhando desde o último vértice até o primeiro, se passar a adjacencia por todos, retorna true
+        public bool completo(){
+
+
+    if (numVertices<2){
+      return false;
+    }
+
+    Vertice VerticeAtual = ultimoVerticeAdicionado;
+
+    while (VerticeAtual!=null){
+
+    Vertice verticeComparacao = VerticeAtual.anterior;
+
+    while (verticeComparacao !=null){
+
+        if (!adjacenciaEntreVertices(VerticeAtual.nome, verticeComparacao.nome)){
+
+            return false;
+        }
+        verticeComparacao = verticeComparacao.anterior;
+    }
+    VerticeAtual = VerticeAtual.anterior;
+   }
+
+         return true;
+
+        }
+
         public void gerarGrafo()//sendo feito
         {
 
