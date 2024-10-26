@@ -6,22 +6,13 @@ class Program
     static void Main(string[] args)
     {
         /*
-        int V = 4; 
-        int[,] adjMatrix = new int[V, V];  
-
-       
-        MatrizdeAdj.iniciarMatriz(adjMatrix, V);
-
-    
-        MatrizdeAdj.adicionarAresta(adjMatrix, 0, 1);
-        MatrizdeAdj.adicionarAresta(adjMatrix, 0, 2);
-        MatrizdeAdj.adicionarAresta(adjMatrix, 1, 2);
-        MatrizdeAdj.adicionarAresta(adjMatrix, 2, 2);
-        MatrizdeAdj.adicionarAresta(adjMatrix, 2, 3);
-
+        int V = 5; 
       
-        MatrizdeAdj.mostrarMatriz(adjMatrix, V);
+        var arestas = new (int, int)[] { (0, 1), (0, 2), (1, 3), (3, 4) };
+
+        MatrizAdj(V, arestas);
         */
+        
         testeGrafo();
     }
 
