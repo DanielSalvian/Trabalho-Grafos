@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace biblioteca
 {
@@ -46,11 +45,13 @@ namespace biblioteca
             numArestas++;
         }
 
+        //Função para chamar a busca de um vertice a partir do nome
         public Vertice encontrarVertice(string _nome)
         {
             return buscarVertice(_nome, ultimoVerticeAdicionado);
         }
 
+        //Função recursiva que faz a busca do vertice no grafo
         public Vertice buscarVertice(string _nome, Vertice vertice)
         {
 
@@ -69,7 +70,7 @@ namespace biblioteca
 
         }
 
-        //Busca pelo nome e a partir de uma aresta
+        //Busca uma Aresta pelo nome e a partir de uma aresta
         public Aresta buscarAresta(string _nome, Aresta aresta)
         {
             if (aresta.nome == _nome)
@@ -86,7 +87,7 @@ namespace biblioteca
             }
         }
 
-        //Busca pelo nome e em todos os vertices
+        //Busca uma Aresta pelo nome e em todos os vertices
         public Aresta buscarAresta(string _nome, Vertice _ultimoVerticeAdicionado)
         {
             Aresta retorno = null;
