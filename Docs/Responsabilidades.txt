@@ -1,5 +1,6 @@
-Daniel - {Data} - {Não sei o que foi feito}
+Daniel - 16/10 - Criação da biblioteca (chamada namespace biblioteca), e adição da função de matriz de adjacência.
 Yago -  17/10 - Criação da classe grafo (Base), contendo arestas,vertices e a opção de adicionar esse elemento.
 Yago - 18/10 - Criação das funções (dentro da classe Grafo) que permitem chegar adjacencia de vertices, adjacencia de arestas,
 existencia de uma aresta, remoção de arestas e vertices, checagem da quantidade de vertices e arestas e a ponderação dos mesmo
 foi feita junto a riação da classe Grafo no dia 17 (foi feito indiretamente).
+Daniel - 21/10 Criação da checagem da quantidade de vértices e arestas no grafo não direcionado

@@ -1,4 +1,7 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Security.AccessControl;
+using System.Xml;
 
 namespace biblioteca
 {
@@ -270,10 +273,132 @@ namespace biblioteca
             return false;
         }
 
-        public void gerarGrafo()//sendo feito
-        {
+//Quant de vertices do não direcionado (falta direcionado)
+         public int ChecarQuantidadedeVert(int numVertices){
+
+        return numVertices;
+
 
         }
+
+////Quant de arestas do não direcionado (falta direcionado)
+        public int ChecarQuantdeArestas(int numArestas){
+ 
+        return numArestas;
+    
+        }
+
+// ver se só isso tá certo depois
+        public bool vazio(){
+
+        return numArestas == 0;
+        
+        }
+
+//Verificação de completo, olhando desde o último vértice até o primeiro, se passar a adjacencia por todos, retorna tru
+        public bool completo(){
+
+
+    if (numVertices<2){
+      return false;
+    }
+
+    Vertice VerticeAtual = ultimoVerticeAdicionado;
+
+    while (VerticeAtual!=null){
+
+    Vertice verticeComparacao = VerticeAtual.anterior;
+
+    while (verticeComparacao !=null){
+
+        if (!adjacenciaEntreVertices(VerticeAtual.nome, verticeComparacao.nome)){
+
+            return false;
+        }
+        verticeComparacao = verticeComparacao.anterior;
+    }
+    VerticeAtual = VerticeAtual.anterior;
+   }
+
+         return true;
+
+        }
+
+
+
+
+        
+//É informado com o número de vértices, no primeiro do while todos os vértices são criados, depois são colocadas as arestas no vértice de origem e de destino, ou não caso digite 3
+        public void gerarGrafo(int numVertices)//sendo feito
+        {
+            int numv=0;
+
+         if (numVertices>=2){   
+       do{
+
+        Console.WriteLine("Digite o nome do vértice");
+        string _nome = Console.ReadLine();
+
+         Console.WriteLine("Digite o valor do vértice");
+        string _valor = Console.ReadLine();
+
+        adicionarVertice( _nome, _valor);
+
+        numv++;
+
+       }while (numv<numVertices);
+      }
+
+          int arestas = 0;
+          int opcao = 0;
+do {
+          Console.WriteLine("Adicionar uma aresta? (1 para sim, 2 para não e 3 para parar completamente)");
+            opcao = int.Parse(Console.ReadLine());
+
+        if (opcao == 1){
+       
+       Console.WriteLine("Digite o nome da aresta");
+       string nome = Console.ReadLine();
+
+        Console.WriteLine("Digite o valor da aresta");
+        string valor = Console.ReadLine();
+
+        Console.WriteLine("Digite o vértice de origem");
+        string vertorigem = Console.ReadLine();
+        
+        Vertice origem = encontrarVertice(vertorigem);
+
+        Console.WriteLine("Digite o vértice de destino");
+        string vertdestino = Console.ReadLine();
+
+        Vertice destino = encontrarVertice(vertdestino);
+
+          if (origem != null && destino != null)
+
+            {  
+
+        arestas++;
+
+       if (arestas > 0 && arestas < numVertices)
+       {
+       adicionarAresta( nome,  valor,  origem,  destino);
+         Console.WriteLine("Aresta adicionada");
+       } 
+       else
+            {
+                Console.WriteLine("Vértice não encontrado");
+            }
+        }
+        else if (opcao == 2)
+        {
+            Console.WriteLine("Não adicionar mais arestas");
+        }
+
+       }
+
+       } while (opcao != 3);
+
+     }
 
 
         //Funções de teste para saber se tudo foi adicionado corretamente
@@ -328,7 +453,7 @@ namespace biblioteca
         }
 
 
-    }
+    }}
 
     public class Vertice
     {
@@ -513,4 +638,4 @@ namespace biblioteca
             }
         }
     }
-}
+
