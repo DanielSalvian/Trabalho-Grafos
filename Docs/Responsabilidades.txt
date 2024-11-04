@@ -4,3 +4,4 @@ Yago - 18/10 - Criação das funções (dentro da classe Grafo) que permitem che
 existencia de uma aresta, remoção de arestas e vertices, checagem da quantidade de vertices e arestas e a ponderação dos mesmo
 foi feita junto a riação da classe Grafo no dia 17 (foi feito indiretamente).
 Daniel - 21/10 Criação da checagem da quantidade de vértices e arestas no grafo não direcionado
+Yago - 03/11 Atualizando a função de quantidade de arestas e vertices e a função de verificar se o grafo esta vazio.

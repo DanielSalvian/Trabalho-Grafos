@@ -1,7 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Security.AccessControl;
-using System.Xml;
 
 namespace biblioteca
 {
@@ -122,7 +119,7 @@ namespace biblioteca
             {
                 while (alvo.arestas != null)
                 {
-                    Console.WriteLine("removido " + alvo.arestas.nome);
+                    //Console.WriteLine("removido " + alvo.arestas.nome);
                     removerAresta(alvo.arestas.nome, alvo);
                 }
 
@@ -273,132 +270,176 @@ namespace biblioteca
             return false;
         }
 
-//Quant de vertices do não direcionado (falta direcionado)
-         public int ChecarQuantidadedeVert(int numVertices){
+        //Retorna a lista de adjacencia de um vertice especifico
+        public ListaAdjacenciaVertice listaDeAdjacencia(Vertice verticeRaizDaLista)
+        {
+            ListaAdjacenciaVertice lista = new ListaAdjacenciaVertice(verticeRaizDaLista);
 
-        return numVertices;
+            if (verticeRaizDaLista.arestas != null)
+            {
+                Aresta arestaAtual = verticeRaizDaLista.arestas;
+                while (arestaAtual != null)
+                {
+                    lista.adicionarVertice(arestaAtual.destino);
+                    arestaAtual = arestaAtual.proxima;
+                }
+            }
 
+            return lista;
+        }
+
+        //Quantidade de vertices do grafo
+        public int quantidadeDeVertices()
+        {
+            return this.numVertices;
+        }
+
+        //Quantidade de arestas do grafo (falta direcionado)
+        public int quantidadeDeArestas()
+        {
+            int count = 0;
+
+            if (this.ultimoVerticeAdicionado != null)
+            {
+                Vertice vertice = ultimoVerticeAdicionado;
+                do
+                {
+                    Aresta arestaAtual = vertice.arestas;
+
+                    while (arestaAtual != null)
+                    {
+                        count++;
+                        arestaAtual = arestaAtual.proxima;
+                    }
+
+                    vertice = vertice.proximo;
+                }
+                while (vertice.proximo != null);
+
+            }
+
+            return count;
+        }
+
+        public bool estaVazio()
+        {
+            return ultimoVerticeAdicionado == null;
+        }
+
+        //Verificação de completo, olhando desde o último vértice até o primeiro, se passar a adjacencia por todos, retorna true
+        public bool completo()
+        {
+
+
+            if (numVertices < 2)
+            {
+                return false;
+            }
+
+            Vertice VerticeAtual = ultimoVerticeAdicionado;
+
+            while (VerticeAtual != null)
+            {
+
+                Vertice verticeComparacao = VerticeAtual.anterior;
+
+                while (verticeComparacao != null)
+                {
+
+                    if (!adjacenciaEntreVertices(VerticeAtual.nome, verticeComparacao.nome))
+                    {
+
+                        return false;
+                    }
+                    verticeComparacao = verticeComparacao.anterior;
+                }
+                VerticeAtual = VerticeAtual.anterior;
+            }
+
+            return true;
 
         }
 
-////Quant de arestas do não direcionado (falta direcionado)
-        public int ChecarQuantdeArestas(int numArestas){
- 
-        return numArestas;
-    
-        }
-
-// ver se só isso tá certo depois
-        public bool vazio(){
-
-        return numArestas == 0;
-        
-        }
-
-//Verificação de completo, olhando desde o último vértice até o primeiro, se passar a adjacencia por todos, retorna tru
-        public bool completo(){
-
-
-    if (numVertices<2){
-      return false;
-    }
-
-    Vertice VerticeAtual = ultimoVerticeAdicionado;
-
-    while (VerticeAtual!=null){
-
-    Vertice verticeComparacao = VerticeAtual.anterior;
-
-    while (verticeComparacao !=null){
-
-        if (!adjacenciaEntreVertices(VerticeAtual.nome, verticeComparacao.nome)){
-
-            return false;
-        }
-        verticeComparacao = verticeComparacao.anterior;
-    }
-    VerticeAtual = VerticeAtual.anterior;
-   }
-
-         return true;
-
-        }
 
 
 
 
-        
-//É informado com o número de vértices, no primeiro do while todos os vértices são criados, depois são colocadas as arestas no vértice de origem e de destino, ou não caso digite 3
+
+        //É informado com o número de vértices, no primeiro do while todos os vértices são criados, depois são colocadas as arestas no vértice de origem e de destino, ou não caso digite 3
         public void gerarGrafo(int numVertices)//sendo feito
         {
-            int numv=0;
+            int numv = 0;
 
-         if (numVertices>=2){   
-       do{
-
-        Console.WriteLine("Digite o nome do vértice");
-        string _nome = Console.ReadLine();
-
-         Console.WriteLine("Digite o valor do vértice");
-        string _valor = Console.ReadLine();
-
-        adicionarVertice( _nome, _valor);
-
-        numv++;
-
-       }while (numv<numVertices);
-      }
-
-          int arestas = 0;
-          int opcao = 0;
-do {
-          Console.WriteLine("Adicionar uma aresta? (1 para sim, 2 para não e 3 para parar completamente)");
-            opcao = int.Parse(Console.ReadLine());
-
-        if (opcao == 1){
-       
-       Console.WriteLine("Digite o nome da aresta");
-       string nome = Console.ReadLine();
-
-        Console.WriteLine("Digite o valor da aresta");
-        string valor = Console.ReadLine();
-
-        Console.WriteLine("Digite o vértice de origem");
-        string vertorigem = Console.ReadLine();
-        
-        Vertice origem = encontrarVertice(vertorigem);
-
-        Console.WriteLine("Digite o vértice de destino");
-        string vertdestino = Console.ReadLine();
-
-        Vertice destino = encontrarVertice(vertdestino);
-
-          if (origem != null && destino != null)
-
-            {  
-
-        arestas++;
-
-       if (arestas > 0 && arestas < numVertices)
-       {
-       adicionarAresta( nome,  valor,  origem,  destino);
-         Console.WriteLine("Aresta adicionada");
-       } 
-       else
+            if (numVertices >= 2)
             {
-                Console.WriteLine("Vértice não encontrado");
+                do
+                {
+
+                    Console.WriteLine("Digite o nome do vértice");
+                    string _nome = Console.ReadLine();
+
+                    Console.WriteLine("Digite o valor do vértice");
+                    string _valor = Console.ReadLine();
+
+                    adicionarVertice(_nome, _valor);
+
+                    numv++;
+
+                } while (numv < numVertices);
             }
+
+            int arestas = 0;
+            int opcao = 0;
+            do
+            {
+                Console.WriteLine("Adicionar uma aresta? (1 para sim, 2 para não e 3 para parar completamente)");
+                opcao = int.Parse(Console.ReadLine());
+
+                if (opcao == 1)
+                {
+
+                    Console.WriteLine("Digite o nome da aresta");
+                    string nome = Console.ReadLine();
+
+                    Console.WriteLine("Digite o valor da aresta");
+                    string valor = Console.ReadLine();
+
+                    Console.WriteLine("Digite o vértice de origem");
+                    string vertorigem = Console.ReadLine();
+
+                    Vertice origem = encontrarVertice(vertorigem);
+
+                    Console.WriteLine("Digite o vértice de destino");
+                    string vertdestino = Console.ReadLine();
+
+                    Vertice destino = encontrarVertice(vertdestino);
+
+                    if (origem != null && destino != null)
+
+                    {
+
+                        arestas++;
+
+                        if (arestas > 0 && arestas < numVertices)
+                        {
+                            adicionarAresta(nome, valor, origem, destino);
+                            Console.WriteLine("Aresta adicionada");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Vértice não encontrado");
+                        }
+                    }
+                    else if (opcao == 2)
+                    {
+                        Console.WriteLine("Não adicionar mais arestas");
+                    }
+
+                }
+
+            } while (opcao != 3);
+
         }
-        else if (opcao == 2)
-        {
-            Console.WriteLine("Não adicionar mais arestas");
-        }
-
-       }
-
-       } while (opcao != 3);
-
-     }
 
 
         //Funções de teste para saber se tudo foi adicionado corretamente
@@ -453,189 +494,235 @@ do {
         }
 
 
-    }}
+    }
+}
 
-    public class Vertice
+public class Vertice
+{
+    public string nome;
+    public string valor;
+
+    public Aresta arestas;
+
+    public Vertice proximo;
+    public Vertice anterior;
+
+    public Aresta arestasQueChegam;
+
+    public Vertice(string _nome, string _valor)
     {
-        public string nome;
-        public string valor;
+        nome = _nome;
+        valor = _valor;
+        arestas = null;
+        proximo = null;
+        anterior = null;
+    }
 
-        public Aresta arestas;
-
-        public Vertice proximo;
-        public Vertice anterior;
-
-        public Aresta arestasQueChegam;
-
-        public Vertice(string _nome, string _valor)
+    public void adicionarArestaAoVertice(Aresta novaAresta)
+    {
+        if (arestas == null)
         {
-            nome = _nome;
-            valor = _valor;
-            arestas = null;
-            proximo = null;
-            anterior = null;
+            arestas = novaAresta;
+        }
+        else
+        {
+            arestas.proxima = novaAresta;
+            novaAresta.anterior = arestas;
+            arestas = novaAresta;
         }
 
-        public void adicionarArestaAoVertice(Aresta novaAresta)
-        {
-            if (arestas == null)
-            {
-                arestas = novaAresta;
-            }
-            else
-            {
-                arestas.proxima = novaAresta;
-                novaAresta.anterior = arestas;
-                arestas = novaAresta;
-            }
+        novaAresta.destino.adicionarArestaQueChega(novaAresta);
+    }
 
-            novaAresta.destino.adicionarArestaQueChega(novaAresta);
+    public void adicionarArestaQueChega(Aresta novaAresta)
+    {
+        if (arestasQueChegam == null)
+        {
+            arestasQueChegam = novaAresta;
         }
-
-        public void adicionarArestaQueChega(Aresta novaAresta)
+        else
         {
-            if (arestasQueChegam == null)
+            arestasQueChegam.proxima = novaAresta;
+            novaAresta.anteriorNoDestino = arestasQueChegam;
+            arestasQueChegam = novaAresta;
+        }
+    }
+
+}
+
+public class Aresta
+{
+    public string nome;
+    public string valor;
+
+    public Vertice origem;
+    public Vertice destino;
+
+    public Aresta proxima;
+    public Aresta anterior;
+
+    //Serve para permitir o vertice de destino poder acessar a aresta
+    public Aresta anteriorNoDestino;
+    public Aresta proximoNoDestino;
+
+    public Aresta(string _nome, string _valor, Vertice _origem, Vertice _destino)
+    {
+        nome = _nome;
+        valor = _valor;
+        origem = _origem;
+        destino = _destino;
+        proxima = null;
+        anterior = null;
+        anteriorNoDestino = null;
+    }
+}
+
+public class ListaAdjacenciaVertice
+{
+    Vertice verticeRaiz;
+    VerticeAdjacente verticeAdjacente;
+
+    public class VerticeAdjacente
+    {
+        Vertice vertice;
+
+        public VerticeAdjacente proximoVerticeAdjacente;
+
+        public VerticeAdjacente(Vertice _vertice)
+        {
+            this.vertice = _vertice;
+            this.proximoVerticeAdjacente = null;
+        }
+    }
+
+    public ListaAdjacenciaVertice(Vertice _verticeRaiz)
+    {
+        verticeRaiz = _verticeRaiz;
+        verticeAdjacente = null;
+    }
+
+    public void adicionarVertice(Vertice novoVertice)
+    {
+
+        VerticeAdjacente novoAdjacente = new VerticeAdjacente(novoVertice);
+        if (verticeAdjacente == null)
+        {
+            verticeAdjacente = novoAdjacente;
+        }
+        else
+        {
+            VerticeAdjacente verticeAtual = verticeAdjacente;
+            while (verticeAtual.proximoVerticeAdjacente != null)
             {
-                arestasQueChegam = novaAresta;
+                verticeAtual = verticeAtual.proximoVerticeAdjacente;
             }
-            else
-            {
-                arestasQueChegam.proxima = novaAresta;
-                novaAresta.anteriorNoDestino = arestasQueChegam;
-                arestasQueChegam = novaAresta;
-            }
+            verticeAtual.proximoVerticeAdjacente = novoAdjacente;
         }
 
     }
 
-    public class Aresta
+}
+
+//Grafo direcionado // até o momento é igual ao não direcionado, mas no futuro é para ter as funções especificas
+public class GrafoDirecionado
+{
+    private int numArestas;
+    private int numVertices;
+
+    public Vertice ultimoVerticeAdicionado;
+
+    public GrafoDirecionado()
     {
-        public string nome;
-        public string valor;
+        numArestas = 0;
+        numVertices = 0;
+        ultimoVerticeAdicionado = null;
+    }
 
-        public Vertice origem;
-        public Vertice destino;
+    public void adicionarVertice(string _nome, string _valor)
+    {
+        Vertice novoVertice = new Vertice(_nome, _valor);
 
-        public Aresta proxima;
-        public Aresta anterior;
-
-        //Serve para permitir o vertice de destino poder acessar a aresta
-        public Aresta anteriorNoDestino;
-        public Aresta proximoNoDestino;
-
-        public Aresta(string _nome, string _valor, Vertice _origem, Vertice _destino)
+        if (ultimoVerticeAdicionado == null)
         {
-            nome = _nome;
-            valor = _valor;
-            origem = _origem;
-            destino = _destino;
-            proxima = null;
-            anterior = null;
-            anteriorNoDestino = null;
+            ultimoVerticeAdicionado = novoVertice;
+        }
+        else
+        {
+            ultimoVerticeAdicionado.proximo = novoVertice;
+            novoVertice.anterior = ultimoVerticeAdicionado;
+            ultimoVerticeAdicionado = novoVertice;
+        }
+
+        numVertices++;
+    }
+
+    public void adicionarAresta(string _nome, string _valor, Vertice _origem, Vertice _destino)
+    {
+        Aresta novaAresta = new Aresta(_nome, _valor, _origem, _destino);
+
+        _origem.adicionarArestaAoVertice(novaAresta);
+
+        numArestas++;
+    }
+
+    public Vertice encontrarVertice(string _nome)
+    {
+        return buscarVertice(_nome, ultimoVerticeAdicionado);
+    }
+
+    public Vertice buscarVertice(string _nome, Vertice vertice)
+    {
+
+        if (vertice.nome == _nome)
+        {
+            return vertice;
+        }
+        if (vertice.anterior != null)
+        {
+            return buscarVertice(_nome, vertice.anterior);
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    //Função de teste para saber se tudo foi adicionado corretamente
+    public void imprimirDados()
+    {
+        Console.WriteLine($"Arestas: {numArestas}");
+        Console.WriteLine($"Vertices: {numVertices}");
+        Console.WriteLine("##############");
+
+        log(ultimoVerticeAdicionado);
+    }
+
+    public void log(Vertice vertice)
+    {
+        Console.WriteLine($"Nome: {vertice.nome}");
+        Console.WriteLine($"Valor: {vertice.valor}");
+        Console.WriteLine("--------------------");
+        if (vertice.arestas != null)
+        {
+            mostrarAresta(vertice.arestas);
+        }
+        Console.WriteLine("##############");
+
+        if (vertice.anterior != null)
+        {
+            log(vertice.anterior);
         }
     }
 
-    //Grafo direcionado // até o momento é igual ao não direcionado, mas no futuro é para ter as funções especificas
-
-    public class GrafoDirecionado
+    public void mostrarAresta(Aresta aresta)
     {
-        private int numArestas;
-        private int numVertices;
+        Console.WriteLine($"Nome: {aresta.nome} ### Valor: {aresta.valor} ### {aresta.origem.nome}->{aresta.destino.nome}");
 
-        public Vertice ultimoVerticeAdicionado;
-
-        public GrafoDirecionado()
+        if (aresta.anterior != null)
         {
-            numArestas = 0;
-            numVertices = 0;
-            ultimoVerticeAdicionado = null;
-        }
-
-        public void adicionarVertice(string _nome, string _valor)
-        {
-            Vertice novoVertice = new Vertice(_nome, _valor);
-
-            if (ultimoVerticeAdicionado == null)
-            {
-                ultimoVerticeAdicionado = novoVertice;
-            }
-            else
-            {
-                ultimoVerticeAdicionado.proximo = novoVertice;
-                novoVertice.anterior = ultimoVerticeAdicionado;
-                ultimoVerticeAdicionado = novoVertice;
-            }
-
-            numVertices++;
-        }
-
-        public void adicionarAresta(string _nome, string _valor, Vertice _origem, Vertice _destino)
-        {
-            Aresta novaAresta = new Aresta(_nome, _valor, _origem, _destino);
-
-            _origem.adicionarArestaAoVertice(novaAresta);
-
-            numArestas++;
-        }
-
-        public Vertice encontrarVertice(string _nome)
-        {
-            return buscarVertice(_nome, ultimoVerticeAdicionado);
-        }
-
-        public Vertice buscarVertice(string _nome, Vertice vertice)
-        {
-
-            if (vertice.nome == _nome)
-            {
-                return vertice;
-            }
-            if (vertice.anterior != null)
-            {
-                return buscarVertice(_nome, vertice.anterior);
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        //Função de teste para saber se tudo foi adicionado corretamente
-        public void imprimirDados()
-        {
-            Console.WriteLine($"Arestas: {numArestas}");
-            Console.WriteLine($"Vertices: {numVertices}");
-            Console.WriteLine("##############");
-
-            log(ultimoVerticeAdicionado);
-        }
-
-        public void log(Vertice vertice)
-        {
-            Console.WriteLine($"Nome: {vertice.nome}");
-            Console.WriteLine($"Valor: {vertice.valor}");
-            Console.WriteLine("--------------------");
-            if (vertice.arestas != null)
-            {
-                mostrarAresta(vertice.arestas);
-            }
-            Console.WriteLine("##############");
-
-            if (vertice.anterior != null)
-            {
-                log(vertice.anterior);
-            }
-        }
-
-        public void mostrarAresta(Aresta aresta)
-        {
-            Console.WriteLine($"Nome: {aresta.nome} ### Valor: {aresta.valor} ### {aresta.origem.nome}->{aresta.destino.nome}");
-
-            if (aresta.anterior != null)
-            {
-                mostrarAresta(aresta.anterior);
-            }
+            mostrarAresta(aresta.anterior);
         }
     }
+}
 
