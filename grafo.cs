@@ -361,86 +361,81 @@ namespace biblioteca
         }
 
 
-
-
-
-
-        //É informado com o número de vértices, no primeiro do while todos os vértices são criados, depois são colocadas as arestas no vértice de origem e de destino, ou não caso digite 3
-        public void gerarGrafo(int numVertices)//sendo feito
+        public bool conexo()
         {
-            int numv = 0;
-
-            if (numVertices >= 2)
+            if (numVertices <= 1)
             {
-                do
-                {
-
-                    Console.WriteLine("Digite o nome do vértice");
-                    string _nome = Console.ReadLine();
-
-                    Console.WriteLine("Digite o valor do vértice");
-                    string _valor = Console.ReadLine();
-
-                    adicionarVertice(_nome, _valor);
-
-                    numv++;
-
-                } while (numv < numVertices);
+                return true;
             }
+            List<Vertice> visitados = new List<Vertice>();
+            Vertice verticeInicial = ultimoVerticeAdicionado;
 
-            int arestas = 0;
-            int opcao = 0;
-            do
-            {
-                Console.WriteLine("Adicionar uma aresta? (1 para sim, 2 para não e 3 para parar completamente)");
-                opcao = int.Parse(Console.ReadLine());
+            buscaEmProfundidade(verticeInicial, visitados);
 
-                if (opcao == 1)
-                {
-
-                    Console.WriteLine("Digite o nome da aresta");
-                    string nome = Console.ReadLine();
-
-                    Console.WriteLine("Digite o valor da aresta");
-                    string valor = Console.ReadLine();
-
-                    Console.WriteLine("Digite o vértice de origem");
-                    string vertorigem = Console.ReadLine();
-
-                    Vertice origem = encontrarVertice(vertorigem);
-
-                    Console.WriteLine("Digite o vértice de destino");
-                    string vertdestino = Console.ReadLine();
-
-                    Vertice destino = encontrarVertice(vertdestino);
-
-                    if (origem != null && destino != null)
-
-                    {
-
-                        arestas++;
-
-                        if (arestas > 0 && arestas < numVertices)
-                        {
-                            adicionarAresta(nome, valor, origem, destino);
-                            Console.WriteLine("Aresta adicionada");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Vértice não encontrado");
-                        }
-                    }
-                    else if (opcao == 2)
-                    {
-                        Console.WriteLine("Não adicionar mais arestas");
-                    }
-
-                }
-
-            } while (opcao != 3);
-
+            // O grafo é conexo se for igual o numero
+            return visitados.Count == numVertices;
         }
 
+        // Função auxiliar para realizar a busca em profundidade e marcar os vértices visitados
+        private void buscaEmProfundidade(Vertice vertice, List<Vertice> visitados)
+        {
+            if (vertice == null || visitados.Contains(vertice))
+            {
+                return;
+            }
+
+
+            visitados.Add(vertice);
+
+            Aresta arestaAtual = vertice.arestas;
+            while (arestaAtual != null)
+            {
+                buscaEmProfundidade(arestaAtual.destino, visitados);
+                arestaAtual = arestaAtual.proxima;
+            }
+        }
+        
+        
+        public bool ponte()
+        {
+            if (!grafo.conexo())
+            {
+                return false;
+            }
+        }
+
+
+        //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
+        public void gerarGrafo(
+            int numVertices,
+            List<(string nome, string valor)> vertices,
+            List<(string nome, string valor, string origem, string destino)> arestas
+        )
+        {
+            if (numVertices >= 2)
+            {
+                for (int i = 0; i < vertices.Count && i < numVertices; i++)
+                {
+                    var (nome, valor) = vertices[i];
+                    adicionarVertice(nome, valor);
+                }
+            }
+
+            foreach (var (nome, valor, origemNome, destinoNome) in arestas)
+            {
+                var origem = encontrarVertice(origemNome);
+                var destino = encontrarVertice(destinoNome);
+
+                if (origem != null && destino != null)
+                {
+                    adicionarAresta(nome, valor, origem, destino);
+                }
+                else
+                {
+                    Console.WriteLine($" Origem '{origemNome}' ou destino '{destinoNome}' não encontrado.");
+                }
+            }
+        }
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()

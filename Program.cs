@@ -12,8 +12,31 @@ class Program
 
         MatrizAdj(V, arestas);
         */
-        
-        testeGrafo();
+
+        // testeGrafo();
+
+/*
+           GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
+
+       
+        var vertices = new List<(string, string)>
+        {
+            ("A", "10"),
+            ("B", "20"),
+            ("C", "15")
+        };
+
+        var arestas = new List<(string, string, string, string)>
+        {
+            ("AB", "5", "A", "B"),
+            ("BC", "7", "B", "C")
+        };
+
+       
+        grafo.gerarGrafo(3, vertices, arestas);
+
+        */
+    
     }
 
     public static void testeGrafo()
@@ -26,7 +49,7 @@ class Program
 
         teste.adicionarAresta("AA", "1", teste.encontrarVertice("VA"), teste.encontrarVertice("VC"));
         teste.adicionarAresta("AB", "2", teste.encontrarVertice("VA"), teste.encontrarVertice("VB"));
-        
+
         Console.Clear();
         teste.imprimirDados();
     }
