@@ -394,16 +394,76 @@ namespace biblioteca
                 arestaAtual = arestaAtual.proxima;
             }
         }
-        
-        
-        public bool ponte()
+
+        //Aresta retirada para verificação de ponte (realiza isso com todas as arestas), verificar se tá tudo correto
+        public List<Aresta> ponte(GrafoNaoDirecionado grafo)
         {
-            if (!grafo.conexo())
+            List<Aresta> pontes = new List<Aresta>();
+
+            foreach (var aresta in grafo.getTodasArestas())
             {
-                return false;
+
+                if (ContarArestasSaindoDe(aresta.origem) == 1)
+                {
+
+                    removerAresta(aresta.nome, aresta.origem);
+
+
+                    if (!grafo.conexo())
+                    {
+
+                        pontes.Add(aresta);
+                    }
+
+
+                    adicionarAresta(aresta.nome, aresta.origem.nome, aresta.origem, aresta.destino);
+                }
             }
+
+            return pontes;
         }
 
+        public int ContarArestasSaindoDe(Vertice vertice)
+        {
+            int contador = 0;
+            Aresta arestaAtual = vertice.arestas;
+
+            while (arestaAtual != null)
+            {
+                contador++;
+                arestaAtual = arestaAtual.proxima;
+            }
+
+            return contador;
+        }
+
+
+
+        public List<Aresta> getTodasArestas()
+        {
+            List<Aresta> arestas = new List<Aresta>();
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+
+            while (verticeAtual != null)
+            {
+                int contadorDeArestas = 0;
+                Aresta arestaAtual = verticeAtual.arestas;
+
+                while (arestaAtual != null)
+                {
+                    arestas.Add(arestaAtual);
+                    contadorDeArestas++;
+                    arestaAtual = arestaAtual.proxima;
+                }
+
+
+                verticeAtual = verticeAtual.anterior;
+            }
+
+            return arestas;
+        }
+
+        //verificar se o da ponte tá todo certo ou se é necessário refazer.
 
         //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
         public void gerarGrafo(
@@ -421,6 +481,7 @@ namespace biblioteca
                 }
             }
 
+            //Adiciona uma aresta indo da origem para o destino, e uma indo do destino para origem (fazendo assim um grafo não direcionado)
             foreach (var (nome, valor, origemNome, destinoNome) in arestas)
             {
                 var origem = encontrarVertice(origemNome);
@@ -429,6 +490,7 @@ namespace biblioteca
                 if (origem != null && destino != null)
                 {
                     adicionarAresta(nome, valor, origem, destino);
+                    adicionarAresta(nome, valor, destino, origem);
                 }
                 else
                 {
@@ -681,6 +743,137 @@ public class GrafoDirecionado
             return null;
         }
 
+    }
+
+    //Verifica a aresta a qual precisa ser buscada pelo vértice.
+    public Aresta buscarAresta(string _nome, Vertice verticeAtual)
+    {
+
+        while (verticeAtual != null)
+        {
+            Aresta arestaAtual = verticeAtual.arestas;
+
+
+            while (arestaAtual != null)
+            {
+                if (arestaAtual.nome == _nome)
+                {
+                    return arestaAtual;
+                }
+                arestaAtual = arestaAtual.proxima;
+            }
+
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+
+        return null;
+    }
+
+
+// Verifica a adjacencia entre arestas pela origem de um vertice e destino do outro (direcionado)
+    public bool adjacenciaEntreArestas(string nomeArestaA, string nomeArestaB)
+    {
+        Aresta arestaA = buscarAresta(nomeArestaA, ultimoVerticeAdicionado);
+        Aresta arestaB = buscarAresta(nomeArestaB, ultimoVerticeAdicionado);
+
+        if (arestaA != null && arestaB != null)
+        {
+            // Verifica se o destino de arestaA é a origem de arestaB
+            if (arestaA.destino == arestaB.origem)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+// Verifica a adjacencia entre vertices pela origem de um vertice e destino do outro pelas arestas (direcionado)
+    public bool adjacenciaEntreVertices(string nomeVerticeA, string nomeVerticeB)
+    {
+        Vertice origem = buscarVertice(nomeVerticeA, ultimoVerticeAdicionado);
+        Vertice destino = buscarVertice(nomeVerticeB, ultimoVerticeAdicionado);
+
+        if (origem != null && destino != null)
+        {
+
+            Aresta arestaEmAnalise = origem.arestas;
+
+            while (arestaEmAnalise != null)
+            {
+                // Verifica se há uma aresta saindo de origem para destino
+                if (arestaEmAnalise.origem.nome == nomeVerticeA && arestaEmAnalise.destino.nome == nomeVerticeB)
+                {
+                    return true;
+                }
+
+                arestaEmAnalise = arestaEmAnalise.proxima;
+            }
+        }
+
+
+        return false;
+    }
+
+
+        public bool GrafoVazio()
+    {
+        return numArestas == 0;
+    }
+
+// Se tiver uma aresta entre cada par de vértices é completo
+    public bool GrafoCompleto()
+    {
+
+        int numeroDeArestasEsperado = numVertices * (numVertices - 1);
+
+        return numArestas == numeroDeArestasEsperado;
+    }
+
+    public int quantidadeDeVertices()
+    {
+        return this.numVertices;
+    }
+
+    public int quantidadeDeArestas()
+    {
+        return this.numArestas;
+    }
+
+
+    //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
+    public void gerarGrafodirec(
+        int numVertices,
+        List<(string nome, string valor)> vertices,
+        List<(string nome, string valor, string origem, string destino)> arestas
+    )
+    {
+        if (numVertices >= 2)
+        {
+            for (int i = 0; i < vertices.Count && i < numVertices; i++)
+            {
+                var (nome, valor) = vertices[i];
+                adicionarVertice(nome, valor);
+            }
+        }
+
+        //Adiciona uma aresta indo da origem para o destino somente
+        foreach (var (nome, valor, origemNome, destinoNome) in arestas)
+        {
+            var origem = encontrarVertice(origemNome);
+            var destino = encontrarVertice(destinoNome);
+
+            if (origem != null && destino != null)
+            {
+                adicionarAresta(nome, valor, origem, destino);
+            }
+            else
+            {
+                Console.WriteLine($" Origem '{origemNome}' ou destino '{destinoNome}' não encontrado.");
+            }
+        }
     }
 
     //Função de teste para saber se tudo foi adicionado corretamente
