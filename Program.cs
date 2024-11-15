@@ -36,36 +36,7 @@ class Program
         grafo.gerarGrafo(3, vertices, arestas);
 
         
-   GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
 
-        
-        grafo.adicionarVertice("A", "1");
-        grafo.adicionarVertice("B", "2");
-        grafo.adicionarVertice("C", "3");
-        grafo.adicionarVertice("D", "4");
-
-      
-        Vertice A = grafo.encontrarVertice("A");
-        Vertice B = grafo.encontrarVertice("B");
-        Vertice C = grafo.encontrarVertice("C");
-        Vertice D = grafo.encontrarVertice("D");
-
-       
-        grafo.adicionarAresta("AB", "3", A, B);
-        grafo.adicionarAresta("BC", "6", B, C);
-        grafo.adicionarAresta("CD", "7", C, D);
-         grafo.adicionarAresta("BD", "7", C, D);
-       
-
- 
-        List<Aresta> pontes = grafo.ponte(grafo);
-
-        
-        Console.WriteLine("Arestas de Ponte:");
-        foreach (var aresta in pontes)
-        {
-            Console.WriteLine($"Aresta: {aresta.nome} - Vértices: {aresta.origem.nome} - {aresta.destino.nome}");
-        }
            
             
 

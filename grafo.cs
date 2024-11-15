@@ -360,8 +360,8 @@ namespace biblioteca
 
         }
 
-
-        public bool conexo()
+        // A partir do último vértice, realiza a busca em profundidade, se o num de vértices for o mesmo número de visitados, é porque passou por todos
+        public bool simpconexo()
         {
             if (numVertices <= 1)
             {
@@ -376,7 +376,7 @@ namespace biblioteca
             return visitados.Count == numVertices;
         }
 
-        // Função auxiliar para realizar a busca em profundidade e marcar os vértices visitados
+        // Realiza busca em profundidade e marca os vértices visitados
         private void buscaEmProfundidade(Vertice vertice, List<Vertice> visitados)
         {
             if (vertice == null || visitados.Contains(vertice))
@@ -394,76 +394,90 @@ namespace biblioteca
                 arestaAtual = arestaAtual.proxima;
             }
         }
-
-        //Aresta retirada para verificação de ponte (realiza isso com todas as arestas), verificar se tá tudo correto
-        public List<Aresta> ponte(GrafoNaoDirecionado grafo)
+        // Faz a busca em profundidade vendo se é possível ter um caminho de A para B, a partir do último vértice, após isso realiza do B para o A. Fazendo isso para todo par de vértices no grafo
+        public bool semifortConexo()
         {
-            List<Aresta> pontes = new List<Aresta>();
+            Vertice verticeA = ultimoVerticeAdicionado;
 
-            foreach (var aresta in grafo.getTodasArestas())
+            while (verticeA != null)
             {
+                Vertice verticeB = verticeA.anterior;
 
-                if (ContarArestasSaindoDe(aresta.origem) == 1)
+                while (verticeB != null)
                 {
 
-                    removerAresta(aresta.nome, aresta.origem);
+                    List<Vertice> AparaB = new List<Vertice>();
+                    buscaEmProfundidade(verticeA, AparaB);
+                    bool caminhoAB = AparaB.Contains(verticeB);
 
 
-                    if (!grafo.conexo())
+                    bool caminhoBA = false;
+                    if (!caminhoAB)
                     {
-
-                        pontes.Add(aresta);
+                        List<Vertice> BparaA = new List<Vertice>();
+                        buscaEmProfundidade(verticeB, BparaA);
+                        caminhoBA = BparaA.Contains(verticeA);
                     }
 
 
-                    adicionarAresta(aresta.nome, aresta.origem.nome, aresta.origem, aresta.destino);
+                    if (!caminhoAB && !caminhoBA)
+                    {
+                        return false;
+                    }
+
+                    verticeB = verticeB.anterior;
                 }
+
+                verticeA = verticeA.anterior;
             }
 
-            return pontes;
+            return true;
         }
 
-        public int ContarArestasSaindoDe(Vertice vertice)
+        // A partir do último vértice adicionado, realiza a busca em profundidade, se não forem alcançáveis retorna false, e ve se todos os vértices alcançam todos os vértices, se não for, retorna false
+        public bool fortementConexo()
         {
-            int contador = 0;
-            Aresta arestaAtual = vertice.arestas;
-
-            while (arestaAtual != null)
+            if (numVertices == 0)
             {
-                contador++;
-                arestaAtual = arestaAtual.proxima;
+                return true;
             }
 
-            return contador;
-        }
+
+            Vertice verticeInicial = ultimoVerticeAdicionado;
 
 
+            List<Vertice> visitados = new List<Vertice>();
+            buscaEmProfundidade(verticeInicial, visitados);
 
-        public List<Aresta> getTodasArestas()
-        {
-            List<Aresta> arestas = new List<Aresta>();
+
+            if (visitados.Count != numVertices)
+            {
+                return false;
+            }
+
+
             Vertice verticeAtual = ultimoVerticeAdicionado;
-
             while (verticeAtual != null)
             {
-                int contadorDeArestas = 0;
-                Aresta arestaAtual = verticeAtual.arestas;
+                List<Vertice> proximosVertices = new List<Vertice>();
+                buscaEmProfundidade(verticeAtual, proximosVertices);
 
-                while (arestaAtual != null)
+
+                if (proximosVertices.Count != numVertices)
                 {
-                    arestas.Add(arestaAtual);
-                    contadorDeArestas++;
-                    arestaAtual = arestaAtual.proxima;
+                    return false;
                 }
-
 
                 verticeAtual = verticeAtual.anterior;
             }
 
-            return arestas;
+            return true;
         }
 
-        //verificar se o da ponte tá todo certo ou se é necessário refazer.
+
+
+
+        //Refazer o de ponte
 
         //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
         public void gerarGrafo(
@@ -772,7 +786,7 @@ public class GrafoDirecionado
     }
 
 
-// Verifica a adjacencia entre arestas pela origem de um vertice e destino do outro (direcionado)
+    // Verifica a adjacencia entre arestas pela origem de um vertice e destino do outro (direcionado)
     public bool adjacenciaEntreArestas(string nomeArestaA, string nomeArestaB)
     {
         Aresta arestaA = buscarAresta(nomeArestaA, ultimoVerticeAdicionado);
@@ -790,7 +804,7 @@ public class GrafoDirecionado
         return false;
     }
 
-// Verifica a adjacencia entre vertices pela origem de um vertice e destino do outro pelas arestas (direcionado)
+    // Verifica a adjacencia entre vertices pela origem de um vertice e destino do outro pelas arestas (direcionado)
     public bool adjacenciaEntreVertices(string nomeVerticeA, string nomeVerticeB)
     {
         Vertice origem = buscarVertice(nomeVerticeA, ultimoVerticeAdicionado);
@@ -818,12 +832,12 @@ public class GrafoDirecionado
     }
 
 
-        public bool GrafoVazio()
+    public bool GrafoVazio()
     {
         return numArestas == 0;
     }
 
-// Se tiver uma aresta entre cada par de vértices é completo
+    // Se tiver uma aresta entre cada par de vértices é completo
     public bool GrafoCompleto()
     {
 
