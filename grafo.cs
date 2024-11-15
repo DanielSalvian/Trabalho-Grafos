@@ -397,6 +397,7 @@ namespace biblioteca
         // Faz a busca em profundidade vendo se é possível ter um caminho de A para B, a partir do último vértice, após isso realiza do B para o A. Fazendo isso para todo par de vértices no grafo
         public bool semifortConexo()
         {
+           
             Vertice verticeA = ultimoVerticeAdicionado;
 
             while (verticeA != null)
@@ -405,24 +406,17 @@ namespace biblioteca
 
                 while (verticeB != null)
                 {
+                    List<Vertice> AB = new List<Vertice>();
+                    buscaEmProfundidade(verticeA, AB);  
+                    bool caminhoAB = AB.Contains(verticeB);
 
-                    List<Vertice> AparaB = new List<Vertice>();
-                    buscaEmProfundidade(verticeA, AparaB);
-                    bool caminhoAB = AparaB.Contains(verticeB);
+                    List<Vertice> BA = new List<Vertice>();
+                    buscaEmProfundidade(verticeB, BA); 
+                    bool caminhoBA = BA.Contains(verticeA);
 
-
-                    bool caminhoBA = false;
-                    if (!caminhoAB)
+                    if (!caminhoAB || !caminhoBA)
                     {
-                        List<Vertice> BparaA = new List<Vertice>();
-                        buscaEmProfundidade(verticeB, BparaA);
-                        caminhoBA = BparaA.Contains(verticeA);
-                    }
-
-
-                    if (!caminhoAB && !caminhoBA)
-                    {
-                        return false;
+                        return false; 
                     }
 
                     verticeB = verticeB.anterior;
