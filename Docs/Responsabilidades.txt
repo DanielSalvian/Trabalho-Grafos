@@ -7,3 +7,4 @@ Daniel - 21/10 Criação da checagem da quantidade de vértices e arestas no gra
 Yago - 03/11 Atualizando a função de quantidade de arestas e vertices e a função de verificar se o grafo esta vazio.
 Daniel - 10/11 Criação de grafo no direcionado, verificação de grafo completo e vazio, e adjacência entre vértices e arestas no direcionado, e (tentativa de) verificação de ponte no grafo não direcionado.
 Daniel - 15/11 Remoção do método falho de verificação de ponte e criação dos métodos de simplesmente conexo, semi-fortemente conexo e fortemente conexo no grafo não-direcionado
+Daniel - 17/11 Criação de arquivo .CSV para grafo direcionado e não direcionado, e criação da Matriz de Indicência (não direc)
