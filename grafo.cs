@@ -397,7 +397,7 @@ namespace biblioteca
         // Faz a busca em profundidade vendo se é possível ter um caminho de A para B, a partir do último vértice, após isso realiza do B para o A. Fazendo isso para todo par de vértices no grafo
         public bool semifortConexo()
         {
-           
+
             Vertice verticeA = ultimoVerticeAdicionado;
 
             while (verticeA != null)
@@ -407,16 +407,16 @@ namespace biblioteca
                 while (verticeB != null)
                 {
                     List<Vertice> AB = new List<Vertice>();
-                    buscaEmProfundidade(verticeA, AB);  
+                    buscaEmProfundidade(verticeA, AB);
                     bool caminhoAB = AB.Contains(verticeB);
 
                     List<Vertice> BA = new List<Vertice>();
-                    buscaEmProfundidade(verticeB, BA); 
+                    buscaEmProfundidade(verticeB, BA);
                     bool caminhoBA = BA.Contains(verticeA);
 
                     if (!caminhoAB || !caminhoBA)
                     {
-                        return false; 
+                        return false;
                     }
 
                     verticeB = verticeB.anterior;
@@ -558,7 +558,36 @@ namespace biblioteca
             }
         }
 
+        public void CSV()
+        {
+            string filePath = "grafos_nao_direcionado.csv";
 
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+
+
+                Vertice verticeAtual = ultimoVerticeAdicionado;
+                while (verticeAtual != null)
+                {
+                    writer.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                    verticeAtual = verticeAtual.anterior;
+                }
+
+                verticeAtual = ultimoVerticeAdicionado;
+                while (verticeAtual != null)
+                {
+                    Aresta arestaAtual = verticeAtual.arestas;
+                    while (arestaAtual != null)
+                    {
+                        writer.WriteLine($"{arestaAtual.nome},{arestaAtual.valor},{arestaAtual.origem.nome},{arestaAtual.destino.nome}");
+                        arestaAtual = arestaAtual.proxima;
+                    }
+                    verticeAtual = verticeAtual.anterior;
+                }
+            }
+
+            Console.WriteLine("Arquivo CSV do grafo não direcionado!");
+        }
     }
 }
 
@@ -919,6 +948,36 @@ public class GrafoDirecionado
         {
             mostrarAresta(aresta.anterior);
         }
+    }
+
+    public void CSV()
+    {
+        string filePath = "grafos_direcionado.csv";
+
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+            while (verticeAtual != null)
+            {
+                writer.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                verticeAtual = verticeAtual.anterior;
+            }
+
+            verticeAtual = ultimoVerticeAdicionado;
+            while (verticeAtual != null)
+            {
+                Aresta arestaAtual = verticeAtual.arestas;
+                while (arestaAtual != null)
+                {
+                    writer.WriteLine($"{arestaAtual.nome},{arestaAtual.valor},{arestaAtual.origem.nome},{arestaAtual.destino.nome}");
+                    arestaAtual = arestaAtual.proxima;
+                }
+                verticeAtual = verticeAtual.anterior;
+            }
+        }
+
+        Console.WriteLine("Arquivo CSV do grafo direcionado!");
     }
 }
 

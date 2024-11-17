@@ -5,91 +5,134 @@ class Program
 {
     static void Main(string[] args)
     {
-        /*
-        int V = 5; 
-      
-        var arestas = new (int, int)[] { (0, 1), (0, 2), (1, 3), (3, 4) };
-
-        MatrizAdj(V, arestas);
-        */
 
         // testeGrafo();
 
-/*
-           GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
+        /*
+                   GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
 
-       
-        var vertices = new List<(string, string)>
+
+                var vertices = new List<(string, string)>
+                {
+                    ("A", "10"),
+                    ("B", "20"),
+                    ("C", "15")
+                };
+
+                var arestas = new List<(string, string, string, string)>
+                {
+                    ("AB", "5", "A", "B"),
+                    ("BC", "7", "B", "C")
+                };
+
+
+                grafo.gerarGrafo(3, vertices, arestas);
+
+
+
+
+
+
+
+                GrafoDirecionado grafo = new GrafoDirecionado();
+
+
+                List<(string nome, string valor)> vertices = new List<(string nome, string valor)>
+                {
+                    ("A", "Vértice A"),
+                    ("B", "Vértice B"),
+                    ("C", "Vértice C")
+                };
+
+
+                List<(string nome, string valor, string origem, string destino)> arestas = new List<(string nome, string valor, string origem, string destino)>
+                {
+
+                };
+
+
+                grafo.gerarGrafodirec(3, vertices, arestas);
+
+
+                Aresta arestaBuscada = grafo.buscarAresta("A1", grafo.ultimoVerticeAdicionado);
+                if (arestaBuscada != null)
+                {
+                    Console.WriteLine($"Aresta encontrada: {arestaBuscada.nome} de {arestaBuscada.origem.nome} para {arestaBuscada.destino.nome}");
+                }
+                else
+                {
+                    Console.WriteLine("Aresta não encontrada.");
+                }
+
+
+                bool adjacenteArestas = grafo.adjacenciaEntreArestas("A1", "A2");
+                Console.WriteLine($"{adjacenteArestas}");
+
+
+                bool adjacenteVertices = grafo.adjacenciaEntreVertices("A", "B");
+                Console.WriteLine($"{adjacenteVertices}");
+
+
+                bool isGrafoVazio = grafo.GrafoVazio();
+                Console.WriteLine($"{isGrafoVazio}");
+
+
+                bool isGrafoCompleto = grafo.GrafoCompleto();
+                Console.WriteLine($"{isGrafoCompleto}");
+
+                */
+
+
+        int V = 5;
+        (int, int)[] arestasAdj = new (int, int)[]
         {
-            ("A", "10"),
-            ("B", "20"),
-            ("C", "15")
+                (0, 1),
+                (0, 2),
+                (1, 2),
+                (1, 3),
+                (2, 4)
         };
 
-        var arestas = new List<(string, string, string, string)>
+
+        MatrizdeAdj.MatrizAdj(V, arestasAdj);
+
+
+        (int, int)[] arestasInc = new (int, int)[]
         {
-            ("AB", "5", "A", "B"),
-            ("BC", "7", "B", "C")
+                (0, 1),
+                (0, 2),
+                (1, 2),
+                (1, 3),
+                (2, 4)
         };
 
-       
-        grafo.gerarGrafo(3, vertices, arestas);
 
-        
+        MatrizdeInc.MatrizInc(V, arestasInc);
 
-           
-            
+        GrafoNaoDirecionado grafoNaoDir = new GrafoNaoDirecionado();
+        grafoNaoDir.adicionarVertice("A", "1");
+        grafoNaoDir.adicionarVertice("B", "2");
+        grafoNaoDir.adicionarVertice("C", "3");
+        grafoNaoDir.adicionarAresta("AB", "1", grafoNaoDir.encontrarVertice("A"), grafoNaoDir.encontrarVertice("B"));
+        grafoNaoDir.adicionarAresta("BC", "1", grafoNaoDir.encontrarVertice("B"), grafoNaoDir.encontrarVertice("C"));
 
-            
-        GrafoDirecionado grafo = new GrafoDirecionado();
 
-        
-        List<(string nome, string valor)> vertices = new List<(string nome, string valor)>
-        {
-            ("A", "Vértice A"),
-            ("B", "Vértice B"),
-            ("C", "Vértice C")
-        };
+        grafoNaoDir.CSV();
 
-     
-        List<(string nome, string valor, string origem, string destino)> arestas = new List<(string nome, string valor, string origem, string destino)>
-        {
-            
-        };
 
-        
-        grafo.gerarGrafodirec(3, vertices, arestas);
+        GrafoDirecionado grafoDir = new GrafoDirecionado();
+        grafoDir.adicionarVertice("A", "1");
+        grafoDir.adicionarVertice("B", "2");
+        grafoDir.adicionarVertice("C", "3");
+        grafoDir.adicionarAresta("AB", "1", grafoDir.encontrarVertice("A"), grafoDir.encontrarVertice("B"));
+        grafoDir.adicionarAresta("BC", "1", grafoDir.encontrarVertice("B"), grafoDir.encontrarVertice("C"));
 
-       
-        Aresta arestaBuscada = grafo.buscarAresta("A1", grafo.ultimoVerticeAdicionado);
-        if (arestaBuscada != null)
-        {
-            Console.WriteLine($"Aresta encontrada: {arestaBuscada.nome} de {arestaBuscada.origem.nome} para {arestaBuscada.destino.nome}");
-        }
-        else
-        {
-            Console.WriteLine("Aresta não encontrada.");
-        }
 
-       
-        bool adjacenteArestas = grafo.adjacenciaEntreArestas("A1", "A2");
-        Console.WriteLine($"{adjacenteArestas}");
-
-        
-        bool adjacenteVertices = grafo.adjacenciaEntreVertices("A", "B");
-        Console.WriteLine($"{adjacenteVertices}");
+        grafoDir.CSV();
 
       
-        bool isGrafoVazio = grafo.GrafoVazio();
-        Console.WriteLine($"{isGrafoVazio}");
+    }
 
-        
-        bool isGrafoCompleto = grafo.GrafoCompleto();
-        Console.WriteLine($"{isGrafoCompleto}");
-
-        */
-        }
-     
 
     public static void testeGrafo()
     {
