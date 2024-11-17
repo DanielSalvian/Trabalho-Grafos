@@ -1,4 +1,5 @@
 using System;
+using biblioteca;
 
 namespace biblioteca
 {
@@ -759,6 +760,37 @@ public class GrafoDirecionado
         numArestas++;
     }
 
+    public void removerAresta(string _nome, Vertice _origem)
+    {
+        if (_origem.arestas != null)
+        {
+            Aresta alvo = buscarAresta(_nome, _origem);
+
+            if (alvo != null)
+            {
+                if (alvo.proxima != null)
+                {
+                    alvo.proxima.anterior = alvo.anterior;
+                }
+
+                if (alvo.anterior != null)
+                {
+                    alvo.anterior.proxima = alvo.proxima;
+                }
+
+                if (_origem.arestas == alvo)
+                {
+                    _origem.arestas = alvo.proxima;
+                }
+
+                alvo.anterior = null;
+                alvo.proxima = null;
+
+                numArestas--;
+            }
+        }
+    }
+
     public Vertice encontrarVertice(string _nome)
     {
         return buscarVertice(_nome, ultimoVerticeAdicionado);
@@ -783,31 +815,181 @@ public class GrafoDirecionado
     }
 
     //Verifica a aresta a qual precisa ser buscada pelo vértice.
-    public Aresta buscarAresta(string _nome, Vertice verticeAtual)
+    public Aresta buscarAresta(string _nome, Vertice origem)
     {
+        Aresta arestaAtual = origem.arestas;
 
-        while (verticeAtual != null)
+        while (arestaAtual != null)
         {
-            Aresta arestaAtual = verticeAtual.arestas;
-
-
-            while (arestaAtual != null)
+            if (arestaAtual.nome == _nome)
             {
-                if (arestaAtual.nome == _nome)
-                {
-                    return arestaAtual;
-                }
-                arestaAtual = arestaAtual.proxima;
+                return arestaAtual;
             }
-
-
-            verticeAtual = verticeAtual.anterior;
+            arestaAtual = arestaAtual.proxima;
         }
-
 
         return null;
     }
 
+    //Verifica se a aresta passada como parâmetro existe em todo o grafo.
+    public bool verificarExistenciaDaAresta(string _nomeAresta)
+    {
+        if (ultimoVerticeAdicionado == null)
+        {
+            return false; 
+        } 
+
+        Vertice verticeVerificado = ultimoVerticeAdicionado;
+        for (int i = 0; i < numVertices; i++)
+        {
+            Aresta arestaExiste = buscarAresta(_nomeAresta, verticeVerificado);
+            if (arestaExiste != null)
+            {
+                return true;
+            }
+            verticeVerificado = verticeVerificado.anterior;
+        }
+        return false;
+    } 
+
+    public GrafoNaoDirecionado TransformarEmSubjacente()
+    {
+        GrafoNaoDirecionado grafoSubjacente = new GrafoNaoDirecionado();
+
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
+        {
+            grafoSubjacente.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+
+            Aresta arestaAtual = verticeAtual.arestas;
+            while (arestaAtual != null)
+            {
+                // Para cada aresta no grafo direcionado, adicionar a aresta bidirecional no grafo não direcionado
+                Vertice origem = arestaAtual.origem;
+                Vertice destino = arestaAtual.destino;
+
+                grafoSubjacente.adicionarAresta(arestaAtual.nome, arestaAtual.valor, origem, destino);
+
+                grafoSubjacente.adicionarAresta(arestaAtual.nome, arestaAtual.valor, destino, origem);
+
+                arestaAtual = arestaAtual.proxima;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        return grafoSubjacente;
+    }
+
+    public bool simpconexo()
+    {
+        if (numVertices <= 1)
+        {
+            return true;
+        }
+
+        GrafoNaoDirecionado grafoSubjacente = TransformarEmSubjacente();
+
+        return grafoSubjacente.simpconexo();
+    }
+
+    public bool semifortConexo()
+    {
+        if (numVertices <= 1)
+        {
+            return true;
+        }
+
+        Vertice verticeInicial = ultimoVerticeAdicionado;
+
+        List<Vertice> visitaOrigem = new List<Vertice>();
+        buscaEmProfundidade(verticeInicial, visitaOrigem);
+
+        if (visitaOrigem.Count != numVertices)
+        {
+            return false; // Se nem todos os vértices são acessíveis, não é semifortemente conexo
+        }
+
+        GrafoDirecionado grafoInvertido = InverterGrafo();
+        List<Vertice> visitaDestino = new List<Vertice>();
+        grafoInvertido.buscaEmProfundidade(verticeInicial, visitaDestino);
+
+        if (visitaDestino.Count != numVertices)
+        {
+            return false; // Se nem todos os vértices são acessíveis no grafo invertido, não é semifortemente conexo
+        }
+
+        return true; // Se ambos os testes forem bem-sucedidos, o grafo é semifortemente conexo
+    }
+    
+    public bool fortementeConexo()
+    {
+        if (numVertices <= 1)
+        {
+            return true;
+        }
+
+        Vertice verticeInicial = ultimoVerticeAdicionado;
+
+        List<Vertice> visitaOrigem = new List<Vertice>();
+        buscaEmProfundidade(verticeInicial, visitaOrigem);
+
+        if (visitaOrigem.Count != numVertices)
+        {
+            return false;
+        }
+
+        GrafoDirecionado grafoInvertido = InverterGrafo();
+
+        List<Vertice> visitaDestino = new List<Vertice>();
+        grafoInvertido.buscaEmProfundidade(verticeInicial, visitaDestino);
+
+        // Se todos os vértices foram visitados no grafo original e no grafo invertido, o grafo é fortemente conexo
+        return visitaDestino.Count == numVertices;
+    }
+
+    private void buscaEmProfundidade(Vertice vertice, List<Vertice> visitados)
+    {
+        if (vertice == null || visitados.Contains(vertice))
+        {
+            return;
+        }
+
+        visitados.Add(vertice);
+
+        Aresta arestaAtual = vertice.arestas;
+
+        while (arestaAtual != null)
+        {
+            buscaEmProfundidade(arestaAtual.destino, visitados);
+            arestaAtual = arestaAtual.proxima;
+        }
+    }
+
+    public GrafoDirecionado InverterGrafo()
+    {
+        GrafoDirecionado grafoInvertido = new GrafoDirecionado();
+
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
+        {
+            grafoInvertido.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+
+            Aresta arestaAtual = verticeAtual.arestas;
+            while (arestaAtual != null)
+            {
+                // Para cada aresta no grafo original, adicionar a aresta invertida no grafo invertido
+                // A aresta original é de origem -> destino, então a aresta invertida será de destino -> origem
+                grafoInvertido.adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.destino, arestaAtual.origem);
+
+                arestaAtual = arestaAtual.proxima;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        return grafoInvertido;
+    }
 
     // Verifica a adjacencia entre arestas pela origem de um vertice e destino do outro (direcionado)
     public bool adjacenciaEntreArestas(string nomeArestaA, string nomeArestaB)
