@@ -561,33 +561,43 @@ namespace biblioteca
 
         public void CSV()
         {
-            string filePath = "grafos_nao_direcionado.csv";
+            string caminhoVertices = "grafos_nao_direcionadovertice.csv";
+            string caminhoArestas = "grafos_nao_direcionadoaresta.csv";
 
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using (StreamWriter Vertices = new StreamWriter(caminhoVertices))
             {
 
+
+                Vertices.WriteLine("id,value");
 
                 Vertice verticeAtual = ultimoVerticeAdicionado;
                 while (verticeAtual != null)
                 {
-                    writer.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                    Vertices.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
                     verticeAtual = verticeAtual.anterior;
                 }
 
-                verticeAtual = ultimoVerticeAdicionado;
+            }
+
+            using (StreamWriter Arestas = new StreamWriter(caminhoArestas))
+            {
+                Arestas.WriteLine("source,target,weight");
+
+                Vertice verticeAtual = ultimoVerticeAdicionado;
                 while (verticeAtual != null)
                 {
                     Aresta arestaAtual = verticeAtual.arestas;
                     while (arestaAtual != null)
                     {
-                        writer.WriteLine($"{arestaAtual.nome},{arestaAtual.valor},{arestaAtual.origem.nome},{arestaAtual.destino.nome}");
+                        Arestas.WriteLine($"{arestaAtual.origem.nome},{arestaAtual.destino.nome},{arestaAtual.valor}");
+                        Arestas.WriteLine($"{arestaAtual.destino.nome},{arestaAtual.origem.nome},{arestaAtual.valor}");
                         arestaAtual = arestaAtual.proxima;
                     }
                     verticeAtual = verticeAtual.anterior;
                 }
             }
 
-            Console.WriteLine("Arquivo CSV do grafo não direcionado!");
+
         }
     }
 }
@@ -836,8 +846,8 @@ public class GrafoDirecionado
     {
         if (ultimoVerticeAdicionado == null)
         {
-            return false; 
-        } 
+            return false;
+        }
 
         Vertice verticeVerificado = ultimoVerticeAdicionado;
         for (int i = 0; i < numVertices; i++)
@@ -850,7 +860,7 @@ public class GrafoDirecionado
             verticeVerificado = verticeVerificado.anterior;
         }
         return false;
-    } 
+    }
 
     public GrafoNaoDirecionado TransformarEmSubjacente()
     {
@@ -921,7 +931,7 @@ public class GrafoDirecionado
 
         return true; // Se ambos os testes forem bem-sucedidos, o grafo é semifortemente conexo
     }
-    
+
     public bool fortementeConexo()
     {
         if (numVertices <= 1)
@@ -1134,32 +1144,42 @@ public class GrafoDirecionado
 
     public void CSV()
     {
-        string filePath = "grafos_direcionado.csv";
+        string caminhoVertices = "grafos_direcionadovertice.csv";
+        string caminhoArestas = "grafos_direcionadoaresta.csv";
 
-        using (StreamWriter writer = new StreamWriter(filePath))
+        using (StreamWriter Vertices = new StreamWriter(caminhoVertices))
         {
+
+
+            Vertices.WriteLine("id,value");
 
             Vertice verticeAtual = ultimoVerticeAdicionado;
             while (verticeAtual != null)
             {
-                writer.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                Vertices.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
                 verticeAtual = verticeAtual.anterior;
             }
 
-            verticeAtual = ultimoVerticeAdicionado;
+        }
+
+        using (StreamWriter Arestas = new StreamWriter(caminhoArestas))
+        {
+            Arestas.WriteLine("source,target,weight");
+
+            Vertice verticeAtual = ultimoVerticeAdicionado;
             while (verticeAtual != null)
             {
                 Aresta arestaAtual = verticeAtual.arestas;
                 while (arestaAtual != null)
                 {
-                    writer.WriteLine($"{arestaAtual.nome},{arestaAtual.valor},{arestaAtual.origem.nome},{arestaAtual.destino.nome}");
+                    Arestas.WriteLine($"{arestaAtual.origem.nome},{arestaAtual.destino.nome},{arestaAtual.valor}");
                     arestaAtual = arestaAtual.proxima;
                 }
                 verticeAtual = verticeAtual.anterior;
             }
         }
 
-        Console.WriteLine("Arquivo CSV do grafo direcionado!");
+
     }
 }
 

@@ -84,7 +84,8 @@ class Program
 
 
         int V = 5;
-        (int, int)[] arestasAdj = new (int, int)[]
+        
+        (int, int)[] arestasAdj =
         {
                 (0, 1),
                 (0, 2),
@@ -97,7 +98,7 @@ class Program
         MatrizdeAdj.MatrizAdj(V, arestasAdj);
 
 
-        (int, int)[] arestasInc = new (int, int)[]
+        (int, int)[] arestasInc =
         {
                 (0, 1),
                 (0, 2),
