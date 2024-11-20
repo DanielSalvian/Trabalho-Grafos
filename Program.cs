@@ -51,7 +51,7 @@ class Program
                 Console.WriteLine($"{isGrafoCompleto}");
                 */
 
-        /*
+        
                 int V = 5;
 
                 (int, int)[] arestasAdj =
@@ -69,11 +69,8 @@ class Program
 
                 (int, int)[] arestasInc =
                 {
-                        (0, 1),
-                        (0, 2),
-                        (1, 2),
-                        (1, 3),
-                        (2, 4)
+                      
+                        
                 };
 
 
@@ -83,8 +80,7 @@ class Program
                 grafoNaoDir.adicionarVertice("A", "1");
                 grafoNaoDir.adicionarVertice("B", "2");
                 grafoNaoDir.adicionarVertice("C", "3");
-                grafoNaoDir.adicionarAresta("AB", "1", grafoNaoDir.encontrarVertice("A"), grafoNaoDir.encontrarVertice("B"));
-                grafoNaoDir.adicionarAresta("BC", "1", grafoNaoDir.encontrarVertice("B"), grafoNaoDir.encontrarVertice("C"));
+                
 
 
                 grafoNaoDir.CSV();
@@ -99,9 +95,8 @@ class Program
 
 
                 grafoDir.CSV();
-        */
+        
 
-        testeGrafo();
 
     }
 

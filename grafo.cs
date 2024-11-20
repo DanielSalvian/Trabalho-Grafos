@@ -452,7 +452,7 @@ namespace biblioteca
             return true;
         }
 
-        // A partir do último vértice adicionado, realiza a busca em profundidade, se não forem alcançáveis retorna false, e ve se todos os vértices alcançam todos os vértices, se não for, retorna false
+        // A partir do último vértice adicionado, realiza a busca em profundidade, se todos os vértices não forem alcançáveis retorna false, e ve se todos os vértices alcançam todos os vértices, se não for, retorna false
         public bool fortementConexo()
         {
             if (numVertices == 0)
