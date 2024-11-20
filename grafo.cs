@@ -497,7 +497,8 @@ namespace biblioteca
 
         //Refazer o de ponte
 
-        //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
+        /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
+        cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
         public void gerarGrafo(
             int numVertices,
             List<(string nome, string valor)> vertices,
