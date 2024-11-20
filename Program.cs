@@ -71,5 +71,13 @@ class Program
     static void Main(string[] args)
     {
         T_MatrizInc_D();
+
+        int numVertices = 59;
+        int numArestas = 40;
+
+       
+        GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
+
+        grafo.gerarGrafo(numVertices, numArestas);
     }
 }
