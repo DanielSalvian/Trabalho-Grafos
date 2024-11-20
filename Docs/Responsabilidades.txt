@@ -1,12 +1,25 @@
 Daniel - 16/10 - Criação da biblioteca (chamada namespace biblioteca), e adição da função de matriz de adjacência.
-Yago -  17/10 - Criação da classe grafo (Base), contendo arestas,vertices e a opção de adicionar esse elemento.
-Yago - 18/10 - Criação das funções (dentro da classe Grafo) que permitem chegar adjacencia de vertices, adjacencia de arestas,
-existencia de uma aresta, remoção de arestas e vertices, checagem da quantidade de vertices e arestas e a ponderação dos mesmo
+
+Yago -  17/10 - Criação da classe grafo (Base), contendo arestas, vértices e a opção de adicionar esse elemento.
+
+Yago - 18/10 - Criação das funções (dentro da classe Grafo) que permitem chegar adjacência de é, adjacência de arestas,
+existencia de uma aresta, remoção de arestas e é, checagem da quantidade de é e arestas e a ponderação dos mesmo
 foi feita junto a riação da classe Grafo no dia 17 (foi feito indiretamente).
-Daniel - 21/10 Criação da checagem da quantidade de vértices e arestas no grafo não direcionado
-Yago - 03/11 Atualizando a função de quantidade de arestas e vertices e a função de verificar se o grafo esta vazio.
-Daniel - 10/11 Criação de grafo no direcionado, verificação de grafo completo e vazio, e adjacência entre vértices e arestas no direcionado, e (tentativa de) verificação de ponte no grafo não direcionado.
-Daniel - 15/11 Remoção do método falho de verificação de ponte e criação dos métodos de simplesmente conexo, semi-fortemente conexo e fortemente conexo no grafo não-direcionado
-Daniel - 17/11 Criação de arquivo .CSV para grafo direcionado e não direcionado, e criação da Matriz de Indicência (não direc)
-Daniel 19/11 Correção na criação do arquivo .CSV para grafo direcionado e não direcionado
-Yago - 20/11 Lista de adjacencia (Não direcionado) corrigida e lista de adjacencia do não direcionado feita.
+
+Daniel - 21/10 - Criação da checagem da quantidade de vértices e arestas no grafo não direcionado.
+
+Yago - 03/11 - Atualizando a função de quantidade de arestas e é e a função de verificar se o grafo esta vazio.
+
+Daniel - 10/11 - Criação de grafo no direcionado, verificação de grafo completo e vazio, e adjacência entre vértices e arestas no 
+direcionado, e (tentativa de) verificação de ponte no grafo não direcionado.
+
+Daniel - 15/11 - Remoção do método falho de verificação de ponte e criação dos métodos de simplesmente conexo, semi-fortemente conexo
+e fortemente conexo no grafo não direcionado.
+
+Daniel - 17/11 - Criação de arquivo .CSV para grafo direcionado e não direcionado, e criação da Matriz de Indicência (não direcionado).
+
+Daniel - 19/11 - Correção na criação do arquivo .CSV para grafo direcionado e não direcionado.
+
+Yago - 20/11 - Lista de adjacência (Não direcionado) corrigida e lista de adjacência do não direcionado feita.
+
+Gustavo - 20/11 - Criação da matriz de adjacência e de incidência em grafos direcionados. Ainda em desenvolvimento.
