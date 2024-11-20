@@ -499,33 +499,26 @@ namespace biblioteca
 
         /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
         cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
-       public void gerarGrafo(int numVertices, int numArestas)
+        public void gerarGrafo(int numVertices, int numArestas)
         {
-
             if (numArestas >= numVertices)
             {
-
                 Console.WriteLine("Grafo impossível de ser criado");
-
             }
             else
             {
-
-
                 Vertice[] vertices = new Vertice[numVertices];
                 for (int i = 0; i < numVertices; i++)
                 {
                     vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
                     adicionarVertice(vertices[i].nome, vertices[i].valor);
-
                 }
 
                 Random random = new Random();
-
+                List<Aresta> arestas = new List<Aresta>();
 
                 while (numArestas > 0)
                 {
-
                     int origemIndex = random.Next(0, numVertices);
                     int destinoIndex = random.Next(0, numVertices);
 
@@ -534,7 +527,6 @@ namespace biblioteca
                         destinoIndex = random.Next(0, numVertices);
                     }
 
-
                     Vertice origem = vertices[origemIndex];
                     Vertice destino = vertices[destinoIndex];
 
@@ -542,18 +534,23 @@ namespace biblioteca
                     string arestaValor = $"ValorAresta{numArestas}";
 
 
-                    Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+
+                    if (!arestaExistente)
+                    {
+                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
 
 
+                        arestas.Add(novaAresta);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
 
-                    adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
-                    Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor:{novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
-
-
-                    numArestas--;
+                        numArestas--;
+                    }
                 }
             }
         }
+
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()
