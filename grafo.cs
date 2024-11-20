@@ -272,21 +272,44 @@ namespace biblioteca
         }
 
         //Retorna a lista de adjacencia de um vertice especifico
-        public ListaAdjacenciaVertice listaDeAdjacencia(Vertice verticeRaizDaLista)
+        public string[] listaDeAdjacencia(Vertice verticeRaizDaLista)
         {
-            ListaAdjacenciaVertice lista = new ListaAdjacenciaVertice(verticeRaizDaLista);
 
-            if (verticeRaizDaLista.arestas != null)
+            Aresta aresta = verticeRaizDaLista.arestas;
+            Aresta arestaQueChega = verticeRaizDaLista.arestasQueChegam;
+            int count = 0;
+            while (aresta != null)
             {
-                Aresta arestaAtual = verticeRaizDaLista.arestas;
-                while (arestaAtual != null)
-                {
-                    lista.adicionarVertice(arestaAtual.destino);
-                    arestaAtual = arestaAtual.proxima;
-                }
+                aresta = aresta.anterior;
+                count++;
+            }
+            while (arestaQueChega != null)
+            {
+                arestaQueChega = arestaQueChega.anterior;
+                count++;
             }
 
-            return lista;
+            string[] listaAdjacencia = new string[count + 1];
+            count = 1;
+            listaAdjacencia[0] = verticeRaizDaLista.nome;
+
+            aresta = verticeRaizDaLista.arestas;
+            arestaQueChega = verticeRaizDaLista.arestasQueChegam;
+
+            while (aresta != null)
+            {
+                listaAdjacencia[count] = aresta.destino.nome;
+                count++;
+                aresta = aresta.anterior;
+            }
+            while (arestaQueChega != null)
+            {
+                listaAdjacencia[count] = arestaQueChega.origem.nome;
+                count++;
+                arestaQueChega = arestaQueChega.anterior;
+            }
+
+            return listaAdjacencia;
         }
 
         //Quantidade de vertices do grafo
@@ -682,52 +705,6 @@ public class Aresta
     }
 }
 
-public class ListaAdjacenciaVertice
-{
-    Vertice verticeRaiz;
-    VerticeAdjacente verticeAdjacente;
-
-    public class VerticeAdjacente
-    {
-        Vertice vertice;
-
-        public VerticeAdjacente proximoVerticeAdjacente;
-
-        public VerticeAdjacente(Vertice _vertice)
-        {
-            this.vertice = _vertice;
-            this.proximoVerticeAdjacente = null;
-        }
-    }
-
-    public ListaAdjacenciaVertice(Vertice _verticeRaiz)
-    {
-        verticeRaiz = _verticeRaiz;
-        verticeAdjacente = null;
-    }
-
-    public void adicionarVertice(Vertice novoVertice)
-    {
-
-        VerticeAdjacente novoAdjacente = new VerticeAdjacente(novoVertice);
-        if (verticeAdjacente == null)
-        {
-            verticeAdjacente = novoAdjacente;
-        }
-        else
-        {
-            VerticeAdjacente verticeAtual = verticeAdjacente;
-            while (verticeAtual.proximoVerticeAdjacente != null)
-            {
-                verticeAtual = verticeAtual.proximoVerticeAdjacente;
-            }
-            verticeAtual.proximoVerticeAdjacente = novoAdjacente;
-        }
-
-    }
-
-}
-
 //Grafo direcionado // até o momento é igual ao não direcionado, mas no futuro é para ter as funções especificas
 public class GrafoDirecionado
 {
@@ -1070,6 +1047,35 @@ public class GrafoDirecionado
     {
         return this.numArestas;
     }
+
+    //Retorna a lista de adjacencia de um vertice especifico
+    public string[] listaDeAdjacencia(Vertice verticeRaizDaLista)
+    {
+
+        Aresta aresta = verticeRaizDaLista.arestas;
+        int count = 0;
+        while (aresta != null)
+        {
+            aresta = aresta.anterior;
+            count++;
+        }
+
+        string[] listaAdjacencia = new string[count + 1];
+        count = 1;
+        listaAdjacencia[0] = verticeRaizDaLista.nome;
+
+        aresta = verticeRaizDaLista.arestas;
+
+        while (aresta != null)
+        {
+            listaAdjacencia[count] = aresta.destino.nome;
+            count++;
+            aresta = aresta.anterior;
+        }
+
+        return listaAdjacencia;
+    }
+
 
 
     //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
