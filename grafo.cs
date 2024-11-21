@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using biblioteca;
 
 namespace biblioteca
@@ -1188,5 +1191,42 @@ public class GrafoDirecionado
 
 
     }
+
+
+    public List<Vertice> PrimeiraEtapaKosaraju(List<Vertice> grafo)
+    {
+        List<Vertice> visitados = new List<Vertice>();
+        List<Vertice> stack = new List<Vertice>();
+
+        foreach (var vertice in grafo)
+        {
+            if (!visitados.Contains(vertice))
+            {
+                PreencherPilhaDFS(vertice, visitados, stack);
+            }
+        }
+
+        return stack;
+    }
+
+    private void PreencherPilhaDFS(Vertice vertice, List<Vertice> visitados, List<Vertice> stack)
+    {
+        visitados.Add(vertice);
+        Aresta arestaAtual = vertice.arestas;
+
+        while (arestaAtual != null)
+        {
+            if (!visitados.Contains(arestaAtual.destino))
+            {
+                PreencherPilhaDFS(arestaAtual.destino, visitados, stack);
+            }
+            arestaAtual = arestaAtual.proxima;
+        }
+
+        stack.Add(vertice); // Adiciona o vértice à pilha após processar todas as arestas
+    }
+
+
+
 }
 
