@@ -497,39 +497,60 @@ namespace biblioteca
 
         //Refazer o de ponte
 
-        //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
-        public void gerarGrafo(
-            int numVertices,
-            List<(string nome, string valor)> vertices,
-            List<(string nome, string valor, string origem, string destino)> arestas
-        )
+        /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
+        cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
+        public void gerarGrafo(int numVertices, int numArestas)
         {
-            if (numVertices >= 2)
+            if (numArestas >= numVertices)
             {
-                for (int i = 0; i < vertices.Count && i < numVertices; i++)
-                {
-                    var (nome, valor) = vertices[i];
-                    adicionarVertice(nome, valor);
-                }
+                Console.WriteLine("Grafo impossível de ser criado");
             }
-
-            //Adiciona uma aresta indo da origem para o destino, e uma indo do destino para origem (fazendo assim um grafo não direcionado)
-            foreach (var (nome, valor, origemNome, destinoNome) in arestas)
+            else
             {
-                var origem = encontrarVertice(origemNome);
-                var destino = encontrarVertice(destinoNome);
-
-                if (origem != null && destino != null)
+                Vertice[] vertices = new Vertice[numVertices];
+                for (int i = 0; i < numVertices; i++)
                 {
-                    adicionarAresta(nome, valor, origem, destino);
-                    adicionarAresta(nome, valor, destino, origem);
+                    vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+                    adicionarVertice(vertices[i].nome, vertices[i].valor);
                 }
-                else
+
+                Random random = new Random();
+                List<Aresta> arestas = new List<Aresta>();
+
+                while (numArestas > 0)
                 {
-                    Console.WriteLine($" Origem '{origemNome}' ou destino '{destinoNome}' não encontrado.");
+                    int origemIndex = random.Next(0, numVertices);
+                    int destinoIndex = random.Next(0, numVertices);
+
+                    while (origemIndex == destinoIndex)
+                    {
+                        destinoIndex = random.Next(0, numVertices);
+                    }
+
+                    Vertice origem = vertices[origemIndex];
+                    Vertice destino = vertices[destinoIndex];
+
+                    string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+                    string arestaValor = $"ValorAresta{numArestas}";
+
+
+                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+
+                    if (!arestaExistente)
+                    {
+                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+
+                        arestas.Add(novaAresta);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
+
+                        numArestas--;
+                    }
                 }
             }
         }
+
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()
