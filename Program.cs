@@ -96,7 +96,7 @@ class Program
 
                 grafoDir.CSV();
         
-
+        //testeConexao();
 
     }
 
@@ -142,6 +142,20 @@ class Program
             Console.Write(resultado[i] + ", ");
         }
         Console.WriteLine("");
+    }
 
+    public static void testeConexao() {
+        GrafoDirecionado grafo2 = new GrafoDirecionado();
+        Vertice v3 = new Vertice("C", "3");
+        Vertice v4 = new Vertice("D", "4");
+        Vertice v5 = new Vertice("E", "5");
+        grafo2.adicionarVertice(v3.nome, v3.valor);
+        grafo2.adicionarVertice(v4.nome, v4.valor);
+        grafo2.adicionarVertice(v5.nome, v5.valor);
+        grafo2.adicionarAresta("Aresta3", "3", grafo2.encontrarVertice("C"), grafo2.encontrarVertice("D"));
+        grafo2.adicionarAresta("Aresta4", "4", grafo2.encontrarVertice("D"), grafo2.encontrarVertice("E"));
+        grafo2.adicionarAresta("Aresta5", "5", grafo2.encontrarVertice("E"), grafo2.encontrarVertice("C"));
+        grafo2.imprimirDados();
+        Console.WriteLine(grafo2.fortementeConexo()); // Saída esperada: true
     }
 }
