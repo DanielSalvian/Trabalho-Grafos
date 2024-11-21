@@ -543,12 +543,14 @@ namespace biblioteca
 
                         arestas.Add(novaAresta);
                         adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
                         Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
 
                         numArestas--;
                     }
                 }
             }
+
         }
 
 
@@ -643,6 +645,7 @@ namespace biblioteca
 
 
         }
+
     }
 }
 
@@ -881,12 +884,12 @@ public class GrafoDirecionado
             if (arestaAtual != null)
             {
                 grafoSubjacente.adicionarAresta(
-                    arestaAtual.nome, 
-                    arestaAtual.valor, 
-                    grafoSubjacente.encontrarVertice(arestaAtual.origem.nome), 
+                    arestaAtual.nome,
+                    arestaAtual.valor,
+                    grafoSubjacente.encontrarVertice(arestaAtual.origem.nome),
                     grafoSubjacente.encontrarVertice(arestaAtual.destino.nome)
-                ); 
-            } 
+                );
+            }
 
             verticeAtual = verticeAtual.anterior;  // Avança para o próximo vértice
         }
@@ -925,7 +928,7 @@ public class GrafoDirecionado
         {
             BEMGrafoOriginal = true;
         }
-        else 
+        else
         {
             BEMGrafoOriginal = false;
         }
@@ -965,7 +968,7 @@ public class GrafoDirecionado
         {
             BEMGrafoOriginal = true;
         }
-        else 
+        else
         {
             BEMGrafoOriginal = false;
         }
@@ -997,7 +1000,7 @@ public class GrafoDirecionado
         visitados.Add(vertice);
 
         Aresta arestaAtual = vertice.arestas;
-       
+
         while (arestaAtual != null)
         {
             buscaEmProfundidade(arestaAtual.destino, visitados);
@@ -1008,7 +1011,7 @@ public class GrafoDirecionado
     public GrafoDirecionado InverterGrafo()
     {
         GrafoDirecionado grafoInvertido = new GrafoDirecionado();
-    
+
         // Primeiro, adiciona todos os vértices no grafo invertido
         Vertice verticeAtual = ultimoVerticeAdicionado;
         while (verticeAtual != null)
@@ -1027,9 +1030,9 @@ public class GrafoDirecionado
                 // Para cada aresta no grafo original, adicionar a aresta invertida no grafo invertido
                 // A aresta original é de origem -> destino, então a aresta invertida será de destino -> origem
                 grafoInvertido.adicionarAresta(
-                    arestaAtual.nome, 
-                    arestaAtual.valor, 
-                    grafoInvertido.encontrarVertice(arestaAtual.destino.nome), 
+                    arestaAtual.nome,
+                    arestaAtual.valor,
+                    grafoInvertido.encontrarVertice(arestaAtual.destino.nome),
                     grafoInvertido.encontrarVertice(arestaAtual.origem.nome)
                 );
 
@@ -1143,38 +1146,57 @@ public class GrafoDirecionado
 
 
     //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
-    public void gerarGrafodirec(
-        int numVertices,
-        List<(string nome, string valor)> vertices,
-        List<(string nome, string valor, string origem, string destino)> arestas
-    )
-    {
-        if (numVertices >= 2)
+    public void gerarGrafo(int numVertices, int numArestas)
         {
-            for (int i = 0; i < vertices.Count && i < numVertices; i++)
+            if (numArestas >= numVertices)
             {
-                var (nome, valor) = vertices[i];
-                adicionarVertice(nome, valor);
-            }
-        }
-
-        //Adiciona uma aresta indo da origem para o destino somente
-        foreach (var (nome, valor, origemNome, destinoNome) in arestas)
-        {
-            var origem = encontrarVertice(origemNome);
-            var destino = encontrarVertice(destinoNome);
-
-            if (origem != null && destino != null)
-            {
-                adicionarAresta(nome, valor, origem, destino);
+                Console.WriteLine("Grafo impossível de ser criado");
             }
             else
             {
-                Console.WriteLine($" Origem '{origemNome}' ou destino '{destinoNome}' não encontrado.");
+                Vertice[] vertices = new Vertice[numVertices];
+                for (int i = 0; i < numVertices; i++)
+                {
+                    vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+                    adicionarVertice(vertices[i].nome, vertices[i].valor);
+                }
+
+                Random random = new Random();
+                List<Aresta> arestas = new List<Aresta>();
+
+                while (numArestas > 0)
+                {
+                    int origemIndex = random.Next(0, numVertices);
+                    int destinoIndex = random.Next(0, numVertices);
+
+                    while (origemIndex == destinoIndex)
+                    {
+                        destinoIndex = random.Next(0, numVertices);
+                    }
+
+                    Vertice origem = vertices[origemIndex];
+                    Vertice destino = vertices[destinoIndex];
+
+                    string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+                    string arestaValor = $"ValorAresta{numArestas}";
+
+
+                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+
+                    if (!arestaExistente)
+                    {
+                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+
+                        arestas.Add(novaAresta);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
+
+                        numArestas--;
+                    }
+                }
             }
         }
-    }
-
     //Função de teste para saber se tudo foi adicionado corretamente
     public void imprimirDados()
     {

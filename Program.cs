@@ -117,11 +117,11 @@ class Program
                 Console.WriteLine($"{isGrafoCompleto}");
                 */
 
-        
-                int V = 5;
 
-                (int, int)[] arestasAdj =
-                {
+        int V = 5;
+
+        (int, int)[] arestasAdj =
+        {
                         (0, 1),
                         (0, 2),
                         (1, 2),
@@ -130,45 +130,44 @@ class Program
                 };
 
 
-                MatrizdeAdj.MatrizAdj(V, arestasAdj);
+        MatrizdeAdj.MatrizAdj(V, arestasAdj);
 
 
-                (int, int)[] arestasInc =
-                {
-                      
-                        
+        (int, int)[] arestasInc =
+        {
+
+
                 };
 
 
-                MatrizdeInc.MatrizInc(V, arestasInc);
+        MatrizdeInc.MatrizInc(V, arestasInc);
 
-                GrafoNaoDirecionado grafoNaoDir = new GrafoNaoDirecionado();
-                grafoNaoDir.adicionarVertice("A", "1");
-                grafoNaoDir.adicionarVertice("B", "2");
-                grafoNaoDir.adicionarVertice("C", "3");
-                
-
-
-                grafoNaoDir.CSV();
+        GrafoNaoDirecionado grafoNaoDir = new GrafoNaoDirecionado();
+        grafoNaoDir.adicionarVertice("A", "1");
+        grafoNaoDir.adicionarVertice("B", "2");
+        grafoNaoDir.adicionarVertice("C", "3");
+        grafoNaoDir.adicionarAresta("AB", "1", grafoNaoDir.encontrarVertice("A"), grafoNaoDir.encontrarVertice("B"));
+        grafoNaoDir.adicionarAresta("BC", "1", grafoNaoDir.encontrarVertice("B"), grafoNaoDir.encontrarVertice("C"));
 
 
-                GrafoDirecionado grafoDir = new GrafoDirecionado();
-                grafoDir.adicionarVertice("A", "1");
-                grafoDir.adicionarVertice("B", "2");
-                grafoDir.adicionarVertice("C", "3");
-                grafoDir.adicionarAresta("AB", "1", grafoDir.encontrarVertice("A"), grafoDir.encontrarVertice("B"));
-                grafoDir.adicionarAresta("BC", "1", grafoDir.encontrarVertice("B"), grafoDir.encontrarVertice("C"));
+        GrafoDirecionado grafoDir = new GrafoDirecionado();
+        grafoDir.adicionarVertice("A", "1");
+        grafoDir.adicionarVertice("B", "2");
+        grafoDir.adicionarVertice("C", "3");
+        grafoDir.adicionarAresta("AB", "1", grafoDir.encontrarVertice("A"), grafoDir.encontrarVertice("B"));
+        grafoDir.adicionarAresta("BC", "1", grafoDir.encontrarVertice("B"), grafoDir.encontrarVertice("C"));
 
 
-                grafoDir.CSV();
 
-        int numVertices = 59;
-        int numArestas = 40;
+        int numVertices = 10;
+        int numArestas = 9;
 
 
         GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
 
         grafo.gerarGrafo(numVertices, numArestas);
+
+        grafo.CSV();
 
         //testeConexao();
     }
@@ -217,7 +216,8 @@ class Program
         Console.WriteLine("");
     }
 
-    public static void testeConexao() {
+    public static void testeConexao()
+    {
         GrafoDirecionado grafo2 = new GrafoDirecionado();
         Vertice v3 = new Vertice("C", "3");
         Vertice v4 = new Vertice("D", "4");
