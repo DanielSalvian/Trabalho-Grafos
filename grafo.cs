@@ -499,11 +499,12 @@ namespace biblioteca
 
         /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
         cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
-        public void gerarGrafo(int numVertices, int numArestas)
+        public List<Aresta> gerarGrafo(int numVertices, int numArestas)
         {
             if (numArestas >= numVertices)
             {
                 Console.WriteLine("Grafo impossível de ser criado");
+                return new List<Aresta>();
             }
             else
             {
@@ -522,6 +523,7 @@ namespace biblioteca
                     int origemIndex = random.Next(0, numVertices);
                     int destinoIndex = random.Next(0, numVertices);
 
+
                     while (origemIndex == destinoIndex)
                     {
                         destinoIndex = random.Next(0, numVertices);
@@ -534,24 +536,27 @@ namespace biblioteca
                     string arestaValor = $"ValorAresta{numArestas}";
 
 
-                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+                    bool arestaExistente = arestas.Any(a =>
+                        (a.origem == origem && a.destino == destino) ||
+                        (a.origem == destino && a.destino == origem));
 
                     if (!arestaExistente)
                     {
                         Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
 
-
                         arestas.Add(novaAresta);
                         adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
                         adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
-                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
+
 
                         numArestas--;
                     }
                 }
-            }
 
+                return arestas;
+            }
         }
+
 
 
         //Funções de teste para saber se tudo foi adicionado corretamente
@@ -605,6 +610,40 @@ namespace biblioteca
             }
         }
 
+        // Gera CSV com o grafo não direc e a lista retornada de arestas aleatória (foi o jeito que eu arrumei pra fazer)
+        public void CSV(List<Aresta> arestasaleat)
+        {
+            string caminhoVertices = "grafos_nao_direcionadovertice.csv";
+            string caminhoArestas = "grafos_nao_direcionadoaresta.csv";
+
+            using (StreamWriter Vertices = new StreamWriter(caminhoVertices))
+            {
+
+
+                Vertices.WriteLine("id,value");
+
+                Vertice verticeAtual = ultimoVerticeAdicionado;
+                while (verticeAtual != null)
+                {
+                    Vertices.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                    verticeAtual = verticeAtual.anterior;
+                }
+
+            }
+
+            using (StreamWriter Arestas = new StreamWriter(caminhoArestas))
+            {
+                Arestas.WriteLine("source,target,weight");
+
+                foreach (var aresta in arestasaleat)
+                {
+                    Arestas.WriteLine($"{aresta.origem.nome},{aresta.destino.nome},{aresta.valor}");
+                }
+
+            }
+        }
+
+        //Gera CSV com o grafo não direc e os valores colocados pelo usuário
         public void CSV()
         {
             string caminhoVertices = "grafos_nao_direcionadovertice.csv";
@@ -1146,11 +1185,12 @@ public class GrafoDirecionado
 
 
     //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
-    public void gerarGrafo(int numVertices, int numArestas)
+     public List<Aresta> gerarGrafo(int numVertices, int numArestas)
         {
             if (numArestas >= numVertices)
             {
                 Console.WriteLine("Grafo impossível de ser criado");
+                return new List<Aresta>();
             }
             else
             {
@@ -1169,6 +1209,7 @@ public class GrafoDirecionado
                     int origemIndex = random.Next(0, numVertices);
                     int destinoIndex = random.Next(0, numVertices);
 
+
                     while (origemIndex == destinoIndex)
                     {
                         destinoIndex = random.Next(0, numVertices);
@@ -1181,20 +1222,23 @@ public class GrafoDirecionado
                     string arestaValor = $"ValorAresta{numArestas}";
 
 
-                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+                    bool arestaExistente = arestas.Any(a =>
+                        (a.origem == origem && a.destino == destino) ||
+                        (a.origem == destino && a.destino == origem));
 
                     if (!arestaExistente)
                     {
                         Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
 
-
                         arestas.Add(novaAresta);
                         adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
-                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
+
 
                         numArestas--;
                     }
                 }
+
+                return arestas;
             }
         }
     //Função de teste para saber se tudo foi adicionado corretamente
@@ -1234,6 +1278,40 @@ public class GrafoDirecionado
         }
     }
 
+    // Gera CSV com o grafo não direc e a lista retornada de arestas aleatória (foi o jeito que eu arrumei pra fazer)
+    public void CSV(List<Aresta> arestasaleat)
+    {
+        string caminhoVertices = "grafos_direcionadovertice.csv";
+        string caminhoArestas = "grafos_direcionadoaresta.csv";
+
+        using (StreamWriter Vertices = new StreamWriter(caminhoVertices))
+        {
+
+
+            Vertices.WriteLine("id,value");
+
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+            while (verticeAtual != null)
+            {
+                Vertices.WriteLine($"{verticeAtual.nome},{verticeAtual.valor}");
+                verticeAtual = verticeAtual.anterior;
+            }
+
+        }
+
+        using (StreamWriter Arestas = new StreamWriter(caminhoArestas))
+        {
+            Arestas.WriteLine("source,target,weight");
+
+            foreach (var aresta in arestasaleat)
+            {
+                Arestas.WriteLine($"{aresta.origem.nome},{aresta.destino.nome},{aresta.valor}");
+            }
+
+        }
+    }
+
+    //Gera CSV com o grafo não direc e os valores colocados pelo usuário
     public void CSV()
     {
         string caminhoVertices = "grafos_direcionadovertice.csv";

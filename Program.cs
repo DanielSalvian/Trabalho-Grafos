@@ -153,7 +153,7 @@ class Program
         GrafoDirecionado grafoDir = new GrafoDirecionado();
         grafoDir.adicionarVertice("A", "1");
         grafoDir.adicionarVertice("B", "2");
-        grafoDir.adicionarVertice("C", "3");
+        grafoDir.adicionarVertice("C", "4");
         grafoDir.adicionarAresta("AB", "1", grafoDir.encontrarVertice("A"), grafoDir.encontrarVertice("B"));
         grafoDir.adicionarAresta("BC", "1", grafoDir.encontrarVertice("B"), grafoDir.encontrarVertice("C"));
 
@@ -162,12 +162,25 @@ class Program
         int numVertices = 10;
         int numArestas = 9;
 
+//teste direc com grafo aleatorio e não aleatorio
+        GrafoDirecionado grafo = new GrafoDirecionado();
 
-        GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
+        List<Aresta> arestasaleat = new List<Aresta>();
 
-        grafo.gerarGrafo(numVertices, numArestas);
+        arestasaleat = grafo.gerarGrafo(numVertices, numArestas);
 
-        grafo.CSV();
+        grafo.CSV(arestasaleat);
+
+//teste nao direc com grafo aleatorio e não aleatorio
+         GrafoNaoDirecionado grafon = new GrafoNaoDirecionado();
+
+        List<Aresta> arestasaleats = new List<Aresta>();
+
+        arestasaleats = grafo.gerarGrafo(numVertices, numArestas);
+
+        grafon.CSV(arestasaleats);
+
+
 
         //testeConexao();
     }

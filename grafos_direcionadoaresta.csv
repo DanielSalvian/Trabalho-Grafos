@@ -1,3 +1,10 @@
 source,target,weight
-B,C,1
-A,B,1
+Vertice2,Vertice5,ValorAresta9
+Vertice2,Vertice8,ValorAresta8
+Vertice0,Vertice8,ValorAresta7
+Vertice8,Vertice9,ValorAresta6
+Vertice8,Vertice5,ValorAresta5
+Vertice3,Vertice2,ValorAresta4
+Vertice7,Vertice3,ValorAresta3
+Vertice4,Vertice9,ValorAresta2
+Vertice1,Vertice9,ValorAresta1
