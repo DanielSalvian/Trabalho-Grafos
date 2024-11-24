@@ -502,38 +502,58 @@ namespace biblioteca
 
         /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
         cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
-        public void gerarGrafo(
-            int numVertices,
-            List<(string nome, string valor)> vertices,
-            List<(string nome, string valor, string origem, string destino)> arestas
-        )
+        public void gerarGrafo(int numVertices, int numArestas)
         {
-            if (numVertices >= 2)
+            if (numArestas >= numVertices)
             {
-                for (int i = 0; i < vertices.Count && i < numVertices; i++)
-                {
-                    var (nome, valor) = vertices[i];
-                    adicionarVertice(nome, valor);
-                }
+                Console.WriteLine("Grafo impossível de ser criado");
             }
-
-            //Adiciona uma aresta indo da origem para o destino, e uma indo do destino para origem (fazendo assim um grafo não direcionado)
-            foreach (var (nome, valor, origemNome, destinoNome) in arestas)
+            else
             {
-                var origem = encontrarVertice(origemNome);
-                var destino = encontrarVertice(destinoNome);
-
-                if (origem != null && destino != null)
+                Vertice[] vertices = new Vertice[numVertices];
+                for (int i = 0; i < numVertices; i++)
                 {
-                    adicionarAresta(nome, valor, origem, destino);
-                    adicionarAresta(nome, valor, destino, origem);
+                    vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+                    adicionarVertice(vertices[i].nome, vertices[i].valor);
                 }
-                else
+
+                Random random = new Random();
+                List<Aresta> arestas = new List<Aresta>();
+
+                while (numArestas > 0)
                 {
-                    Console.WriteLine($" Origem '{origemNome}' ou destino '{destinoNome}' não encontrado.");
+                    int origemIndex = random.Next(0, numVertices);
+                    int destinoIndex = random.Next(0, numVertices);
+
+                    while (origemIndex == destinoIndex)
+                    {
+                        destinoIndex = random.Next(0, numVertices);
+                    }
+
+                    Vertice origem = vertices[origemIndex];
+                    Vertice destino = vertices[destinoIndex];
+
+                    string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+                    string arestaValor = $"ValorAresta{numArestas}";
+
+
+                    bool arestaExistente = arestas.Any(a => a.nome == arestaNome);
+
+                    if (!arestaExistente)
+                    {
+                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+
+                        arestas.Add(novaAresta);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+                        Console.WriteLine($"Aresta criada: {novaAresta.nome} - Aresta valor: {novaAresta.valor} Origem: {origem.nome} -> Destino: {destino.nome}");
+
+                        numArestas--;
+                    }
                 }
             }
         }
+
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()
@@ -847,26 +867,31 @@ public class GrafoDirecionado
     {
         GrafoNaoDirecionado grafoSubjacente = new GrafoNaoDirecionado();
 
+        // Primeiro, adiciona todos os vértices
         Vertice verticeAtual = ultimoVerticeAdicionado;
         while (verticeAtual != null)
         {
             grafoSubjacente.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+            verticeAtual = verticeAtual.anterior;
+        }
 
+        verticeAtual = ultimoVerticeAdicionado;  // Reinicia a iteração dos vértices
+
+        while (verticeAtual != null)
+        {
             Aresta arestaAtual = verticeAtual.arestas;
-            while (arestaAtual != null)
+
+            if (arestaAtual != null)
             {
-                // Para cada aresta no grafo direcionado, adicionar a aresta bidirecional no grafo não direcionado
-                Vertice origem = arestaAtual.origem;
-                Vertice destino = arestaAtual.destino;
-
-                grafoSubjacente.adicionarAresta(arestaAtual.nome, arestaAtual.valor, origem, destino);
-
-                grafoSubjacente.adicionarAresta(arestaAtual.nome, arestaAtual.valor, destino, origem);
-
-                arestaAtual = arestaAtual.proxima;
+                grafoSubjacente.adicionarAresta(
+                    arestaAtual.nome,
+                    arestaAtual.valor,
+                    grafoSubjacente.encontrarVertice(arestaAtual.origem.nome),
+                    grafoSubjacente.encontrarVertice(arestaAtual.destino.nome)
+                );
             }
 
-            verticeAtual = verticeAtual.anterior;
+            verticeAtual = verticeAtual.anterior;  // Avança para o próximo vértice
         }
 
         return grafoSubjacente;
@@ -880,6 +905,7 @@ public class GrafoDirecionado
         }
 
         GrafoNaoDirecionado grafoSubjacente = TransformarEmSubjacente();
+        grafoSubjacente.imprimirDados();
 
         return grafoSubjacente.simpconexo();
     }
@@ -892,25 +918,36 @@ public class GrafoDirecionado
         }
 
         Vertice verticeInicial = ultimoVerticeAdicionado;
+        bool BEMGrafoOriginal;
+        bool BEMGrafoInvertido;
 
         List<Vertice> visitaOrigem = new List<Vertice>();
         buscaEmProfundidade(verticeInicial, visitaOrigem);
 
-        if (visitaOrigem.Count != numVertices)
+        if (visitaOrigem.Count == numVertices)
         {
-            return false; // Se nem todos os vértices são acessíveis, não é semifortemente conexo
+            BEMGrafoOriginal = true;
+        }
+        else
+        {
+            BEMGrafoOriginal = false;
         }
 
         GrafoDirecionado grafoInvertido = InverterGrafo();
+        grafoInvertido.imprimirDados();
         List<Vertice> visitaDestino = new List<Vertice>();
-        grafoInvertido.buscaEmProfundidade(verticeInicial, visitaDestino);
+        grafoInvertido.buscaEmProfundidade(grafoInvertido.encontrarVertice(verticeInicial.nome), visitaDestino);
 
-        if (visitaDestino.Count != numVertices)
+        if (visitaDestino.Count == numVertices)
         {
-            return false; // Se nem todos os vértices são acessíveis no grafo invertido, não é semifortemente conexo
+            BEMGrafoInvertido = true;
+        }
+        else
+        {
+            BEMGrafoInvertido = false;
         }
 
-        return true; // Se ambos os testes forem bem-sucedidos, o grafo é semifortemente conexo
+        return BEMGrafoOriginal || BEMGrafoInvertido; // Se uma das buscas em profundidade forem bem sucedidas, o grafo é semifortemente conexo
     }
 
     public bool fortementeConexo()
@@ -921,22 +958,36 @@ public class GrafoDirecionado
         }
 
         Vertice verticeInicial = ultimoVerticeAdicionado;
+        bool BEMGrafoOriginal;
+        bool BEMGrafoInvertido;
 
         List<Vertice> visitaOrigem = new List<Vertice>();
         buscaEmProfundidade(verticeInicial, visitaOrigem);
 
-        if (visitaOrigem.Count != numVertices)
+        if (visitaOrigem.Count == numVertices)
         {
-            return false;
+            BEMGrafoOriginal = true;
+        }
+        else
+        {
+            BEMGrafoOriginal = false;
         }
 
         GrafoDirecionado grafoInvertido = InverterGrafo();
-
+        grafoInvertido.imprimirDados();
         List<Vertice> visitaDestino = new List<Vertice>();
-        grafoInvertido.buscaEmProfundidade(verticeInicial, visitaDestino);
+        grafoInvertido.buscaEmProfundidade(grafoInvertido.encontrarVertice(verticeInicial.nome), visitaDestino);
 
-        // Se todos os vértices foram visitados no grafo original e no grafo invertido, o grafo é fortemente conexo
-        return visitaDestino.Count == numVertices;
+        if (visitaDestino.Count == numVertices)
+        {
+            BEMGrafoInvertido = true;
+        }
+        else
+        {
+            BEMGrafoInvertido = false;
+        }
+
+        return BEMGrafoOriginal && BEMGrafoInvertido; // Se ambas as buscas em profundidade forem bem sucedidas, o grafo é fortemente conexo
     }
 
     private void buscaEmProfundidade(Vertice vertice, List<Vertice> visitados)
@@ -961,17 +1012,29 @@ public class GrafoDirecionado
     {
         GrafoDirecionado grafoInvertido = new GrafoDirecionado();
 
+        // Primeiro, adiciona todos os vértices no grafo invertido
         Vertice verticeAtual = ultimoVerticeAdicionado;
         while (verticeAtual != null)
         {
             grafoInvertido.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+            verticeAtual = verticeAtual.anterior;
+        }
 
+        // Agora, adiciona as arestas invertidas
+        verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
+        {
             Aresta arestaAtual = verticeAtual.arestas;
             while (arestaAtual != null)
             {
                 // Para cada aresta no grafo original, adicionar a aresta invertida no grafo invertido
                 // A aresta original é de origem -> destino, então a aresta invertida será de destino -> origem
-                grafoInvertido.adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.destino, arestaAtual.origem);
+                grafoInvertido.adicionarAresta(
+                    arestaAtual.nome,
+                    arestaAtual.valor,
+                    grafoInvertido.encontrarVertice(arestaAtual.destino.nome),
+                    grafoInvertido.encontrarVertice(arestaAtual.origem.nome)
+                );
 
                 arestaAtual = arestaAtual.proxima;
             }
@@ -1226,7 +1289,115 @@ public class GrafoDirecionado
         stack.Add(vertice); // Adiciona o vértice à pilha após processar todas as arestas
     }
 
+    public int kosaraju()
+    {
+        //adicionando os vertices a lista
+        List<Vertice> vertices = new List<Vertice>();
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
+        {
+            vertices.Add(verticeAtual);
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        //visitando vertices
+        List<Vertice> visitados = new List<Vertice>();
+        List<Vertice> stack = new List<Vertice>();
+
+        verticeAtual = vertices.First();
+        Aresta arestaAtual;
+        while (verticeAtual != null)
+        {
+            if (!visitados.Contains(verticeAtual))
+            {
+                pesquisaEmProfundidadeKosaraju(verticeAtual, visitados, stack);
+            }
+
+            arestaAtual = verticeAtual.arestas;
+            while (arestaAtual != null)
+            {
+                if (!stack.Contains(arestaAtual.destino))
+                {
+                    pesquisaEmProfundidadeKosaraju(arestaAtual.destino, visitados, stack);
+                }
+                arestaAtual = arestaAtual.proxima;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        //invertendo grafo
+        GrafoDirecionado grafoInvertido = InverterGrafo();
+
+        visitados = new List<Vertice>();
+        //Simulando o comportamento de uma pilha em uma lista porque nao consegui substituir a lista por pilha no resto da função
+
+        List<Vertice> aux = new List<Vertice>();
+        foreach (var vertice in stack)
+        {
+            aux.Add(grafoInvertido.encontrarVertice(vertice.nome));
+        }
+        stack = aux;
+
+        verticeAtual = stack.Last();
+        //stack.RemoveAt(stack.Count() - 1);
+        int componentes = 0;
+        while (stack.Count() > 0)
+        {
+            foreach (var vertice in stack)
+            {
+                Console.Write(vertice.nome + "->");
+            }
+            Console.WriteLine();
 
 
+            if (!visitados.Contains(verticeAtual))
+            {
+                grafoInvertido.pesquisaEmProfundidadeKosarajuInvertido(grafoInvertido, verticeAtual, visitados, stack);
+                componentes++;
+                Console.WriteLine("//////////");
+            }
+            verticeAtual = stack.Last();
+            stack.RemoveAt(stack.Count() - 1);
+
+        }
+componentes--;
+        Console.WriteLine("componentes: " + componentes);
+        return componentes;
+
+    }
+
+    private void pesquisaEmProfundidadeKosaraju(Vertice vertice, List<Vertice> visitados, List<Vertice> stack)
+    {
+        visitados.Add(vertice);
+        Aresta arestaAtual = vertice.arestas;
+
+        while (arestaAtual != null)
+        {
+            if (!visitados.Contains(arestaAtual.destino))
+            {
+                pesquisaEmProfundidadeKosaraju(arestaAtual.destino, visitados, stack);
+            }
+            arestaAtual = arestaAtual.proxima;
+        }
+
+        stack.Add(vertice); // Adiciona o vértice à pilha após processar todas as arestas
+    }
+
+    private void pesquisaEmProfundidadeKosarajuInvertido(GrafoDirecionado grafoInvertido, Vertice vertice, List<Vertice> visitados, List<Vertice> stack)
+    {
+        visitados.Add(vertice);
+        Aresta arestaAtual = vertice.arestas;
+
+        while (arestaAtual != null)
+        {
+            if (!visitados.Contains(arestaAtual.destino))
+            {
+                grafoInvertido.pesquisaEmProfundidadeKosarajuInvertido(grafoInvertido, arestaAtual.destino, visitados, stack);
+            }
+            arestaAtual = arestaAtual.proxima;
+        }
+
+    }
 }
 
