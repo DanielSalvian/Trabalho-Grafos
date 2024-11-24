@@ -495,9 +495,6 @@ namespace biblioteca
             return true;
         }
 
-
-
-
         //Refazer o de ponte
 
         /* É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando
@@ -559,8 +556,6 @@ namespace biblioteca
                 return arestas;
             }
         }
-
-
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()
@@ -688,6 +683,44 @@ namespace biblioteca
 
         }
 
+        public GrafoDirecionado converterEmDirecionado()
+        {
+            GrafoDirecionado grafoDirecionado = new GrafoDirecionado();
+
+            //Adicionando vertice
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+            while (verticeAtual != null)
+            {
+                grafoDirecionado.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+                verticeAtual = verticeAtual.anterior;//anterior?
+            }
+
+            //Adicionando aresta
+            verticeAtual = ultimoVerticeAdicionado;
+            Aresta arestaAtual;
+            while (verticeAtual != null)
+            {
+                arestaAtual = verticeAtual.arestas;
+
+                while (arestaAtual != null)
+                {
+                    grafoDirecionado.adicionarAresta(arestaAtual.nome, arestaAtual.valor, grafoDirecionado.encontrarVertice(arestaAtual.origem.nome), grafoDirecionado.encontrarVertice(arestaAtual.destino.nome));
+                    grafoDirecionado.adicionarAresta(arestaAtual.nome + "Invertida", arestaAtual.valor, grafoDirecionado.encontrarVertice(arestaAtual.destino.nome), grafoDirecionado.encontrarVertice(arestaAtual.origem.nome));
+                    arestaAtual = arestaAtual.anterior;//ou proximo?
+                }
+
+                verticeAtual = verticeAtual.anterior;
+            }
+
+
+            return grafoDirecionado;
+        }
+
+        public int kosaraju()
+        {
+            GrafoDirecionado grafoDirecionado = converterEmDirecionado();
+            return grafoDirecionado.kosaraju();
+        }
     }
 }
 
@@ -1188,62 +1221,62 @@ public class GrafoDirecionado
 
 
     //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
-     public List<Aresta> gerarGrafo(int numVertices, int numArestas)
+    public List<Aresta> gerarGrafo(int numVertices, int numArestas)
+    {
+        if (numArestas >= numVertices)
         {
-            if (numArestas >= numVertices)
-            {
-                Console.WriteLine("Grafo impossível de ser criado");
-                return new List<Aresta>();
-            }
-            else
-            {
-                Vertice[] vertices = new Vertice[numVertices];
-                for (int i = 0; i < numVertices; i++)
-                {
-                    vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
-                    adicionarVertice(vertices[i].nome, vertices[i].valor);
-                }
-
-                Random random = new Random();
-                List<Aresta> arestas = new List<Aresta>();
-
-                while (numArestas > 0)
-                {
-                    int origemIndex = random.Next(0, numVertices);
-                    int destinoIndex = random.Next(0, numVertices);
-
-
-                    while (origemIndex == destinoIndex)
-                    {
-                        destinoIndex = random.Next(0, numVertices);
-                    }
-
-                    Vertice origem = vertices[origemIndex];
-                    Vertice destino = vertices[destinoIndex];
-
-                    string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
-                    string arestaValor = $"ValorAresta{numArestas}";
-
-
-                    bool arestaExistente = arestas.Any(a =>
-                        (a.origem == origem && a.destino == destino) ||
-                        (a.origem == destino && a.destino == origem));
-
-                    if (!arestaExistente)
-                    {
-                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
-
-                        arestas.Add(novaAresta);
-                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
-
-
-                        numArestas--;
-                    }
-                }
-
-                return arestas;
-            }
+            Console.WriteLine("Grafo impossível de ser criado");
+            return new List<Aresta>();
         }
+        else
+        {
+            Vertice[] vertices = new Vertice[numVertices];
+            for (int i = 0; i < numVertices; i++)
+            {
+                vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+                adicionarVertice(vertices[i].nome, vertices[i].valor);
+            }
+
+            Random random = new Random();
+            List<Aresta> arestas = new List<Aresta>();
+
+            while (numArestas > 0)
+            {
+                int origemIndex = random.Next(0, numVertices);
+                int destinoIndex = random.Next(0, numVertices);
+
+
+                while (origemIndex == destinoIndex)
+                {
+                    destinoIndex = random.Next(0, numVertices);
+                }
+
+                Vertice origem = vertices[origemIndex];
+                Vertice destino = vertices[destinoIndex];
+
+                string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+                string arestaValor = $"ValorAresta{numArestas}";
+
+
+                bool arestaExistente = arestas.Any(a =>
+                    (a.origem == origem && a.destino == destino) ||
+                    (a.origem == destino && a.destino == origem));
+
+                if (!arestaExistente)
+                {
+                    Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+                    arestas.Add(novaAresta);
+                    adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
+
+
+                    numArestas--;
+                }
+            }
+
+            return arestas;
+        }
+    }
     //Função de teste para saber se tudo foi adicionado corretamente
     public void imprimirDados()
     {
@@ -1356,39 +1389,6 @@ public class GrafoDirecionado
     }
 
 
-    public List<Vertice> PrimeiraEtapaKosaraju(List<Vertice> grafo)
-    {
-        List<Vertice> visitados = new List<Vertice>();
-        List<Vertice> stack = new List<Vertice>();
-
-        foreach (var vertice in grafo)
-        {
-            if (!visitados.Contains(vertice))
-            {
-                PreencherPilhaDFS(vertice, visitados, stack);
-            }
-        }
-
-        return stack;
-    }
-
-    private void PreencherPilhaDFS(Vertice vertice, List<Vertice> visitados, List<Vertice> stack)
-    {
-        visitados.Add(vertice);
-        Aresta arestaAtual = vertice.arestas;
-
-        while (arestaAtual != null)
-        {
-            if (!visitados.Contains(arestaAtual.destino))
-            {
-                PreencherPilhaDFS(arestaAtual.destino, visitados, stack);
-            }
-            arestaAtual = arestaAtual.proxima;
-        }
-
-        stack.Add(vertice); // Adiciona o vértice à pilha após processar todas as arestas
-    }
-
     public int kosaraju()
     {
         //adicionando os vertices a lista
@@ -1444,25 +1444,17 @@ public class GrafoDirecionado
         int componentes = 0;
         while (stack.Count() > 0)
         {
-            foreach (var vertice in stack)
-            {
-                Console.Write(vertice.nome + "->");
-            }
-            Console.WriteLine();
-
 
             if (!visitados.Contains(verticeAtual))
             {
                 grafoInvertido.pesquisaEmProfundidadeKosarajuInvertido(grafoInvertido, verticeAtual, visitados, stack);
                 componentes++;
-                Console.WriteLine("//////////");
             }
             verticeAtual = stack.Last();
             stack.RemoveAt(stack.Count() - 1);
 
         }
-componentes--;
-        Console.WriteLine("componentes: " + componentes);
+        componentes--;
         return componentes;
 
     }

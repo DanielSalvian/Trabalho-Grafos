@@ -107,21 +107,36 @@ class Program
         gr.adicionarVertice("A", "valorTeste");
         gr.adicionarVertice("B", "valorTeste");
         gr.adicionarVertice("C", "valorTeste");
-        gr.adicionarVertice("D", "valorTeste");
+        //gr.adicionarVertice("D", "valorTeste");
 
         gr.adicionarAresta("AB", "valorTeste", gr.encontrarVertice("A"), gr.encontrarVertice("B"));
         gr.adicionarAresta("BC", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("C"));
 
         Console.Clear();
 
-        gr.kosaraju();
+        Console.WriteLine("Componentes: " + gr.kosaraju());
 
 
     }
 
+    static void T_kosaraju_ND()
+    {
+        GrafoNaoDirecionado gr = new GrafoNaoDirecionado();
+
+        gr.adicionarVertice("A", "valorTeste");
+        gr.adicionarVertice("B", "valorTeste");
+        gr.adicionarVertice("C", "valorTeste");
+
+        gr.adicionarAresta("AB", "valorTeste", gr.encontrarVertice("A"), gr.encontrarVertice("B"));
+        gr.adicionarAresta("BC", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("C"));
+
+        Console.Clear();
+        Console.WriteLine("Componentes: " + gr.kosaraju());
+
+    }
     static void Main(string[] args)
     {
-        T_kosaraju_D();
+        T_kosaraju_ND();
     }
 
 

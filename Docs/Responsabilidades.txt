@@ -23,3 +23,5 @@ Daniel - 19/11 - Correção na criação do arquivo .CSV para grafo direcionado 
 Yago - 20/11 - Lista de adjacência (Não direcionado) corrigida e lista de adjacência do não direcionado feita.
 
 Gustavo - 20/11 - Criação da matriz de adjacência e de incidência em grafos direcionados. Ainda em desenvolvimento.
+
+Yago 24/11 - Finalizei kosaraju no grafo direcionado e no direcionado, além da função para converter o não direcionado em direcionado
