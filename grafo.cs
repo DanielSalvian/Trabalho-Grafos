@@ -721,6 +721,202 @@ namespace biblioteca
             GrafoDirecionado grafoDirecionado = converterEmDirecionado();
             return grafoDirecionado.kosaraju();
         }
+
+        public List<Vertice> obterTodosOsVertices()
+        {
+            List<Vertice> vertices = new List<Vertice>();
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+            while (verticeAtual != null)
+            {
+                vertices.Add(verticeAtual);
+                verticeAtual = verticeAtual.anterior;
+            }
+            return vertices;
+        }
+
+       public List<(Vertice origem, Vertice destino)> encontrarPontes()
+        {
+            // Lista para armazenar as pontes encontradas
+            List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
+
+            // Auxiliares para a busca em profundidade
+            Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
+            Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
+            Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
+            Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
+
+            var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
+
+            foreach (var vertice in verticesOrdenados)
+            {
+                visitado[vertice] = false;
+                tempoDeDescoberta[vertice] = -1;
+                menorTempoDeDescoberta[vertice] = -1;
+                pai[vertice] = null;
+            }
+
+            int tempo = 0;
+
+            // Itera por todos os vértices para garantir que todos os componentes sejam processados
+            foreach (var vertice in verticesOrdenados)
+            {
+                if (!visitado[vertice])
+                {
+                    buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+                }
+            }
+
+            Console.WriteLine("Pontes encontradas:");
+            foreach (var ponte in pontes)
+            {
+                Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
+            }
+
+            return pontes;
+        }
+
+        private void buscaEmProfundidadeParaPontes(Vertice verticeAtual, Dictionary<Vertice, bool> visitado, 
+            Dictionary<Vertice, int> tempoDeDescoberta, Dictionary<Vertice, int> menorTempoDeDescoberta, 
+            Dictionary<Vertice, Vertice> pai, ref int tempo, List<(Vertice origem, Vertice destino)> pontes)
+        {
+            // Marca o vértice como visitado e define o tempo de descoberta
+            visitado[verticeAtual] = true;
+            tempoDeDescoberta[verticeAtual] = menorTempoDeDescoberta[verticeAtual] = tempo++;
+    
+            Aresta arestaAtual = verticeAtual.arestas;
+            while (arestaAtual != null)
+            {
+                Vertice vizinho = arestaAtual.destino;
+
+                if (!visitado[vizinho])     
+                {
+                    pai[vizinho] = verticeAtual;
+
+                    // Chama recursivamente a DFS
+                    buscaEmProfundidadeParaPontes(vizinho, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+
+                    // Após a chamada recursiva, atualiza o menor tempo de descoberta
+                    menorTempoDeDescoberta[verticeAtual] = Math.Min(menorTempoDeDescoberta[verticeAtual], menorTempoDeDescoberta[vizinho]);
+
+                    // Se o tempo de descoberta do vizinho é maior que o menor tempo de descoberta do vizinho
+                    // significa que a aresta (verticeAtual, vizinho) é uma ponte
+                    if (menorTempoDeDescoberta[vizinho] > tempoDeDescoberta[verticeAtual])
+                    {
+                        pontes.Add((verticeAtual, vizinho));
+                    }
+                }
+                // Caso contrário, atualiza o menor tempo de descoberta, mas não realiza a recursão
+                else if (vizinho != pai[verticeAtual]) 
+                {
+                    menorTempoDeDescoberta[verticeAtual] = Math.Min(menorTempoDeDescoberta[verticeAtual], tempoDeDescoberta[vizinho]);
+                }
+
+                arestaAtual = arestaAtual.proxima;
+            }
+        }
+
+        public List<Vertice> encontrarArticulacoes()
+        {
+            List<Vertice> articulacoes = new List<Vertice>();
+
+            // auxiliares para a busca em profundidade
+            Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
+            Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
+            Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
+            Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
+            Dictionary<Vertice, int> filhos = new Dictionary<Vertice, int>(); // Contagem de filhos
+
+            // Inicialização das estruturas auxiliares
+            var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
+            foreach (var vertice in verticesOrdenados)
+            {
+                visitado[vertice] = false;
+                tempoDeDescoberta[vertice] = -1;
+                menorTempoDeDescoberta[vertice] = -1;
+                pai[vertice] = null;
+                filhos[vertice] = 0;
+            }
+
+            // Tempo usado no cálculo do tempo de descoberta
+            int tempo = 0;
+
+            // Itera por todos os vértices ordenados para garantir que todos os componentes sejam processados
+            foreach (var vertice in verticesOrdenados)
+            {
+                if (!visitado[vertice])
+                {
+                    buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+                }
+            }
+
+            Console.WriteLine("Articulações encontradas:");
+            foreach (var articulacao in articulacoes)
+            {
+                Console.WriteLine(articulacao.nome);
+            }
+
+            return articulacoes;
+        }
+
+        private void buscaEmProfundidadeParaArticulacoes
+        (
+            Vertice u,
+            Dictionary<Vertice, bool> visitado,
+            Dictionary<Vertice, int> tempoDeDescoberta,
+            Dictionary<Vertice, int> menorTempoDeDescoberta,
+            Dictionary<Vertice, Vertice> pai,
+            Dictionary<Vertice, int> filhos,
+            ref int tempo,
+            List<Vertice> articulacoes
+        )
+        {
+            // Marca o vértice como visitado
+            visitado[u] = true;
+
+            // Define tempo de descoberta e o menor tempo do vértice atual
+            tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = ++tempo;
+
+            // Percorre todas as arestas do vértice atual
+            Aresta arestaAtual = u.arestas;
+            while (arestaAtual != null)
+            {
+                Vertice v = arestaAtual.destino;
+
+                // Em grafos não direcionados, devemos ignorar a aresta que leva ao pai
+                if (!visitado[v] && v != pai[u])
+                {
+                    // Marca o vértice atual como pai do próximo vértice
+                    pai[v] = u;
+
+                    // Chamada recursiva para o próximo vértice
+                    buscaEmProfundidadeParaArticulacoes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+
+                    // Atualiza o menor tempo de descoberta do vértice atual com base no filho
+                    menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
+
+                    // Se o vértice u for a raiz e tiver mais de um filho, é uma articulação
+                    if (pai[u] == null && filhos[u] > 1)
+                    {
+                        articulacoes.Add(u);
+                    }
+                    // Se o vértice u não for raiz e o menor tempo de descoberta do v for maior ou igual ao tempo de descoberta de u, é uma articulação
+                    else if (pai[u] != null && menorTempoDeDescoberta[v] >= tempoDeDescoberta[u])
+                    {
+                        articulacoes.Add(u);
+                    }
+
+                    // Incrementa a contagem de filhos de u
+                    filhos[u]++;
+                }
+                else if (v != pai[u])
+                {
+                    // Atualiza o menor tempo de descoberta do vértice atual com base em arestas de retorno
+                    menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
+                }
+
+                arestaAtual = arestaAtual.proxima;
+            }
+        }
     }
 }
 
@@ -759,6 +955,20 @@ public class Vertice
         }
 
         novaAresta.destino.adicionarArestaQueChega(novaAresta);
+    }
+
+    public void adicionarArestaAoVerticeGrafoDirecionado(Aresta novaAresta)
+    {
+        if (arestas == null)
+        {
+            arestas = novaAresta;
+        }
+        else
+        {
+            arestas.proxima = novaAresta;
+            novaAresta.anterior = arestas;
+            arestas = novaAresta;
+        }
     }
 
     public void adicionarArestaQueChega(Aresta novaAresta)
@@ -841,42 +1051,64 @@ public class GrafoDirecionado
     {
         Aresta novaAresta = new Aresta(_nome, _valor, _origem, _destino);
 
-        _origem.adicionarArestaAoVertice(novaAresta);
+        _origem.adicionarArestaAoVerticeGrafoDirecionado(novaAresta);
 
         numArestas++;
     }
 
-    public void removerAresta(string _nome, Vertice _origem)
+    public void RemoverAresta(string nomeAresta)
     {
-        if (_origem.arestas != null)
+        // Itera sobre todos os vértices para encontrar a aresta a ser removida
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
         {
-            Aresta alvo = buscarAresta(_nome, _origem);
-
-            if (alvo != null)
+            Aresta arestaAtual = verticeAtual.arestas;
+            while (arestaAtual != null)
             {
-                if (alvo.proxima != null)
+                if (arestaAtual.nome == nomeAresta)
                 {
-                    alvo.proxima.anterior = alvo.anterior;
+                    // Ajusta os ponteiros para remover a aresta da lista de saída do vértice
+                    if (arestaAtual.anterior != null)
+                    {
+                        arestaAtual.anterior.proxima = arestaAtual.proxima;
+                    }
+                    if (arestaAtual.proxima != null)
+                    {
+                        arestaAtual.proxima.anterior = arestaAtual.anterior;
+                    }
+                    if (verticeAtual.arestas == arestaAtual)
+                    {
+                        verticeAtual.arestas = arestaAtual.proxima;
+                    }
+
+                    // Ajusta os ponteiros no vértice de destino para remover a referência à aresta
+                    Vertice destino = arestaAtual.destino;
+                    if (destino.arestasQueChegam == arestaAtual)
+                   {
+                        destino.arestasQueChegam = arestaAtual.anteriorNoDestino;
+                    }
+                    if (arestaAtual.anteriorNoDestino != null)
+                    {
+                        arestaAtual.anteriorNoDestino.proximoNoDestino = arestaAtual.proximoNoDestino;
+                    }
+                    if (arestaAtual.proximoNoDestino != null)
+                    {
+                        arestaAtual.proximoNoDestino.anteriorNoDestino = arestaAtual.anteriorNoDestino;
+                    }
+
+                    numArestas--;
+
+                    return;
                 }
 
-                if (alvo.anterior != null)
-                {
-                    alvo.anterior.proxima = alvo.proxima;
-                }
-
-                if (_origem.arestas == alvo)
-                {
-                    _origem.arestas = alvo.proxima;
-                }
-
-                alvo.anterior = null;
-                alvo.proxima = null;
-
-                numArestas--;
+                arestaAtual = arestaAtual.proxima;
             }
-        }
-    }
 
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        Console.WriteLine($"Aresta com nome '{nomeAresta}' não encontrada.");
+    }
     public Vertice encontrarVertice(string _nome)
     {
         return buscarVertice(_nome, ultimoVerticeAdicionado);
@@ -1489,6 +1721,213 @@ public class GrafoDirecionado
             arestaAtual = arestaAtual.proxima;
         }
 
+    }
+
+    public List<Vertice> obterTodosOsVertices()
+    {
+        List<Vertice> vertices = new List<Vertice>();
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+        while (verticeAtual != null)
+        {
+            vertices.Add(verticeAtual);
+            verticeAtual = verticeAtual.anterior;
+        }
+        return vertices;
+    }
+
+    public List<(Vertice origem, Vertice destino)> encontrarPontes()
+    {
+        // Lista para armazenar as pontes encontradas
+        List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
+
+        // auxiliares para a busca em profundidade
+        Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
+        Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
+
+        var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
+
+        // Inicializar as estruturas
+        foreach (var vertice in verticesOrdenados)
+        {
+            visitado[vertice] = false;
+            tempoDeDescoberta[vertice] = -1;
+            menorTempoDeDescoberta[vertice] = -1;
+            pai[vertice] = null;
+        }
+
+       // Tempo usado no cálculo do tempo de descoberta
+        int tempo = 0;
+
+        // Itera por todos os vértices para garantir que todos os componentes sejam processados
+        foreach (var vertice in verticesOrdenados)
+        {
+            if (!visitado[vertice])
+            {
+                buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+            }
+        }
+
+        Console.WriteLine("Pontes encontradas:");
+        foreach (var ponte in pontes)
+        {
+            Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
+        }
+
+        return pontes;
+    }
+
+    private void buscaEmProfundidadeParaPontes
+    (
+        Vertice u,
+        Dictionary<Vertice, bool> visitado,
+        Dictionary<Vertice, int> tempoDeDescoberta,
+        Dictionary<Vertice, int> menorTempoDeDescoberta,
+        Dictionary<Vertice, Vertice> pai,
+        ref int tempo,
+        List<(Vertice origem, Vertice destino)> pontes
+    )
+    {
+        // Marca o vértice como visitado
+        visitado[u] = true;
+
+        // Define tempo de descoberta e o menor tempo do vértice atual
+        tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = ++tempo;
+
+        // Percorre todas as arestas do vértice atual
+        Aresta arestaAtual = u.arestas;
+        while (arestaAtual != null)
+        {
+            Vertice v = arestaAtual.destino;
+
+            if (!visitado[v])
+            {
+                // Marca o vértice atual como pai do próximo vértice
+                pai[v] = u;
+
+                // Chamada recursiva para o próximo vértice
+                buscaEmProfundidadeParaPontes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+
+                // Atualiza o menor tem,po de descoberta do vértice atual com base no filho
+                menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
+
+                // Se o menor tempo de descoberta do vértice filho for maior que o tempo de descoberta do vértice atual, é uma ponte
+                if (menorTempoDeDescoberta[v] > tempoDeDescoberta[u])
+                {
+                    pontes.Add((u, v));
+                }
+            }
+            else if (v != pai[u])
+            {
+                // Atualiza o menor tempo de descoberta do vértice atual com base em arestas de retorno
+                menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
+            }
+
+            arestaAtual = arestaAtual.proxima;
+        }
+    }
+
+    public List<Vertice> encontrarArticulacoes()
+    {
+        List<Vertice> articulacoes = new List<Vertice>();
+
+        // auxiliares para a busca em profundidade
+        Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
+        Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
+        Dictionary<Vertice, int> filhos = new Dictionary<Vertice, int>(); // Contagem de filhos
+
+        // Inicialização das estruturas auxiliares
+        var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
+        foreach (var vertice in verticesOrdenados)
+        {
+            visitado[vertice] = false;
+            tempoDeDescoberta[vertice] = -1;
+            menorTempoDeDescoberta[vertice] = -1;
+            pai[vertice] = null;
+            filhos[vertice] = 0;
+        }
+
+        // Tempo usado no cálculo do tempo de descoberta
+        int tempo = 0;
+
+        // Itera por todos os vértices ordenados para garantir que todos os componentes sejam processados
+        foreach (var vertice in verticesOrdenados)
+        {
+            if (!visitado[vertice])
+            {
+                buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+            }
+        }
+
+        Console.WriteLine("Articulações encontradas:");
+        foreach (var articulacao in articulacoes)
+        {
+            Console.WriteLine(articulacao.nome);
+        }
+
+        return articulacoes;
+    }
+
+    private void buscaEmProfundidadeParaArticulacoes
+    (
+        Vertice u,
+        Dictionary<Vertice, bool> visitado,
+        Dictionary<Vertice, int> tempoDeDescoberta,
+        Dictionary<Vertice, int> menorTempoDeDescoberta,
+        Dictionary<Vertice, Vertice> pai,
+        Dictionary<Vertice, int> filhos,
+        ref int tempo,
+        List<Vertice> articulacoes
+    )
+    {
+        // Marca o vértice como visitado
+        visitado[u] = true;
+
+        // Define tempo de descoberta e o menor tempo do vértice atual
+        tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = ++tempo;
+
+        // Percorre todas as arestas do vértice atual
+        Aresta arestaAtual = u.arestas;
+        while (arestaAtual != null)
+        {
+            Vertice v = arestaAtual.destino;
+
+            if (!visitado[v])
+            {
+                // Marca o vértice atual como pai do próximo vértice
+                pai[v] = u;
+
+                // Chamada recursiva para o próximo vértice
+                buscaEmProfundidadeParaArticulacoes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+
+                // Atualiza o menor tempo de descoberta do vértice atual com base no filho
+                menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
+
+                // Se o vértice u for a raiz e tiver mais de um filho, é uma articulação
+                if (pai[u] == null && filhos[u] > 1)
+                {
+                    articulacoes.Add(u);
+                }
+                // Se o vértice u não for raiz e o menor tempo de descoberta do v for maior ou igual ao tempo de descoberta de u, é uma articulação
+               else if (pai[u] != null && menorTempoDeDescoberta[v] >= tempoDeDescoberta[u])
+                {
+                    articulacoes.Add(u);
+                }
+
+                // Incrementa a contagem de filhos de u
+                filhos[u]++;
+            }
+            else if (v != pai[u])
+            {
+                // Atualiza o menor tempo de descoberta do vértice atual com base em arestas de retorno
+                menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
+            }
+
+            arestaAtual = arestaAtual.proxima;
+        }
     }
 }
 
