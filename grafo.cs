@@ -1413,16 +1413,6 @@ public class GrafoDirecionado
                 pesquisaEmProfundidadeKosaraju(verticeAtual, visitados, stack);
             }
 
-            arestaAtual = verticeAtual.arestas;
-            while (arestaAtual != null)
-            {
-                if (!stack.Contains(arestaAtual.destino))
-                {
-                    pesquisaEmProfundidadeKosaraju(arestaAtual.destino, visitados, stack);
-                }
-                arestaAtual = arestaAtual.proxima;
-            }
-
             verticeAtual = verticeAtual.anterior;
         }
 
@@ -1440,21 +1430,30 @@ public class GrafoDirecionado
         stack = aux;
 
         verticeAtual = stack.Last();
-        //stack.RemoveAt(stack.Count() - 1);
+        stack.RemoveAt(stack.Count() - 1);
         int componentes = 0;
-        while (stack.Count() > 0)
-        {
 
+        while (stack.Count() >= 0)
+        {
+            Console.WriteLine("---" + verticeAtual.nome);
             if (!visitados.Contains(verticeAtual))
             {
                 grafoInvertido.pesquisaEmProfundidadeKosarajuInvertido(grafoInvertido, verticeAtual, visitados, stack);
                 componentes++;
             }
-            verticeAtual = stack.Last();
-            stack.RemoveAt(stack.Count() - 1);
+
+            if (stack.Count() > 0)
+            {
+                verticeAtual = stack.Last();
+                stack.RemoveAt(stack.Count() - 1);
+            }
+            else{
+                break;
+            }
+
 
         }
-        componentes--;
+        //componentes--;
         return componentes;
 
     }

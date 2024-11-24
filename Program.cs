@@ -71,50 +71,21 @@ class Program
 
     static void T_kosaraju_D()
     {
-        GrafoDirecionado gr = new GrafoDirecionado();
-        /*
-        gr.adicionarVertice("A", "valorTeste");
-        gr.adicionarVertice("B", "valorTeste");
-        gr.adicionarVertice("C", "valorTeste");
-        gr.adicionarVertice("D", "valorTeste");
-        gr.adicionarVertice("E", "valorTeste");
-        gr.adicionarVertice("F", "valorTeste");
-        gr.adicionarVertice("G", "valorTeste");
-        gr.adicionarVertice("H", "valorTeste");
+        GrafoDirecionado grafo = new GrafoDirecionado();
+        grafo.adicionarVertice("B", "2");
+        grafo.adicionarVertice("C", "3");
+        grafo.adicionarVertice("D", "4");
+        grafo.adicionarVertice("A", "1");
 
-        gr.adicionarAresta("AC", "valorTeste", gr.encontrarVertice("A"), gr.encontrarVertice("C"));
-
-        gr.adicionarAresta("CE", "valorTeste", gr.encontrarVertice("C"), gr.encontrarVertice("E"));
-        gr.adicionarAresta("CD", "valorTeste", gr.encontrarVertice("C"), gr.encontrarVertice("D"));
-        gr.adicionarAresta("CB", "valorTeste", gr.encontrarVertice("C"), gr.encontrarVertice("B"));
-
-        gr.adicionarAresta("EG", "valorTeste", gr.encontrarVertice("E"), gr.encontrarVertice("G"));
-        gr.adicionarAresta("EF", "valorTeste", gr.encontrarVertice("E"), gr.encontrarVertice("F"));
-
-        gr.adicionarAresta("GH", "valorTeste", gr.encontrarVertice("G"), gr.encontrarVertice("H"));
-        gr.adicionarAresta("GE", "valorTeste", gr.encontrarVertice("G"), gr.encontrarVertice("E"));
-
-        gr.adicionarAresta("HF", "valorTeste", gr.encontrarVertice("H"), gr.encontrarVertice("F"));
-        gr.adicionarAresta("HG", "valorTeste", gr.encontrarVertice("H"), gr.encontrarVertice("G"));
-
-        gr.adicionarAresta("FD", "valorTeste", gr.encontrarVertice("F"), gr.encontrarVertice("D"));
-
-        gr.adicionarAresta("DF", "valorTeste", gr.encontrarVertice("D"), gr.encontrarVertice("F"));
-
-        gr.adicionarAresta("BD", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("D"));
-        gr.adicionarAresta("BA", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("A"));
-*/
-        gr.adicionarVertice("A", "valorTeste");
-        gr.adicionarVertice("B", "valorTeste");
-        gr.adicionarVertice("C", "valorTeste");
-        //gr.adicionarVertice("D", "valorTeste");
-
-        gr.adicionarAresta("AB", "valorTeste", gr.encontrarVertice("A"), gr.encontrarVertice("B"));
-        gr.adicionarAresta("BC", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("C"));
+        // Adicionando arestas
+        //grafo.adicionarAresta("A1", "10", grafo.encontrarVertice("A"), grafo.encontrarVertice("B"));
+        grafo.adicionarAresta("A2", "20", grafo.encontrarVertice("B"), grafo.encontrarVertice("C"));
+        grafo.adicionarAresta("A3", "30", grafo.encontrarVertice("C"), grafo.encontrarVertice("D"));
+        grafo.adicionarAresta("A4", "40", grafo.encontrarVertice("D"), grafo.encontrarVertice("B"));
 
         Console.Clear();
 
-        Console.WriteLine("Componentes: " + gr.kosaraju());
+        Console.WriteLine("Componentes: " + grafo.kosaraju());
 
 
     }
@@ -136,7 +107,7 @@ class Program
     }
     static void Main(string[] args)
     {
-        T_kosaraju_ND();
+        T_kosaraju_D();
     }
 
 
