@@ -158,9 +158,3 @@ public class MatrizdeAdj_Direcionado
         }
 
     }
-
-    public class ListadeInc
-    {
-
-    }
-

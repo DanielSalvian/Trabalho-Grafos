@@ -75,8 +75,8 @@ class Program
         string aux1, aux2, aux3, aux4;
 
         switch (aux) {
-            case 1:
 
+            case 1:
             Console.WriteLine("===== ADICIONAR ARESTA =====");
             Console.Write("Nome da aresta: ");
             aux1 = Console.ReadLine();
@@ -87,30 +87,57 @@ class Program
             Console.Write("Vértice de destino: ");
             aux4 = Console.ReadLine();
             
-            grafoD.adicionarAresta(aux1, aux2, grafoD.encontrarVertice(aux3), grafoD.encontrarVertice(aux4)); 
+            grafoD.adicionarAresta(aux1, aux2, grafoD.encontrarVertice(aux3), grafoD.encontrarVertice(aux4));
+            Console.WriteLine("Aresta adiocionada."); 
             break;
 
             case 2:
-
             Console.WriteLine("===== REMOVER ARESTA =====");
             Console.Write("Nome da aresta");
             aux1 = Console.ReadLine();
-            Console.Write("Vértice de origem: ");
-            aux3 = Console.ReadLine();
 
-            grafoD.removerAresta(aux1, grafoD.encontrarVertice(aux3));
+            grafoD.RemoverAresta(aux1);
+            Console.WriteLine("Aresta removida.");
             break;
 
             case 3:
+            Console.WriteLine("===== ADICIONAR VÉRTICE =====");
+            Console.Write("Nome do vértice: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Valor do vértice: ");
+            aux2 = Console.ReadLine();
+
+            grafoD.adicionarVertice(aux1, aux2);
+            Console.WriteLine("Vértice adicionado.");
             break;
 
             case 4:
+            Console.WriteLine("===== REMOVER VÉRTICE =====");
+            Console.Write("Nome do vértice: ");
+            aux1 = Console.ReadLine();
+
+            grafoD.removerVertice(aux1);
+            Console.WriteLine("Vértice removido.");
             break;
 
             case 5:
+            Console.WriteLine("==== ADJACÊNCIA ENTRE VÉRTICES =====");
+            Console.Write("Nome do primeiro vértice: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Nome do segundo vértice: ");
+            aux2 = Console.ReadLine();
+
+            Console.WriteLine($"Existe adjâcencia entre os vértices? {grafoD.adjacenciaEntreVertices(aux1, aux2)}");
             break;
 
             case 6:
+            Console.WriteLine("==== ADJACÊNCIA ENTRE ARESTAS =====");
+            Console.Write("Nome da primeira arestas: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Nome da segunda arestas: ");
+            aux2 = Console.ReadLine();
+
+            Console.WriteLine($"Existe adjâcencia entre as arestas? {grafoD.adjacenciaEntreArestas(aux1, aux2)}");
             break;
 
             case 7:
@@ -138,12 +165,22 @@ class Program
             break;
 
             case 15:
+            Console.WriteLine("===== MATRIZ DE ADJACÊNCIA =====");
+            Console.Write("Quantidade de vértices: ");
+            aux = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < 100; i++)
+            {
+                Console.
+            }
             break;
 
             case 16:
+            Console.WriteLine("===== MATRIZ DE INCIDÊNCIA =====");
             break;
 
             case 17:
+            Console.WriteLine("===== LISTA DE ADJACÊNCIA =====");
             break;
 
             case 18:

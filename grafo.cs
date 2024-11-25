@@ -693,18 +693,18 @@ namespace biblioteca
 
                 while (arestaAtual != null)
                 {
-                   
+
                     removerAresta(arestaAtual.nome, arestaAtual.origem);
 
-                
+
                     if (!simpconexo())
                     {
-              
+
                         adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
                         return false;
                     }
 
-    
+
                     adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
 
                     arestaAtual = arestaAtual.anterior;
@@ -1078,6 +1078,37 @@ public class GrafoDirecionado
         }
 
         numVertices++;
+    }
+
+    public void removerVertice(string _nome)
+    {
+        Vertice alvo = buscarVertice(_nome, ultimoVerticeAdicionado);
+        if (alvo != null)
+        {
+            while (alvo.arestas != null)
+            {
+                //Console.WriteLine("removido " + alvo.arestas.nome);
+                RemoverAresta(alvo.arestas.nome);
+            }
+
+            if (alvo.proximo != null)
+            {
+                alvo.proximo.anterior = alvo.anterior;
+            }
+            if (alvo.anterior != null)
+            {
+                alvo.anterior.proximo = alvo.proximo;
+            }
+            if (alvo.anterior == null && alvo.proximo == null)
+            {
+                ultimoVerticeAdicionado = null;
+            }
+
+            alvo.proximo = null;
+            alvo.anterior = null;
+
+            numVertices--;
+        }
     }
 
     public void adicionarAresta(string _nome, string _valor, Vertice _origem, Vertice _destino)
