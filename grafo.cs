@@ -799,12 +799,6 @@ namespace biblioteca
                 }
             }
 
-            Console.WriteLine("Pontes encontradas:");
-            foreach (var ponte in pontes)
-            {
-                Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
-            }
-
             return pontes;
         }
 
@@ -880,12 +874,6 @@ namespace biblioteca
                 {
                     buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
                 }
-            }
-
-            Console.WriteLine("Articulações encontradas:");
-            foreach (var articulacao in articulacoes)
-            {
-                Console.WriteLine(articulacao.nome);
             }
 
             return articulacoes;
@@ -1834,12 +1822,6 @@ public class GrafoDirecionado
             }
         }
 
-        Console.WriteLine("Pontes encontradas:");
-        foreach (var ponte in pontes)
-        {
-            Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
-        }
-
         return pontes;
     }
 
@@ -1925,12 +1907,6 @@ public class GrafoDirecionado
             {
                 buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
             }
-        }
-
-        Console.WriteLine("Articulações encontradas:");
-        foreach (var articulacao in articulacoes)
-        {
-            Console.WriteLine(articulacao.nome);
         }
 
         return articulacoes;
