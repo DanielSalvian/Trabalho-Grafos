@@ -69,104 +69,216 @@ class Program
         MatrizdeInc_Direcionado.MatrizInc(V, arestasInc);
     }
 
-    static void T_kosaraju_D()
+    static void ChamadaFuncoesDirecionado() 
     {
-        GrafoDirecionado grafo = new GrafoDirecionado();
-        grafo.adicionarVertice("B", "2");
-        grafo.adicionarVertice("C", "3");
-        grafo.adicionarVertice("D", "4");
-        grafo.adicionarVertice("A", "1");
+        int aux = 0;
+        string aux1, aux2, aux3, aux4;
 
-        // Adicionando arestas
-        //grafo.adicionarAresta("A1", "10", grafo.encontrarVertice("A"), grafo.encontrarVertice("B"));
-        grafo.adicionarAresta("A2", "20", grafo.encontrarVertice("B"), grafo.encontrarVertice("C"));
-        grafo.adicionarAresta("A3", "30", grafo.encontrarVertice("C"), grafo.encontrarVertice("D"));
-        grafo.adicionarAresta("A4", "40", grafo.encontrarVertice("D"), grafo.encontrarVertice("B"));
+        switch (aux) {
+            case 1:
 
-        Console.Clear();
+            Console.WriteLine("===== ADICIONAR ARESTA =====");
+            Console.Write("Nome da aresta: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Valor da aresta: ");
+            aux2 = Console.ReadLine();
+            Console.Write("Vértice de origem: ");
+            aux3 = Console.ReadLine();
+            Console.Write("Vértice de destino: ");
+            aux4 = Console.ReadLine();
+            
+            grafoD.adicionarAresta(aux1, aux2, grafoD.encontrarVertice(aux3), grafoD.encontrarVertice(aux4)); 
+            break;
 
-        Console.WriteLine("Componentes: " + grafo.kosaraju());
+            case 2:
 
+            Console.WriteLine("===== REMOVER ARESTA =====");
+            Console.Write("Nome da aresta");
+            aux1 = Console.ReadLine();
+            Console.Write("Vértice de origem: ");
+            aux3 = Console.ReadLine();
 
+            grafoD.removerAresta(aux1, grafoD.encontrarVertice(aux3));
+            break;
+
+            case 3:
+            break;
+
+            case 4:
+            break;
+
+            case 5:
+            break;
+
+            case 6:
+            break;
+
+            case 7:
+            break;
+
+            case 8:
+            break;
+
+            case 9:
+            break;
+
+            case 10:
+            break;
+
+            case 11:
+            break;
+
+            case 12:
+            break;
+
+            case 13:
+            break;
+
+            case 14:
+            break;
+
+            case 15:
+            break;
+
+            case 16:
+            break;
+
+            case 17:
+            break;
+
+            case 18:
+            break;
+
+            case 19:
+            break;
+
+            case 20:
+            break;
+        
+        }
     }
 
-    static void T_kosaraju_ND()
+    static void ChamadaFuncoesNãoDirecionado() 
     {
-        GrafoNaoDirecionado gr = new GrafoNaoDirecionado();
+        int aux = 0;
+        switch (aux) {
+            case 1: 
+            string aux1, aux2, aux3, aux4;
 
-        gr.adicionarVertice("A", "valorTeste");
-        gr.adicionarVertice("B", "valorTeste");
-        gr.adicionarVertice("C", "valorTeste");
+            Console.WriteLine("Nome da aresta: ");
+            aux1 = Console.ReadLine();
+            Console.WriteLine("Valor da aresta: ");
+            aux2 = Console.ReadLine();
+            Console.WriteLine("Vértice de origem: ");
+            aux3 = Console.ReadLine();
+            Console.WriteLine("Vértice de destino: ");
+            aux4 = Console.ReadLine();
+            
+            grafoND.adicionarAresta(aux1, aux2, grafoND.encontrarVertice(aux3), grafoND.encontrarVertice(aux4)); 
+            break;
 
-        gr.adicionarAresta("AB", "valorTeste", gr.encontrarVertice("A"), gr.encontrarVertice("B"));
-        gr.adicionarAresta("BC", "valorTeste", gr.encontrarVertice("B"), gr.encontrarVertice("C"));
-
-        Console.Clear();
-        Console.WriteLine("Componentes: " + gr.kosaraju());
-
+        }
     }
+
+    static int ExibicaoMenu()
+    {
+        int aux = -1;
+        Console.WriteLine("");
+        Console.WriteLine("===== MANIPULAÇÃO =====");
+        Console.WriteLine("1 - Criar arestas");
+        Console.WriteLine("2 - Remover arestas");
+        Console.WriteLine("3 - Criar vértices");
+        Console.WriteLine("4 - Remover vértices");
+        Console.WriteLine("5 - Checagem de adjacência entre vértices");
+        Console.WriteLine("6 - Checagem de adjacência entre arestas");
+        Console.WriteLine("7 - Checagem da existência entre arestas");
+        Console.WriteLine("8 - Checagem da quantidade de vértices");
+        Console.WriteLine("9 - Checagem da quantidade de arestas");
+        Console.WriteLine("10 - Checagem de grafo vazio");
+        Console.WriteLine("11 - Checagem de grafo completo");
+        Console.WriteLine("12 - Checagem de quantidade de componentes fortemente conexos com Kosaraju");
+        Console.WriteLine("13 - Checagem de ponte");
+        Console.WriteLine("14 - Checagem de articulação");
+        Console.WriteLine("15 - Matriz de adjacência");
+        Console.WriteLine("16 - Matriz de incidência");
+        Console.WriteLine("17 - Lista de adjacência");
+        Console.WriteLine("18 - Simplesmente conexo");
+        Console.WriteLine("19 - Semi-fortemente conexo");
+        Console.WriteLine("20 - Fortemente conexo");
+        Console.WriteLine("0 - ENCERRAR PROGRAMA");
+        Console.WriteLine("");
+        aux = int.Parse(Console.ReadLine());
+
+        return aux;
+    }
+
+    public static GrafoDirecionado grafoD;
+    public static GrafoNaoDirecionado grafoND;
+
     static void Main(string[] args)
     {
-        T_kosaraju_D();
-    }
+        int tipo = -1, aux = -1, aux2 = -1, aux1 = -1;
+        bool teste = true;
 
-
-    public static void testeGrafo()
-    {
-        GrafoNaoDirecionado teste = new GrafoNaoDirecionado();
-        Console.Clear();
-        teste.adicionarVertice("VerticeA", "1");
-        teste.adicionarVertice("VerticeB", "2");
-        teste.adicionarVertice("VerticeC", "3");
-
-        teste.adicionarAresta("ArestaAC", "1", teste.encontrarVertice("VerticeA"), teste.encontrarVertice("VerticeC"));
-        teste.adicionarAresta("ArestaAB", "2", teste.encontrarVertice("VerticeA"), teste.encontrarVertice("VerticeB"));
-        teste.adicionarAresta("ArestaAA", "2", teste.encontrarVertice("VerticeC"), teste.encontrarVertice("VerticeA"));
-
-        Console.Clear();
-        //teste.imprimirDados();
-
-        string[] resultado = teste.listaDeAdjacencia(teste.encontrarVertice("VerticeA"));
-
-        Console.Write(resultado[0] + "|");
-        for (int i = 1; i < resultado.Length; i++)
+        while (tipo > 1 || tipo < 0)
         {
-            Console.Write(resultado[i] + ", ");
+            Console.WriteLine("===== BIBLIOTECA DE GRAFOS  =====");
+            Console.WriteLine("===== TIPO DE GRAFO =====");
+            Console.WriteLine("0 - Grafo direcionado ");
+            Console.WriteLine("1 - Grafo não direcionado ");
+            tipo = int.Parse(Console.ReadLine());
         }
-        Console.WriteLine("");
 
-        GrafoDirecionado testeD = new GrafoDirecionado();
-        testeD.adicionarVertice("VerticeA", "1");
-        testeD.adicionarVertice("VerticeB", "2");
-        testeD.adicionarVertice("VerticeC", "3");
+        if (tipo == 0)
+            grafoD = new GrafoDirecionado();
 
-        testeD.adicionarAresta("ArestaAC", "1", testeD.encontrarVertice("VerticeA"), testeD.encontrarVertice("VerticeC"));
-        testeD.adicionarAresta("ArestaAB", "2", testeD.encontrarVertice("VerticeA"), testeD.encontrarVertice("VerticeB"));
-        testeD.adicionarAresta("ArestaAA", "2", testeD.encontrarVertice("VerticeC"), testeD.encontrarVertice("VerticeA"));
+        else
+            grafoND = new GrafoNaoDirecionado();
 
-        resultado = testeD.listaDeAdjacencia(testeD.encontrarVertice("VerticeA"));
-
-        Console.Write(resultado[0] + "|");
-        for (int i = 1; i < resultado.Length; i++)
+        while (teste)
         {
-            Console.Write(resultado[i] + ", ");
-        }
-        Console.WriteLine("");
-    }
+            Console.WriteLine("===== CRIAR NOVO =====");
+            Console.Write("Quantidade de vértices: ");
+            aux1 = int.Parse(Console.ReadLine());
+            Console.Write("Quantidade de arestas: ");
+            aux2 = int.Parse(Console.ReadLine());
 
-    public static void testeConexao()
-    {
-        GrafoDirecionado grafo2 = new GrafoDirecionado();
-        Vertice v3 = new Vertice("C", "3");
-        Vertice v4 = new Vertice("D", "4");
-        Vertice v5 = new Vertice("E", "5");
-        grafo2.adicionarVertice(v3.nome, v3.valor);
-        grafo2.adicionarVertice(v4.nome, v4.valor);
-        grafo2.adicionarVertice(v5.nome, v5.valor);
-        grafo2.adicionarAresta("Aresta3", "3", grafo2.encontrarVertice("C"), grafo2.encontrarVertice("D"));
-        grafo2.adicionarAresta("Aresta4", "4", grafo2.encontrarVertice("D"), grafo2.encontrarVertice("E"));
-        grafo2.adicionarAresta("Aresta5", "5", grafo2.encontrarVertice("E"), grafo2.encontrarVertice("C"));
-        grafo2.imprimirDados();
-        Console.WriteLine(grafo2.fortementeConexo()); // Saída esperada: true
+            if (aux2 < aux1 && aux2 > 0)
+                teste = false;
+
+            else
+                Console.WriteLine("Grafo inválido! O número de arestas precisa ser (vértices - 1) e não pode ser negativo.");
+
+        }
+
+        if (tipo == 0)
+        {
+            grafoD.gerarGrafo(aux1, aux2);
+        }
+
+        else
+        {
+            grafoND.gerarGrafo(aux1, aux2);
+        }
+
+        aux = -1;
+        while (aux != 0)
+        {
+            while (tipo == 0 && (aux < 0 || aux > 20))
+            {
+                aux = ExibicaoMenu();
+
+                if (aux == 0)
+                    break;
+            }
+
+            while (tipo == 1 && (aux < 0 || aux > 20))
+            {
+                aux = ExibicaoMenu();
+
+                if (aux == 0)
+                    break;
+            }
+        }
     }
 }
