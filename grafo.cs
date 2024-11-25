@@ -683,6 +683,39 @@ namespace biblioteca
 
         }
 
+        public bool metodoNaive()
+        {
+            Vertice verticeAtual = ultimoVerticeAdicionado;
+
+            while (verticeAtual != null)
+            {
+                Aresta arestaAtual = verticeAtual.arestas;
+
+                while (arestaAtual != null)
+                {
+                   
+                    removerAresta(arestaAtual.nome, arestaAtual.origem);
+
+                
+                    if (!simpconexo())
+                    {
+              
+                        adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
+                        return false;
+                    }
+
+    
+                    adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
+
+                    arestaAtual = arestaAtual.anterior;
+                }
+
+                verticeAtual = verticeAtual.anterior;
+            }
+
+            return true;
+        }
+
         public GrafoDirecionado converterEmDirecionado()
         {
             GrafoDirecionado grafoDirecionado = new GrafoDirecionado();
@@ -734,7 +767,7 @@ namespace biblioteca
             return vertices;
         }
 
-       public List<(Vertice origem, Vertice destino)> encontrarPontes()
+        public List<(Vertice origem, Vertice destino)> encontrarPontes()
         {
             // Lista para armazenar as pontes encontradas
             List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
@@ -775,20 +808,20 @@ namespace biblioteca
             return pontes;
         }
 
-        private void buscaEmProfundidadeParaPontes(Vertice verticeAtual, Dictionary<Vertice, bool> visitado, 
-            Dictionary<Vertice, int> tempoDeDescoberta, Dictionary<Vertice, int> menorTempoDeDescoberta, 
+        private void buscaEmProfundidadeParaPontes(Vertice verticeAtual, Dictionary<Vertice, bool> visitado,
+            Dictionary<Vertice, int> tempoDeDescoberta, Dictionary<Vertice, int> menorTempoDeDescoberta,
             Dictionary<Vertice, Vertice> pai, ref int tempo, List<(Vertice origem, Vertice destino)> pontes)
         {
             // Marca o vértice como visitado e define o tempo de descoberta
             visitado[verticeAtual] = true;
             tempoDeDescoberta[verticeAtual] = menorTempoDeDescoberta[verticeAtual] = tempo++;
-    
+
             Aresta arestaAtual = verticeAtual.arestas;
             while (arestaAtual != null)
             {
                 Vertice vizinho = arestaAtual.destino;
 
-                if (!visitado[vizinho])     
+                if (!visitado[vizinho])
                 {
                     pai[vizinho] = verticeAtual;
 
@@ -806,7 +839,7 @@ namespace biblioteca
                     }
                 }
                 // Caso contrário, atualiza o menor tempo de descoberta, mas não realiza a recursão
-                else if (vizinho != pai[verticeAtual]) 
+                else if (vizinho != pai[verticeAtual])
                 {
                     menorTempoDeDescoberta[verticeAtual] = Math.Min(menorTempoDeDescoberta[verticeAtual], tempoDeDescoberta[vizinho]);
                 }
@@ -1084,7 +1117,7 @@ public class GrafoDirecionado
                     // Ajusta os ponteiros no vértice de destino para remover a referência à aresta
                     Vertice destino = arestaAtual.destino;
                     if (destino.arestasQueChegam == arestaAtual)
-                   {
+                    {
                         destino.arestasQueChegam = arestaAtual.anteriorNoDestino;
                     }
                     if (arestaAtual.anteriorNoDestino != null)
@@ -1679,7 +1712,8 @@ public class GrafoDirecionado
                 verticeAtual = stack.Last();
                 stack.RemoveAt(stack.Count() - 1);
             }
-            else{
+            else
+            {
                 break;
             }
 
@@ -1757,7 +1791,7 @@ public class GrafoDirecionado
             pai[vertice] = null;
         }
 
-       // Tempo usado no cálculo do tempo de descoberta
+        // Tempo usado no cálculo do tempo de descoberta
         int tempo = 0;
 
         // Itera por todos os vértices para garantir que todos os componentes sejam processados
@@ -1912,7 +1946,7 @@ public class GrafoDirecionado
                     articulacoes.Add(u);
                 }
                 // Se o vértice u não for raiz e o menor tempo de descoberta do v for maior ou igual ao tempo de descoberta de u, é uma articulação
-               else if (pai[u] != null && menorTempoDeDescoberta[v] >= tempoDeDescoberta[u])
+                else if (pai[u] != null && menorTempoDeDescoberta[v] >= tempoDeDescoberta[u])
                 {
                     articulacoes.Add(u);
                 }
@@ -1929,5 +1963,39 @@ public class GrafoDirecionado
             arestaAtual = arestaAtual.proxima;
         }
     }
+
+    public bool metodoNaive()
+    {
+        Vertice verticeAtual = ultimoVerticeAdicionado;
+
+        while (verticeAtual != null)
+        {
+            Aresta arestaAtual = verticeAtual.arestas;
+
+            while (arestaAtual != null)
+            {
+
+                RemoverAresta(arestaAtual.nome);
+
+
+                if (!simpconexo())
+                {
+
+                    adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
+                    return false;
+                }
+
+
+                adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
+
+                arestaAtual = arestaAtual.anterior;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        return true;
+    }
+
 }
 
