@@ -280,12 +280,12 @@ class Program
         }
     }
 
-    static void ChamadaFuncoesNãoDirecionado() 
+    static void ChamadaFuncoesNãoDirecionado(int opcao) 
     {
-        int aux = 0;
+        int aux = opcao;
         switch (aux) {
             case 1: 
-            string aux1, aux2, aux3, aux4, nomeDoVertice, nomeDaAresta;
+            string aux1, aux2, aux3, aux4, nomeDaAresta, nomeDoVertice;
             string[] resultadoListaDeAdjacencia;
 
             Console.WriteLine("Nome da aresta: ");
@@ -302,12 +302,12 @@ class Program
 
             case 2:
             Console.WriteLine("===== REMOVER ARESTA =====");
-            Console.Write("Nome da aresta: ");
+            Console.Write("Nome da aresta");
             aux1 = Console.ReadLine();
-            Console.Write("Vértice de origem: ");
-            aux2 = Console.ReadLine();
+            Aresta arestaAux = grafoND.buscarAresta(aux1, grafoND.ultimoVerticeAdicionado);
+            string nomeVertice = arestaAux.origem.nome;
 
-            grafoND.removerAresta(aux1, grafoND.encontrarVertice(aux2));
+            grafoND.removerAresta(aux1, grafoND.encontrarVertice(nomeVertice));
             Console.WriteLine("Aresta removida.");
             break;
 
@@ -355,15 +355,16 @@ class Program
 
             Console.WriteLine("===== CHECAGEM DA EXISTENCIA DE ARESTAS =====");
             Console.Write("Nome da aresta: ");
-            aux1 = Console.ReadLine();
-            /*if(grafoND.verificarExistenciaDaAresta(aux1))
+            nomeDaAresta = Console.ReadLine();
+            Aresta arestaBuscada = grafoND.buscarAresta(nomeDaAresta, grafoND.ultimoVerticeAdicionado);
+            if(arestaBuscada != null)
             {
-                Console.WriteLine("A aresta " + aux1 + " existe no grafo.");
+                Console.WriteLine("A aresta " + nomeDaAresta + " existe no grafo.");
             }
             else
             {
-                Console.WriteLine("A aresta " + aux1 + " não existe no grafo.");
-            }*/
+                Console.WriteLine("A aresta " + nomeDaAresta + " não existe no grafo.");
+            }
             break;
 
             case 8:
@@ -447,7 +448,7 @@ class Program
             Console.WriteLine("===== LISTA DE ADJACÊNCIA =====");
             Console.Write("Nome do vértice: ");
             nomeDoVertice = Console.ReadLine();
-            resultadoListaDeAdjacencia = grafoND.listaDeAdjacencia(grafoND.encontrarVertice(nomeDoVertice));
+            resultadoListaDeAdjacencia = grafoD.listaDeAdjacencia(grafoND.encontrarVertice(nomeDoVertice));
             for (int i = 0; i < resultadoListaDeAdjacencia.Length; i++)
             {
                 Console.WriteLine(resultadoListaDeAdjacencia[i]);
@@ -486,7 +487,6 @@ class Program
                 Console.WriteLine("Esse grafo não é fortemente conexo");
             }
             break;
-
         }
     }
 
@@ -586,7 +586,7 @@ class Program
             while (tipo == 1 && (aux < 0 || aux > 20))
             {
                 aux = ExibicaoMenu();
-                ChamadaFuncoesNãoDirecionado();
+                ChamadaFuncoesNãoDirecionado(aux);
 
                 if (aux == 0)
                     break;
