@@ -72,7 +72,8 @@ class Program
     static void ChamadaFuncoesDirecionado() 
     {
         int aux = 0;
-        string aux1, aux2, aux3, aux4;
+        string aux1, aux2, aux3, aux4, nomeDaAresta, nomeDoVertice;
+        string[] resultadoListaDeAdjacencia;
 
         switch (aux) {
             case 1:
@@ -114,27 +115,87 @@ class Program
             break;
 
             case 7:
+
+            Console.WriteLine("===== CHECAGEM DA EXISTENCIA DE ARESTAS =====");
+            Console.Write("Nome da aresta: ");
+            nomeDaAresta = Console.ReadLine();
+            if(grafoD.verificarExistenciaDaAresta(nomeDaAresta))
+            {
+                Console.WriteLine("A aresta " + nomeDaAresta + " existe no grafo.");
+            }
+            else
+            {
+                Console.WriteLine("A aresta " + nomeDaAresta + " não existe no grafo.");
+            }
             break;
 
             case 8:
+
+            Console.WriteLine("===== CHECAGEM DE QUANTIDADE DE VERTICES =====");
+            int qntDeVertices = grafoD.quantidadeDeVertices();
+            Console.WriteLine("Esse grafo possui " + qntDeVertices + " vértices.");
             break;
 
             case 9:
+
+            Console.WriteLine("===== CHECAGEM DE QUANTIDADE DE ARESTAS =====");
+            int qntDeArestas = grafoD.quantidadeDeArestas();
+            Console.WriteLine("Esse grafo possui " + qntDeArestas + " arestas.");
             break;
 
             case 10:
+
+            Console.WriteLine("===== CHECAGEM DE GRAFO VAZIO =====");
+            if(grafoD.GrafoVazio())
+            {
+                Console.WriteLine("Esse grafo é um grafo vazio.");
+            }
+            else
+            {
+                Console.WriteLine("Esse grafo não é um grafo vazio.");
+            }
             break;
 
             case 11:
+
+            Console.WriteLine("===== CHECAGEM DE GRAFO COMPLETO =====");
+            if(grafoD.GrafoCompleto())
+            {
+                Console.WriteLine("Esse grafo é um grafo completo.");
+            }
+            else
+            {
+                Console.WriteLine("Esse grafo não é um grafo completo.");
+            }
             break;
 
             case 12:
+
+            Console.WriteLine("===== CHECAGEM DE COMPONENTES FORTEMENTE CONEXOS =====");
+            int nmrDeComponentes = grafoD.kosaraju();
+            Console.WriteLine("O número de componentes fortemente conexos desse grafo é de " + nmrDeComponentes);
             break;
 
             case 13:
+
+            Console.WriteLine("===== CHECAGEM DE PONTE =====");
+            var pontes = grafoD.encontrarPontes();
+            Console.WriteLine("Pontes encontradas:");
+            foreach (var ponte in pontes)
+            {
+                Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
+            }
             break;
 
             case 14:
+
+            var articulacoes = grafoD.encontrarArticulacoes();
+            Console.WriteLine("===== CHECAGEM DE ARTICULAÇÕES =====");
+            Console.WriteLine("Articulações encontradas:");
+            foreach (var articulacao in articulacoes)
+            {
+                Console.WriteLine(articulacao.nome);
+            }
             break;
 
             case 15:
@@ -144,15 +205,48 @@ class Program
             break;
 
             case 17:
+
+            Console.WriteLine("===== LISTA DE ADJACÊNCIA =====");
+            Console.Write("Nome do vértice: ");
+            nomeDoVertice = Console.ReadLine();
+            resultadoListaDeAdjacencia = grafoD.listaDeAdjacencia(grafoD.encontrarVertice(nomeDoVertice));
+            for (int i = 0; i < resultadoListaDeAdjacencia.Length; i++)
+            {
+                Console.WriteLine(resultadoListaDeAdjacencia[i]);
+            }
             break;
 
             case 18:
+
+            Console.WriteLine("===== SIMPLESMENTE CONEXO =====");
+            if(grafoD.simpconexo()) {
+                Console.WriteLine("Esse grafo é simplesmente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é simplesmemnte conexo");
+            }
             break;
 
             case 19:
+
+            Console.WriteLine("===== SEMI FORTEMENTE CONEXO =====");
+            if(grafoD.semifortConexo()) {
+                Console.WriteLine("Esse grafo é semi fortemente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é semi fortemente conexo");
+            }
             break;
 
             case 20:
+
+            Console.WriteLine("===== FORTEMENTE CONEXO =====");
+            if(grafoD.fortementeConexo()) {
+                Console.WriteLine("Esse grafo é fortemente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é fortemente conexo");
+            }
             break;
         
         }
