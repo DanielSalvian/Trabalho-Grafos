@@ -285,7 +285,8 @@ class Program
         int aux = 0;
         switch (aux) {
             case 1: 
-            string aux1, aux2, aux3, aux4;
+            string aux1, aux2, aux3, aux4, nomeDoVertice, nomeDaAresta;
+            string[] resultadoListaDeAdjacencia;
 
             Console.WriteLine("Nome da aresta: ");
             aux1 = Console.ReadLine();
@@ -297,6 +298,193 @@ class Program
             aux4 = Console.ReadLine();
             
             grafoND.adicionarAresta(aux1, aux2, grafoND.encontrarVertice(aux3), grafoND.encontrarVertice(aux4)); 
+            break;
+
+            case 2:
+            Console.WriteLine("===== REMOVER ARESTA =====");
+            Console.Write("Nome da aresta: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Vértice de origem: ");
+            aux2 = Console.ReadLine();
+
+            grafoND.removerAresta(aux1, grafoND.encontrarVertice(aux2));
+            Console.WriteLine("Aresta removida.");
+            break;
+
+            case 3:
+            Console.WriteLine("===== ADICIONAR VÉRTICE =====");
+            Console.Write("Nome do vértice: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Valor do vértice: ");
+            aux2 = Console.ReadLine();
+
+            grafoND.adicionarVertice(aux1, aux2);
+            Console.WriteLine("Vértice adicionado.");
+            break;
+
+            case 4:
+            Console.WriteLine("===== REMOVER VÉRTICE =====");
+            Console.Write("Nome do vértice: ");
+            aux1 = Console.ReadLine();
+
+            grafoND.removerVertice(aux1);
+            Console.WriteLine("Vértice removido.");
+            break;
+
+            case 5:
+            Console.WriteLine("==== ADJACÊNCIA ENTRE VÉRTICES =====");
+            Console.Write("Nome do primeiro vértice: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Nome do segundo vértice: ");
+            aux2 = Console.ReadLine();
+
+            Console.WriteLine($"Existe adjâcencia entre os vértices? {grafoND.adjacenciaEntreVertices(aux1, aux2)}");
+            break;
+
+            case 6:
+            Console.WriteLine("==== ADJACÊNCIA ENTRE ARESTAS =====");
+            Console.Write("Nome da primeira arestas: ");
+            aux1 = Console.ReadLine();
+            Console.Write("Nome da segunda arestas: ");
+            aux2 = Console.ReadLine();
+
+            Console.WriteLine($"Existe adjâcencia entre as arestas? {grafoND.adjacenciaEntreArestas(aux1, aux2)}");
+            break;
+
+            case 7:
+
+            Console.WriteLine("===== CHECAGEM DA EXISTENCIA DE ARESTAS =====");
+            Console.Write("Nome da aresta: ");
+            aux1 = Console.ReadLine();
+            /*if(grafoND.verificarExistenciaDaAresta(aux1))
+            {
+                Console.WriteLine("A aresta " + aux1 + " existe no grafo.");
+            }
+            else
+            {
+                Console.WriteLine("A aresta " + aux1 + " não existe no grafo.");
+            }*/
+            break;
+
+            case 8:
+
+            Console.WriteLine("===== CHECAGEM DE QUANTIDADE DE VERTICES =====");
+            int qntDeVertices = grafoND.quantidadeDeVertices();
+            Console.WriteLine("Esse grafo possui " + qntDeVertices + " vértices.");
+            break;
+
+            case 9:
+
+            Console.WriteLine("===== CHECAGEM DE QUANTIDADE DE ARESTAS =====");
+            int qntDeArestas = grafoND.quantidadeDeArestas();
+            Console.WriteLine("Esse grafo possui " + qntDeArestas + " arestas.");
+            break;
+
+            case 10:
+
+            Console.WriteLine("===== CHECAGEM DE GRAFO VAZIO =====");
+            if(grafoND.estaVazio())
+            {
+                Console.WriteLine("Esse grafo é um grafo vazio.");
+            }
+            else
+            {
+                Console.WriteLine("Esse grafo não é um grafo vazio.");
+            }
+            break;
+
+            case 11:
+
+            Console.WriteLine("===== CHECAGEM DE GRAFO COMPLETO =====");
+            if(grafoND.completo())
+            {
+                Console.WriteLine("Esse grafo é um grafo completo.");
+            }
+            else
+            {
+                Console.WriteLine("Esse grafo não é um grafo completo.");
+            }
+            break;
+
+            case 12:
+
+            Console.WriteLine("===== CHECAGEM DE COMPONENTES FORTEMENTE CONEXOS =====");
+            int nmrDeComponentes = grafoND.kosaraju();
+            Console.WriteLine("O número de componentes fortemente conexos desse grafo é de " + nmrDeComponentes);
+            break;
+
+            case 13:
+
+            Console.WriteLine("===== CHECAGEM DE PONTE =====");
+            var pontes = grafoND.encontrarPontes();
+            Console.WriteLine("Pontes encontradas:");
+            foreach (var ponte in pontes)
+            {
+                Console.WriteLine($"{ponte.origem.nome} -> {ponte.destino.nome}");
+            }
+            break;
+
+            case 14:
+
+            var articulacoes = grafoND.encontrarArticulacoes();
+            Console.WriteLine("===== CHECAGEM DE ARTICULAÇÕES =====");
+            Console.WriteLine("Articulações encontradas:");
+            foreach (var articulacao in articulacoes)
+            {
+                Console.WriteLine(articulacao.nome);
+            }
+            break;
+
+            case 15:
+            break;
+
+            case 16:
+            Console.WriteLine("===== MATRIZ DE INCIDÊNCIA =====");
+            break;
+
+            case 17:
+
+            Console.WriteLine("===== LISTA DE ADJACÊNCIA =====");
+            Console.Write("Nome do vértice: ");
+            nomeDoVertice = Console.ReadLine();
+            resultadoListaDeAdjacencia = grafoND.listaDeAdjacencia(grafoND.encontrarVertice(nomeDoVertice));
+            for (int i = 0; i < resultadoListaDeAdjacencia.Length; i++)
+            {
+                Console.WriteLine(resultadoListaDeAdjacencia[i]);
+            }
+            break;
+
+            case 18:
+
+            Console.WriteLine("===== SIMPLESMENTE CONEXO =====");
+            if(grafoND.simpconexo()) {
+                Console.WriteLine("Esse grafo é simplesmente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é simplesmemnte conexo");
+            }
+            break;
+
+            case 19:
+
+            Console.WriteLine("===== SEMI FORTEMENTE CONEXO =====");
+            if(grafoND.semifortConexo()) {
+                Console.WriteLine("Esse grafo é semi fortemente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é semi fortemente conexo");
+            }
+            break;
+
+            case 20:
+
+            Console.WriteLine("===== FORTEMENTE CONEXO =====");
+            if(grafoND.fortementConexo()) {
+                Console.WriteLine("Esse grafo é fortemente conexo");
+            }
+            else {
+                Console.WriteLine("Esse grafo não é fortemente conexo");
+            }
             break;
 
         }
