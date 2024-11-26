@@ -501,13 +501,8 @@ namespace biblioteca
         cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
         public List<Aresta> gerarGrafo(int numVertices, int numArestas)
         {
-            if (numArestas >= numVertices)
-            {
-                Console.WriteLine("Grafo impossível de ser criado");
-                return new List<Aresta>();
-            }
-            else
-            {
+           
+           
                 Vertice[] vertices = new Vertice[numVertices];
                 for (int i = 0; i < numVertices; i++)
                 {
@@ -555,7 +550,7 @@ namespace biblioteca
 
                 return arestas;
             }
-        }
+        
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()

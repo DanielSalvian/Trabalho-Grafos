@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PUC\\grafos\\Trabalho-Grafos\\Trabalho-Grafos.csproj": {}
+    "C:\\Users\\danie\\Desktop\\grafosFinal\\Trabalho-Grafos\\Trabalho-Grafos.csproj": {}
   },
   "projects": {
-    "D:\\PUC\\grafos\\Trabalho-Grafos\\Trabalho-Grafos.csproj": {
+    "C:\\Users\\danie\\Desktop\\grafosFinal\\Trabalho-Grafos\\Trabalho-Grafos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PUC\\grafos\\Trabalho-Grafos\\Trabalho-Grafos.csproj",
+        "projectUniqueName": "C:\\Users\\danie\\Desktop\\grafosFinal\\Trabalho-Grafos\\Trabalho-Grafos.csproj",
         "projectName": "Trabalho-Grafos",
-        "projectPath": "D:\\PUC\\grafos\\Trabalho-Grafos\\Trabalho-Grafos.csproj",
-        "packagesPath": "C:\\Users\\gusta\\.nuget\\packages\\",
-        "outputPath": "D:\\PUC\\grafos\\Trabalho-Grafos\\obj\\",
+        "projectPath": "C:\\Users\\danie\\Desktop\\grafosFinal\\Trabalho-Grafos\\Trabalho-Grafos.csproj",
+        "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\danie\\Desktop\\grafosFinal\\Trabalho-Grafos\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\gusta\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -60,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
