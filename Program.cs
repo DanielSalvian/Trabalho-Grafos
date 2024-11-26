@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using biblioteca;
 
 class Program
@@ -284,7 +285,7 @@ class Program
                 MatrizdeInc.MatrizInc(qntDeVerticess, arestas);
 
                 break;
-             
+
 
             case 17:
 
@@ -343,12 +344,26 @@ class Program
             case 21:
 
                 grafoD.imprimirDados();
-                break;    
+                break;
 
             case 22:
 
                 grafoD.CSV();
-                break;      
+                break;
+
+            case 23:
+
+                int qntdeAre = grafoD.quantidadeDeArestas();
+
+                int qntDeVe = grafoD.quantidadeDeVertices();
+
+                GrafoDirecionado grafo = new GrafoDirecionado();
+
+                List<Aresta> arestt = new List<Aresta>();
+                arestt = grafo.gerarGrafo(qntDeVe, qntdeAre);
+                grafo.CSV(arestt);
+
+                break;
 
         }
     }
@@ -628,7 +643,21 @@ class Program
             case 22:
 
                 grafoND.CSV();
-                break;    
+                break;
+
+            case 23:
+
+                int qntdeAre = grafoND.quantidadeDeArestas();
+
+                int qntDeVe = grafoND.quantidadeDeVertices();
+
+                GrafoNaoDirecionado grafo = new GrafoNaoDirecionado();
+
+                List<Aresta> arestt = new List<Aresta>();
+                arestt = grafo.gerarGrafo(qntDeVe, qntdeAre);
+                grafo.CSV(arestt);
+
+                break;
         }
     }
 
@@ -659,6 +688,7 @@ class Program
         Console.WriteLine("20 - Fortemente conexo");
         Console.WriteLine("21 - Imprimir dados do grafo");
         Console.WriteLine("22 - Gerar CSV");
+        Console.WriteLine("23 - Gerar CSV aleatório");
         Console.WriteLine("0 - ENCERRAR PROGRAMA");
         Console.WriteLine("");
         aux = int.Parse(Console.ReadLine());
@@ -693,11 +723,13 @@ class Program
         Console.WriteLine("0 - Gerar Grafo ");
         Console.WriteLine("1 - Ler CSV ");
         aux255 = int.Parse(Console.ReadLine());
-        if (aux255 == 0) {
+        if (aux255 == 0)
+        {
             teste = true;
         }
-        else if (aux255 == 1) {
-            teste =  false;
+        else if (aux255 == 1)
+        {
+            teste = false;
         }
 
         if (teste)
@@ -708,7 +740,7 @@ class Program
             Console.Write("Quantidade de arestas: ");
             aux2 = int.Parse(Console.ReadLine());
 
-             //teste = false;
+            //teste = false;
             if (tipo == 0)
             {
                 grafoD.gerarGrafo(aux1, aux2);
@@ -716,10 +748,13 @@ class Program
 
             else
             {
-                grafoND.gerarGrafo(aux1, aux2);
-            } 
+                List<Aresta> list = new List<Aresta>();
+
+                list = grafoND.gerarGrafo(aux1, aux2);
+            }
         }
-        else {
+        else
+        {
             if (tipo == 0)
             {
                 grafoD.lerArquivo();
@@ -734,7 +769,7 @@ class Program
         aux = -1;
         while (aux != 0)
         {
-            while (tipo == 0 && (aux > 0 || aux < 22))
+            while (tipo == 0 && (aux > 0 || aux < 24))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesDirecionado(aux);
@@ -743,7 +778,7 @@ class Program
                     break;
             }
 
-            while (tipo == 1 && (aux > 0 || aux < 22))
+            while (tipo == 1 && (aux > 0 || aux < 24))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesNãoDirecionado(aux);

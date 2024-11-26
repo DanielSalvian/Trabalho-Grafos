@@ -1,3 +1,5 @@
 source,target,weight
-B,C,1
-A,B,1
+Vertice2,Vertice1,ValorAresta4
+Vertice4,Vertice0,ValorAresta3
+Vertice2,Vertice3,ValorAresta2
+Vertice0,Vertice2,ValorAresta1
