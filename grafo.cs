@@ -140,8 +140,12 @@ namespace biblioteca
                     ultimoVerticeAdicionado = null;
                 }
 
-                alvo.proximo = null;
-                alvo.anterior = null;
+                if(ultimoVerticeAdicionado == alvo){
+                    ultimoVerticeAdicionado = alvo.anterior;
+                }
+
+                //alvo.proximo = null;
+                //alvo.anterior = null;
 
                 numVertices--;
             }
@@ -324,28 +328,30 @@ namespace biblioteca
         //Quantidade de arestas do grafo (falta direcionado)
         public int quantidadeDeArestas()
         {
-            int count = 0;
+            // int count = 0;
 
-            if (this.ultimoVerticeAdicionado != null)
-            {
-                Vertice vertice = ultimoVerticeAdicionado;
-                do
-                {
-                    Aresta arestaAtual = vertice.arestas;
+            // if (this.ultimoVerticeAdicionado != null)
+            // {
+            //     Vertice vertice = ultimoVerticeAdicionado;
+            //     do
+            //     {
+            //         Aresta arestaAtual = vertice.arestas;
 
-                    while (arestaAtual != null)
-                    {
-                        count++;
-                        arestaAtual = arestaAtual.proxima;
-                    }
+            //         while (arestaAtual != null)
+            //         {
+            //             count++;
+            //             arestaAtual = arestaAtual.anterior;
+            //         }
 
-                    vertice = vertice.proximo;
-                }
-                while (vertice.proximo != null);
+            //         vertice = vertice.anterior;
+            //     }
+            //     while (vertice.anterior != null);
 
-            }
+            // }
 
-            return count;
+            // return count;
+
+            return numArestas;
         }
 
         public bool estaVazio()
@@ -540,8 +546,8 @@ namespace biblioteca
                         Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
 
                         arestas.Add(novaAresta);
-                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
-                        adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
+                        adicionarAresta(novaAresta.nome, novaAresta.valor, encontrarVertice(novaAresta.origem.nome), encontrarVertice(novaAresta.destino.nome));
+                        //adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
 
 
                         numArestas--;
@@ -668,8 +674,8 @@ namespace biblioteca
                     while (arestaAtual != null)
                     {
                         Arestas.WriteLine($"{arestaAtual.origem.nome},{arestaAtual.destino.nome},{arestaAtual.valor}");
-                        Arestas.WriteLine($"{arestaAtual.destino.nome},{arestaAtual.origem.nome},{arestaAtual.valor}");
-                        arestaAtual = arestaAtual.proxima;
+                        //Arestas.WriteLine($"{arestaAtual.destino.nome},{arestaAtual.origem.nome},{arestaAtual.valor}");
+                        arestaAtual = arestaAtual.anterior;
                     }
                     verticeAtual = verticeAtual.anterior;
                 }
@@ -933,6 +939,40 @@ namespace biblioteca
                 arestaAtual = arestaAtual.proxima;
             }
         }
+
+        public void lerArquivo()
+        {
+            string caminhoVertices = "grafos_nao_direcionadovertice.csv";
+            string caminhoArestas = "grafos_nao_direcionadoaresta.csv";
+
+            StreamReader leitor = new StreamReader(caminhoVertices);
+            String linha = leitor.ReadLine();//pula a primeira => colunas
+            linha = leitor.ReadLine();
+            String[] dados;
+
+            while (linha != null)
+            {
+                dados = linha.Split(",");
+
+                adicionarVertice(dados[0], dados[1]);
+
+                linha = leitor.ReadLine();
+            }
+
+            leitor = new StreamReader(caminhoArestas);
+            linha = leitor.ReadLine();//pula a primeira => colunas
+            linha = leitor.ReadLine();
+
+            while (linha != null)
+            {
+                dados = linha.Split(",");
+
+                adicionarAresta("Aresta"+dados[0]+""+dados[1],dados[2],encontrarVertice(dados[0]),encontrarVertice(dados[1]));
+
+                linha = leitor.ReadLine();
+            }
+
+        }
     }
 }
 
@@ -1087,8 +1127,13 @@ public class GrafoDirecionado
                 ultimoVerticeAdicionado = null;
             }
 
-            alvo.proximo = null;
-            alvo.anterior = null;
+            if(ultimoVerticeAdicionado == alvo)
+            {
+                ultimoVerticeAdicionado = alvo.anterior;
+            }
+            
+            //alvo.proximo = null;
+            //alvo.anterior = null;
 
             numVertices--;
         }
@@ -1180,20 +1225,45 @@ public class GrafoDirecionado
     }
 
     //Verifica a aresta a qual precisa ser buscada pelo vértice.
-    public Aresta buscarAresta(string _nome, Vertice origem)
+    public Aresta buscarAresta(string _nome, Aresta aresta)
     {
-        Aresta arestaAtual = origem.arestas;
-
-        while (arestaAtual != null)
+        if (aresta.nome == _nome)
         {
-            if (arestaAtual.nome == _nome)
-            {
-                return arestaAtual;
-            }
-            arestaAtual = arestaAtual.proxima;
+            return aresta;
         }
+        if (aresta.anterior != null)
+        {
+            return buscarAresta(_nome, aresta.anterior);
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-        return null;
+    //Busca uma Aresta pelo nome e em todos os vertices
+    public Aresta buscarAresta(string _nome, Vertice _ultimoVerticeAdicionado)
+    {
+        Aresta retorno = null;
+        Vertice emAnalise = _ultimoVerticeAdicionado;
+
+        while (emAnalise != null && retorno == null)
+        {
+            if (emAnalise.arestas != null)
+            {
+                retorno = buscarAresta(_nome, emAnalise.arestas);
+            }
+
+            if (emAnalise.anterior != null)
+            {
+                emAnalise = emAnalise.anterior;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return retorno;
     }
 
     //Verifica se a aresta passada como parâmetro existe em todo o grafo.
@@ -1408,7 +1478,7 @@ public class GrafoDirecionado
         if (arestaA != null && arestaB != null)
         {
             // Verifica se o destino de arestaA é a origem de arestaB
-            if (arestaA.destino == arestaB.origem)
+            if (arestaA.destino == arestaB.origem || arestaA.origem == arestaB.destino)
             {
                 return true;
             }
@@ -1502,59 +1572,52 @@ public class GrafoDirecionado
     //É informado o número de vértices, e duas listas (uma de vertices e uma de arestas), será passado um for pela lista de vertices adicionando cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta.
     public List<Aresta> gerarGrafo(int numVertices, int numArestas)
     {
-        if (numArestas >= numVertices)
+
+        Vertice[] vertices = new Vertice[numVertices];
+        for (int i = 0; i < numVertices; i++)
         {
-            Console.WriteLine("Grafo impossível de ser criado");
-            return new List<Aresta>();
+            vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+            adicionarVertice(vertices[i].nome, vertices[i].valor);
         }
-        else
+
+        Random random = new Random();
+        List<Aresta> arestas = new List<Aresta>();
+
+        while (numArestas > 0)
         {
-            Vertice[] vertices = new Vertice[numVertices];
-            for (int i = 0; i < numVertices; i++)
+            int origemIndex = random.Next(0, numVertices);
+            int destinoIndex = random.Next(0, numVertices);
+
+
+            while (origemIndex == destinoIndex)
             {
-                vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
-                adicionarVertice(vertices[i].nome, vertices[i].valor);
+                destinoIndex = random.Next(0, numVertices);
             }
 
-            Random random = new Random();
-            List<Aresta> arestas = new List<Aresta>();
+            Vertice origem = vertices[origemIndex];
+            Vertice destino = vertices[destinoIndex];
 
-            while (numArestas > 0)
+            string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+            string arestaValor = $"ValorAresta{numArestas}";
+
+
+            bool arestaExistente = arestas.Any(a =>
+                (a.origem == origem && a.destino == destino) ||
+                (a.origem == destino && a.destino == origem));
+
+            if (!arestaExistente)
             {
-                int origemIndex = random.Next(0, numVertices);
-                int destinoIndex = random.Next(0, numVertices);
+                Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+                arestas.Add(novaAresta);
+                adicionarAresta(novaAresta.nome, novaAresta.valor, encontrarVertice(novaAresta.origem.nome), encontrarVertice(novaAresta.destino.nome));
 
 
-                while (origemIndex == destinoIndex)
-                {
-                    destinoIndex = random.Next(0, numVertices);
-                }
-
-                Vertice origem = vertices[origemIndex];
-                Vertice destino = vertices[destinoIndex];
-
-                string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
-                string arestaValor = $"ValorAresta{numArestas}";
-
-
-                bool arestaExistente = arestas.Any(a =>
-                    (a.origem == origem && a.destino == destino) ||
-                    (a.origem == destino && a.destino == origem));
-
-                if (!arestaExistente)
-                {
-                    Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
-
-                    arestas.Add(novaAresta);
-                    adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.origem, novaAresta.destino);
-
-
-                    numArestas--;
-                }
+                numArestas--;
             }
-
-            return arestas;
         }
+
+        return arestas;
     }
     //Função de teste para saber se tudo foi adicionado corretamente
     public void imprimirDados()
@@ -1658,7 +1721,7 @@ public class GrafoDirecionado
                 while (arestaAtual != null)
                 {
                     Arestas.WriteLine($"{arestaAtual.origem.nome},{arestaAtual.destino.nome},{arestaAtual.valor}");
-                    arestaAtual = arestaAtual.proxima;
+                    arestaAtual = arestaAtual.anterior;
                 }
                 verticeAtual = verticeAtual.anterior;
             }
@@ -1997,6 +2060,40 @@ public class GrafoDirecionado
         }
 
         return true;
+    }
+
+    public void lerArquivo()
+    {
+        string caminhoVertices = "grafos_direcionadovertice.csv";
+        string caminhoArestas = "grafos_direcionadoaresta.csv";
+
+        StreamReader leitor = new StreamReader(caminhoVertices);
+        String linha = leitor.ReadLine();//pula a primeira => colunas
+        linha = leitor.ReadLine();
+        String[] dados;
+
+        while (linha != null)
+        {
+            dados = linha.Split(",");
+
+            adicionarVertice(dados[0], dados[1]);
+
+            linha = leitor.ReadLine();
+        }
+
+        leitor = new StreamReader(caminhoArestas);
+        linha = leitor.ReadLine();//pula a primeira => colunas
+        linha = leitor.ReadLine();
+
+        while (linha != null)
+        {
+            dados = linha.Split(",");
+
+            adicionarAresta("Aresta" + dados[0] + "" + dados[1], dados[2], encontrarVertice(dados[0]), encontrarVertice(dados[1]));
+
+            linha = leitor.ReadLine();
+        }
+
     }
 
 }

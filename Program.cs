@@ -90,7 +90,7 @@ class Program
                 aux4 = Console.ReadLine();
 
                 grafoD.adicionarAresta(aux1, aux2, grafoD.encontrarVertice(aux3), grafoD.encontrarVertice(aux4));
-                Console.WriteLine("Aresta adiocionada.");
+                Console.WriteLine("Aresta adicionada.");
                 break;
 
             case 2:
@@ -309,6 +309,7 @@ class Program
                 {
                     Console.WriteLine("Esse grafo não é simplesmemnte conexo");
                 }
+                Console.ReadKey();
                 break;
 
             case 19:
@@ -322,6 +323,7 @@ class Program
                 {
                     Console.WriteLine("Esse grafo não é semi fortemente conexo");
                 }
+                Console.ReadKey();
                 break;
 
             case 20:
@@ -335,7 +337,18 @@ class Program
                 {
                     Console.WriteLine("Esse grafo não é fortemente conexo");
                 }
+                Console.ReadKey();
                 break;
+
+            case 21:
+
+                grafoD.imprimirDados();
+                break;    
+
+            case 22:
+
+                grafoD.CSV();
+                break;      
 
         }
     }
@@ -343,11 +356,11 @@ class Program
     static void ChamadaFuncoesNãoDirecionado(int opcao)
     {
         int aux = opcao;
+        string[] resultadoListaDeAdjacencia;
         switch (aux)
         {
             case 1:
                 string aux1, aux2, aux3, aux4, nomeDaAresta, nomeDoVertice;
-                string[] resultadoListaDeAdjacencia;
 
                 Console.WriteLine("Nome da aresta: ");
                 aux1 = Console.ReadLine();
@@ -359,6 +372,7 @@ class Program
                 aux4 = Console.ReadLine();
 
                 grafoND.adicionarAresta(aux1, aux2, grafoND.encontrarVertice(aux3), grafoND.encontrarVertice(aux4));
+                grafoND.imprimirDados();
                 break;
 
             case 2:
@@ -605,6 +619,16 @@ class Program
                     Console.WriteLine("Esse grafo não é fortemente conexo");
                 }
                 break;
+
+            case 21:
+
+                grafoND.imprimirDados();
+                break;
+
+            case 22:
+
+                grafoND.CSV();
+                break;    
         }
     }
 
@@ -619,7 +643,7 @@ class Program
         Console.WriteLine("4 - Remover vértices");
         Console.WriteLine("5 - Checagem de adjacência entre vértices");
         Console.WriteLine("6 - Checagem de adjacência entre arestas");
-        Console.WriteLine("7 - Checagem da existência entre arestas");
+        Console.WriteLine("7 - Checagem da existência de arestas");
         Console.WriteLine("8 - Checagem da quantidade de vértices");
         Console.WriteLine("9 - Checagem da quantidade de arestas");
         Console.WriteLine("10 - Checagem de grafo vazio");
@@ -633,6 +657,8 @@ class Program
         Console.WriteLine("18 - Simplesmente conexo");
         Console.WriteLine("19 - Semi-fortemente conexo");
         Console.WriteLine("20 - Fortemente conexo");
+        Console.WriteLine("21 - Imprimir dados do grafo");
+        Console.WriteLine("22 - Gerar CSV");
         Console.WriteLine("0 - ENCERRAR PROGRAMA");
         Console.WriteLine("");
         aux = int.Parse(Console.ReadLine());
@@ -645,7 +671,7 @@ class Program
 
     static void Main(string[] args)
     {
-        int tipo = -1, aux = -1, aux2 = -1, aux1 = -1;
+        int tipo = -1, aux = -1, aux2 = -1, aux1 = -1, aux255 = -1;
         bool teste = true;
 
         while (tipo > 1 || tipo < 0)
@@ -663,7 +689,18 @@ class Program
         else
             grafoND = new GrafoNaoDirecionado();
 
-        while (teste)
+        Console.WriteLine("===== GERAR GRAFO OU LER CSV =====");
+        Console.WriteLine("0 - Gerar Grafo ");
+        Console.WriteLine("1 - Ler CSV ");
+        aux255 = int.Parse(Console.ReadLine());
+        if (aux255 == 0) {
+            teste = true;
+        }
+        else if (aux255 == 1) {
+            teste =  false;
+        }
+
+        if (teste)
         {
             Console.WriteLine("===== CRIAR NOVO =====");
             Console.Write("Quantidade de vértices: ");
@@ -671,24 +708,33 @@ class Program
             Console.Write("Quantidade de arestas: ");
             aux2 = int.Parse(Console.ReadLine());
 
-             teste = false;
+             //teste = false;
+            if (tipo == 0)
+            {
+                grafoD.gerarGrafo(aux1, aux2);
+            }
 
+            else
+            {
+                grafoND.gerarGrafo(aux1, aux2);
+            } 
         }
+        else {
+            if (tipo == 0)
+            {
+                grafoD.lerArquivo();
+            }
 
-        if (tipo == 0)
-        {
-            grafoD.gerarGrafo(aux1, aux2);
-        }
-
-        else
-        {
-            grafoND.gerarGrafo(aux1, aux2);
+            else
+            {
+                grafoND.lerArquivo();
+            }
         }
 
         aux = -1;
         while (aux != 0)
         {
-            while (tipo == 0 && (aux < 0 || aux > 20))
+            while (tipo == 0 && (aux > 0 || aux < 22))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesDirecionado(aux);
@@ -697,7 +743,7 @@ class Program
                     break;
             }
 
-            while (tipo == 1 && (aux < 0 || aux > 20))
+            while (tipo == 1 && (aux > 0 || aux < 22))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesNãoDirecionado(aux);
