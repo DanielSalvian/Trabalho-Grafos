@@ -25,3 +25,5 @@ Yago - 20/11 - Lista de adjacência (Não direcionado) corrigida e lista de adja
 Gustavo - 20/11 - Criação da matriz de adjacência e de incidência em grafos direcionados. Ainda em desenvolvimento.
 
 Yago 24/11 - Finalizei kosaraju no grafo direcionado e no direcionado, além da função para converter o não direcionado em direcionado
+
+Vinicius 26/11 - Criação dos métodos de Fleury utilizando a checagem de pontes por Tarjan e Naive. 
