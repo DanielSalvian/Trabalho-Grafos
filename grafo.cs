@@ -827,79 +827,44 @@ namespace biblioteca
             return vertices;
         }
 
-        public List<(Vertice origem, Vertice destino)> encontrarPontes()
+        public List<(Vertice origem, Vertice destino)> encontrarPontesTarjan()
         {
-            // Lista para armazenar as pontes encontradas
-            List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
-
-            // Auxiliares para a busca em profundidade
-            Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
-            Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
-            Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
-            Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
-
-            var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
-
-            foreach (var vertice in verticesOrdenados)
-            {
-                visitado[vertice] = false;
-                tempoDeDescoberta[vertice] = -1;
-                menorTempoDeDescoberta[vertice] = -1;
-                pai[vertice] = null;
-            }
-
-            int tempo = 0;
-
-            // Itera por todos os vértices para garantir que todos os componentes sejam processados
-            foreach (var vertice in verticesOrdenados)
-            {
-                if (!visitado[vertice])
-                {
-                    buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
-                }
-            }
-
+            GrafoDirecionado grafoConvertidoParaDirecionado = converterEmDirecionado();
+            List<(Vertice origem, Vertice destino)> pontes;
+            pontes = grafoConvertidoParaDirecionado.encontrarPontesTarjan();
             return pontes;
-        }
 
-        private void buscaEmProfundidadeParaPontes(Vertice verticeAtual, Dictionary<Vertice, bool> visitado,
-            Dictionary<Vertice, int> tempoDeDescoberta, Dictionary<Vertice, int> menorTempoDeDescoberta,
-            Dictionary<Vertice, Vertice> pai, ref int tempo, List<(Vertice origem, Vertice destino)> pontes)
-        {
-            // Marca o vértice como visitado e define o tempo de descoberta
-            visitado[verticeAtual] = true;
-            tempoDeDescoberta[verticeAtual] = menorTempoDeDescoberta[verticeAtual] = tempo++;
+            // // Lista para armazenar as pontes encontradas
+            // List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
 
-            Aresta arestaAtual = verticeAtual.arestas;
-            while (arestaAtual != null)
-            {
-                Vertice vizinho = arestaAtual.destino;
+            // // Auxiliares para a busca em profundidade
+            // Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
+            // Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
+            // Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
+            // Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
 
-                if (!visitado[vizinho])
-                {
-                    pai[vizinho] = verticeAtual;
+            // var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
 
-                    // Chama recursivamente a DFS
-                    buscaEmProfundidadeParaPontes(vizinho, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+            // foreach (var vertice in verticesOrdenados)
+            // {
+            //     visitado[vertice] = false;
+            //     tempoDeDescoberta[vertice] = -1;
+            //     menorTempoDeDescoberta[vertice] = -1;
+            //     pai[vertice] = null;
+            // }
 
-                    // Após a chamada recursiva, atualiza o menor tempo de descoberta
-                    menorTempoDeDescoberta[verticeAtual] = Math.Min(menorTempoDeDescoberta[verticeAtual], menorTempoDeDescoberta[vizinho]);
+            // int tempo = 0;
 
-                    // Se o tempo de descoberta do vizinho é maior que o menor tempo de descoberta do vizinho
-                    // significa que a aresta (verticeAtual, vizinho) é uma ponte
-                    if (menorTempoDeDescoberta[vizinho] > tempoDeDescoberta[verticeAtual])
-                    {
-                        pontes.Add((verticeAtual, vizinho));
-                    }
-                }
-                // Caso contrário, atualiza o menor tempo de descoberta, mas não realiza a recursão
-                else if (vizinho != pai[verticeAtual])
-                {
-                    menorTempoDeDescoberta[verticeAtual] = Math.Min(menorTempoDeDescoberta[verticeAtual], tempoDeDescoberta[vizinho]);
-                }
+            // // Itera por todos os vértices para garantir que todos os componentes sejam processados
+            // foreach (var vertice in verticesOrdenados)
+            // {
+            //     if (!visitado[vertice])
+            //     {
+            //         buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+            //     }
+            // }
 
-                arestaAtual = arestaAtual.proxima;
-            }
+            // return pontes;
         }
 
         public List<Vertice> encontrarArticulacoes()
@@ -1904,7 +1869,7 @@ public class GrafoDirecionado
         return vertices;
     }
 
-    public List<(Vertice origem, Vertice destino)> encontrarPontes()
+    public List<(Vertice origem, Vertice destino)> encontrarPontesTarjan()
     {
         // Lista para armazenar as pontes encontradas
         List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
@@ -1915,10 +1880,8 @@ public class GrafoDirecionado
         Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
         Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
 
-        var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
-
         // Inicializar as estruturas
-        foreach (var vertice in verticesOrdenados)
+        foreach (var vertice in obterTodosOsVertices())
         {
             visitado[vertice] = false;
             tempoDeDescoberta[vertice] = -1;
@@ -1930,18 +1893,18 @@ public class GrafoDirecionado
         int tempo = 0;
 
         // Itera por todos os vértices para garantir que todos os componentes sejam processados
-        foreach (var vertice in verticesOrdenados)
+        foreach (var vertice in obterTodosOsVertices())
         {
             if (!visitado[vertice])
             {
-                buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+                buscaEmProfundidadeParaPontesTarjan(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
             }
         }
 
         return pontes;
     }
 
-    private void buscaEmProfundidadeParaPontes
+    private void buscaEmProfundidadeParaPontesTarjan
     (
         Vertice u,
         Dictionary<Vertice, bool> visitado,
@@ -1956,7 +1919,8 @@ public class GrafoDirecionado
         visitado[u] = true;
 
         // Define tempo de descoberta e o menor tempo do vértice atual
-        tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = ++tempo;
+        tempo++;
+        tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = tempo;
 
         // Percorre todas as arestas do vértice atual
         Aresta arestaAtual = u.arestas;
@@ -1970,7 +1934,7 @@ public class GrafoDirecionado
                 pai[v] = u;
 
                 // Chamada recursiva para o próximo vértice
-                buscaEmProfundidadeParaPontes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
+                buscaEmProfundidadeParaPontesTarjan(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
 
                 // Atualiza o menor tem,po de descoberta do vértice atual com base no filho
                 menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
@@ -1987,7 +1951,7 @@ public class GrafoDirecionado
                 menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
             }
 
-            arestaAtual = arestaAtual.proxima;
+            arestaAtual = arestaAtual.anterior;
         }
     }
 
