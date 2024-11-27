@@ -681,6 +681,29 @@ class Program
 
                 break;
 
+            case 25:
+                List<Vertice> caminhoEulerianoTarjan = grafoND.encontrarCaminhoEulerianoComTarjan();
+                // Imprimir o caminho euleriano encontrado
+                Console.WriteLine("Caminho Euleriano com Tarjan:");
+                foreach (var vertice in caminhoEulerianoTarjan)
+                {
+                    Console.Write(vertice.nome + " / ");
+                }
+                Console.ReadKey();
+
+                break;
+
+            case 26:
+                List<Vertice> caminhoEulerianoNaive = grafoND.encontrarCaminhoEulerianoComNaive();
+                // Imprimir o caminho euleriano encontrado
+                Console.WriteLine("Caminho Euleriano com Naive:");
+                foreach (var vertice in caminhoEulerianoNaive)
+                {
+                    Console.Write(vertice.nome + " / ");
+                }
+                Console.ReadKey();
+
+                break;    
         }
     }
 
@@ -701,8 +724,8 @@ class Program
         Console.WriteLine("10 - Checagem de grafo vazio");
         Console.WriteLine("11 - Checagem de grafo completo");
         Console.WriteLine("12 - Checagem de quantidade de componentes fortemente conexos com Kosaraju");
-        Console.WriteLine("13 - Checagem de ponte");
-        Console.WriteLine("14 - Checagem de articulação");
+        Console.WriteLine("13 - Checagem de ponte com Tarjan");
+        Console.WriteLine("14 - Checagem de articulação com Tarjan");
         Console.WriteLine("15 - Matriz de adjacência");
         Console.WriteLine("16 - Matriz de incidência");
         Console.WriteLine("17 - Lista de adjacência");
@@ -713,6 +736,8 @@ class Program
         Console.WriteLine("22 - Gerar CSV");
         Console.WriteLine("23 - Gerar CSV aleatório");
         Console.WriteLine("24 - Naive");
+        Console.WriteLine("25 - Algoritmo de Fleury com Tarjan");
+        Console.WriteLine("26 - Algoritmo de Fleury com Naive");
         Console.WriteLine("0 - ENCERRAR PROGRAMA");
         Console.WriteLine("");
         aux = int.Parse(Console.ReadLine());

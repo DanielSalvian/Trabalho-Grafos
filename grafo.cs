@@ -330,29 +330,6 @@ namespace biblioteca
         //Quantidade de arestas do grafo (falta direcionado)
         public int quantidadeDeArestas()
         {
-            // int count = 0;
-
-            // if (this.ultimoVerticeAdicionado != null)
-            // {
-            //     Vertice vertice = ultimoVerticeAdicionado;
-            //     do
-            //     {
-            //         Aresta arestaAtual = vertice.arestas;
-
-            //         while (arestaAtual != null)
-            //         {
-            //             count++;
-            //             arestaAtual = arestaAtual.anterior;
-            //         }
-
-            //         vertice = vertice.anterior;
-            //     }
-            //     while (vertice.anterior != null);
-
-            // }
-
-            // return count;
-
             return numArestas;
         }
 
@@ -428,7 +405,7 @@ namespace biblioteca
                 {
                     buscaEmProfundidade(arestaAtual.destino, visitados);
                 }
-                arestaAtual = arestaAtual.proxima;
+                arestaAtual = arestaAtual.anterior;
             }
         }
         // Faz a busca em profundidade vendo se é possível ter um caminho de A para B, a partir do último vértice, após isso realiza do B para o A. Fazendo isso para todo par de vértices no grafo
@@ -688,13 +665,14 @@ namespace biblioteca
 
         }
 
-        public void naive()
+        public List<(Vertice origem, Vertice destino)> naive()
         {
             GrafoNaoDirecionado grafoDasRemocoes = copiarGrafo(this);
 
             List<Aresta> listaDeArestas = new List<Aresta>();
             adicionarArestasALista(grafoDasRemocoes, listaDeArestas);
             List<Aresta> listaDePontes = new List<Aresta>();
+            List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
 
             foreach (Aresta aresta in listaDeArestas)
             {
@@ -703,7 +681,7 @@ namespace biblioteca
                 if (!grafoDasRemocoes.semifortConexo())
                 {
                     // Console.WriteLine(">>>Ponte Encontrada"+aresta.nome);
-                    listaDePontes.Add(aresta);
+                    pontes.Add((aresta.origem, aresta.destino));
                 }
 
                 grafoDasRemocoes = copiarGrafo(this);
@@ -718,10 +696,12 @@ namespace biblioteca
                 {
                     Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
                 }
+                return pontes;
             }
             else
             {
                 Console.WriteLine("Nenhuma Ponte Encontrada");
+                return pontes;
             }
 
         }
@@ -756,6 +736,244 @@ namespace biblioteca
             }
 
             return grafoCopiado;
+        }
+
+        public List<Vertice> encontrarCaminhoEulerianoComTarjan()
+        {
+            List<Vertice> caminho = new List<Vertice>();
+            Vertice inicio;
+
+            int nmrDeGrausImpares = 0;
+            foreach (var vertice in obterTodosOsVertices())
+            {
+                // Calcula o grau de cada vértice
+                int grau = calcularGrau(vertice);
+                if (grau % 2 != 0)
+                {
+                    nmrDeGrausImpares++;
+                    if (nmrDeGrausImpares >= 3)
+                    {
+                        Console.WriteLine("Esse grafo não é Euleriano e nem Semi-Euleriano");
+                        return caminho;
+                    }
+                }
+            }
+
+            // Encontrar o vértice inicial com grau ímpar
+            if (nmrDeGrausImpares > 0)
+            {
+                inicio = obterTodosOsVertices().FirstOrDefault(v => calcularGrau(v) % 2 != 0);
+            }
+            else
+            {
+                inicio = ultimoVerticeAdicionado;
+            }
+            caminho.Add(inicio);
+            GrafoDirecionado grafoDirecionado = converterEmDirecionado();
+            GrafoNaoDirecionado grafoCopia = copiarGrafo(this);
+
+            // Caminho Euleriano
+            while (grafoCopia.numArestas != 0)
+            {
+                Vertice u = caminho.Last();
+                Vertice uNoDirecionado = grafoDirecionado.encontrarVertice(u.nome);
+                Aresta arestaAtual = uNoDirecionado.arestas;
+
+                bool encontrouAresta = false;
+
+                var pontes = grafoDirecionado.encontrarPontesTarjan();
+                HashSet<Aresta> pontesSet = new HashSet<Aresta>(pontes.Select(p => new Aresta(p.origem.nome + "-" + p.destino.nome, "", p.origem, p.destino)));
+
+                while (arestaAtual != null)
+                {
+                    Vertice v = arestaAtual.destino;
+
+                    // Verifica se a aresta é uma ponte e se não há outra opção
+                    if (pontesSet.Contains(arestaAtual) && !grafoDirecionado.possuiArestasAlternativas(u, v))
+                    {
+                        caminho.Add(v);
+                        // Remover a aresta
+                        grafoCopia.removerArestaPorOrigemDestino(arestaAtual.origem, arestaAtual.destino);
+                        encontrouAresta = true;
+                        break;
+                    }
+                    else if (!pontesSet.Contains(arestaAtual))
+                    {
+                        caminho.Add(v);
+                        // Remover a aresta
+                        grafoCopia.removerArestaPorOrigemDestino(arestaAtual.origem, arestaAtual.destino);
+                        encontrouAresta = true;
+                        break;
+                    }
+
+                    arestaAtual = arestaAtual.anterior;
+                }
+            }
+
+            return caminho;
+        }
+
+        public List<Vertice> encontrarCaminhoEulerianoComNaive()
+        {
+            List<Vertice> caminho = new List<Vertice>();
+            Vertice inicio;
+
+            int nmrDeGrausImpares = 0;
+            foreach (var vertice in obterTodosOsVertices())
+            {
+                // Calcula o grau de cada vértice
+                int grau = calcularGrau(vertice);
+                if (grau % 2 != 0)
+                {
+                    nmrDeGrausImpares++;
+                    if (nmrDeGrausImpares >= 3)
+                    {
+                        Console.WriteLine("Esse grafo não é Euleriano e nem Semi-Euleriano");
+                        return caminho;
+                    }
+                }
+            }
+
+            // Encontrar o vértice inicial com grau ímpar
+            if (nmrDeGrausImpares > 0)
+            {
+                inicio = obterTodosOsVertices().FirstOrDefault(v => calcularGrau(v) % 2 != 0);
+            }
+            else
+            {
+                inicio = ultimoVerticeAdicionado;
+            }
+            caminho.Add(inicio);
+            GrafoDirecionado grafoDirecionado = converterEmDirecionado();
+            GrafoNaoDirecionado grafoCopia = copiarGrafo(this);
+
+            // Caminho Euleriano
+            while (grafoCopia.numArestas != 0)
+            {
+                Vertice u = caminho.Last();
+                Vertice uNoDirecionado = grafoDirecionado.encontrarVertice(u.nome);
+                Aresta arestaAtual = uNoDirecionado.arestas;
+
+                bool encontrouAresta = false;
+
+                var pontes = grafoDirecionado.naive();
+                HashSet<Aresta> pontesSet = new HashSet<Aresta>(pontes.Select(p => new Aresta(p.origem.nome + "-" + p.destino.nome, "", p.origem, p.destino)));
+
+                while (arestaAtual != null)
+                {
+                    Vertice v = arestaAtual.destino;
+
+                    // Verifica se a aresta é uma ponte e se não há outra opção
+                    if (pontesSet.Contains(arestaAtual) && !grafoDirecionado.possuiArestasAlternativas(u, v))
+                    {
+                        caminho.Add(v);
+                        // Remover a aresta
+                        grafoCopia.removerArestaPorOrigemDestino(arestaAtual.origem, arestaAtual.destino);
+                        encontrouAresta = true;
+                        break;
+                    }
+                    else if (!pontesSet.Contains(arestaAtual))
+                    {
+                        caminho.Add(v);
+                        // Remover a aresta
+                        grafoCopia.removerArestaPorOrigemDestino(arestaAtual.origem, arestaAtual.destino);
+                        encontrouAresta = true;
+                        break;
+                    }
+
+                    arestaAtual = arestaAtual.anterior;
+                }
+            }
+
+            return caminho;
+        }
+
+        public int calcularGrau(Vertice vertice)
+        {
+            int grau = 0;
+
+            // Calculando grau
+            Aresta arestaAtual = vertice.arestas;
+            while (arestaAtual != null)
+            {
+                if (arestaAtual.origem == vertice || arestaAtual.destino == vertice)
+                {
+                    grau++;
+                }
+                arestaAtual = arestaAtual.anterior;
+            }
+
+            Aresta arestaQueChegaAtual = vertice.arestasQueChegam;
+            while (arestaQueChegaAtual != null)
+            {
+                if (arestaQueChegaAtual.origem == vertice || arestaQueChegaAtual.destino == vertice)
+                {
+                    grau++;
+                }
+                arestaQueChegaAtual = arestaQueChegaAtual.anterior;
+            }
+
+            Aresta arestaQueChegaanteriorNoDestino = vertice?.arestasQueChegam?.anteriorNoDestino;
+            while (arestaQueChegaanteriorNoDestino != null)
+            {
+                if (arestaQueChegaanteriorNoDestino.origem == vertice || arestaQueChegaanteriorNoDestino.destino == vertice)
+                {
+                    grau++;
+                }
+                arestaQueChegaanteriorNoDestino = arestaQueChegaanteriorNoDestino.anteriorNoDestino;
+            }
+
+            return grau;
+        }
+
+        public void removerArestaPorOrigemDestino(Vertice origem, Vertice destino)
+        {
+            // Remover a aresta da lista de arestas do vértice de origem
+            Aresta arestaAtual = origem.arestas;
+            Aresta arestaAnterior = null;
+
+            while (arestaAtual != null)
+            {
+                if (arestaAtual.destino == destino)
+                {
+                    if (arestaAnterior == null)
+                    {
+                        origem.arestas = arestaAtual.anterior;
+                    }
+                    else
+                    {
+                        arestaAnterior.anterior = arestaAtual.anterior;
+                    }
+                    break;
+                }
+
+                arestaAnterior = arestaAtual;
+                arestaAtual = arestaAtual.anterior;
+            }
+
+            // Remover a aresta correspondente da lista de arestas do vértice de destino
+            arestaAtual = destino.arestas;
+            arestaAnterior = null;
+
+            while (arestaAtual != null)
+            {
+                if (arestaAtual.destino == origem)
+                {
+                    if (arestaAnterior == null)
+                    {
+                        destino.arestas = arestaAtual.anterior;
+                    }
+                    else
+                    {
+                        arestaAnterior.anterior = arestaAtual.anterior;
+                    }
+                    break;
+                }
+
+                arestaAnterior = arestaAtual;
+                arestaAtual = arestaAtual.anterior;
+            }
+            numArestas--;
         }
 
         public void adicionarArestasALista(GrafoNaoDirecionado grafo, List<Aresta> lista)
@@ -1104,7 +1322,7 @@ public class GrafoDirecionado
             verticeAtual = verticeAtual.anterior;
         }
 
-        Console.WriteLine($"Aresta com nome '{nomeAresta}' não encontrada.");
+        //Console.WriteLine($"Aresta com nome '{nomeAresta}' não encontrada.");
     }
     public Vertice encontrarVertice(string _nome)
     {
@@ -1965,13 +2183,14 @@ public class GrafoDirecionado
         return true;
     }
 
-    public void naive()
+    public List<(Vertice origem, Vertice destino)> naive()
     {
         GrafoDirecionado grafoDasRemocoes = copiarGrafo(this);
 
         List<Aresta> listaDeArestas = new List<Aresta>();
         adicionarArestasALista(grafoDasRemocoes, listaDeArestas);
         List<Aresta> listaDePontes = new List<Aresta>();
+        List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
 
         foreach (Aresta aresta in listaDeArestas)
         {
@@ -1980,7 +2199,7 @@ public class GrafoDirecionado
             if (!grafoDasRemocoes.semifortConexo())
             {
                 // Console.WriteLine(">>>Ponte Encontrada"+aresta.nome);
-                listaDePontes.Add(aresta);
+                pontes.Add((aresta.origem, aresta.destino));
             }
 
             grafoDasRemocoes = copiarGrafo(this);
@@ -1991,14 +2210,16 @@ public class GrafoDirecionado
         {
             Console.WriteLine("Ponte Encontrada");
 
-            foreach (Aresta ponte in listaDePontes)
+            foreach (var ponte in pontes)
             {
                 Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
             }
+            return pontes;
         }
         else
         {
             Console.WriteLine("Nenhuma Ponte Encontrada");
+            return pontes;
         }
 
     }
@@ -2054,6 +2275,16 @@ public class GrafoDirecionado
 
     }
 
+    public bool possuiArestasAlternativas(Vertice u, Vertice v)
+    {
+        Aresta arestaAtual = u.arestas;
+        while (arestaAtual != null)
+        {
+            if (arestaAtual.destino != v) return true;
+            arestaAtual = arestaAtual.anterior;
+        }
+        return false;
+    }
 
     public void lerArquivo()
     {
