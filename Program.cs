@@ -208,7 +208,7 @@ class Program
             case 13:
 
                 Console.WriteLine("===== CHECAGEM DE PONTE =====");
-                var pontes = grafoD.encontrarPontes();
+                var pontes = grafoD.encontrarPontesTarjan();
                 Console.WriteLine("Pontes encontradas:");
                 foreach (var ponte in pontes)
                 {
@@ -507,7 +507,7 @@ class Program
             case 13:
 
                 Console.WriteLine("===== CHECAGEM DE PONTE =====");
-                var pontes = grafoND.encontrarPontes();
+                var pontes = grafoND.encontrarPontesTarjan();
                 Console.WriteLine("Pontes encontradas:");
                 foreach (var ponte in pontes)
                 {
