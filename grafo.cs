@@ -774,135 +774,14 @@ namespace biblioteca
             List<(Vertice origem, Vertice destino)> pontes;
             pontes = grafoConvertidoParaDirecionado.encontrarPontesTarjan();
             return pontes;
-
-            // // Lista para armazenar as pontes encontradas
-            // List<(Vertice origem, Vertice destino)> pontes = new List<(Vertice origem, Vertice destino)>();
-
-            // // Auxiliares para a busca em profundidade
-            // Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
-            // Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
-            // Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
-            // Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
-
-            // var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
-
-            // foreach (var vertice in verticesOrdenados)
-            // {
-            //     visitado[vertice] = false;
-            //     tempoDeDescoberta[vertice] = -1;
-            //     menorTempoDeDescoberta[vertice] = -1;
-            //     pai[vertice] = null;
-            // }
-
-            // int tempo = 0;
-
-            // // Itera por todos os vértices para garantir que todos os componentes sejam processados
-            // foreach (var vertice in verticesOrdenados)
-            // {
-            //     if (!visitado[vertice])
-            //     {
-            //         buscaEmProfundidadeParaPontes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, ref tempo, pontes);
-            //     }
-            // }
-
-            // return pontes;
         }
 
-        public List<Vertice> encontrarArticulacoes()
+        public List<Vertice> encontrarArticulacoesTarjan()
         {
+            GrafoDirecionado grafoConvertidoParaDirecionado = converterEmDirecionado();
             List<Vertice> articulacoes = new List<Vertice>();
-
-            // auxiliares para a busca em profundidade
-            Dictionary<Vertice, bool> visitado = new Dictionary<Vertice, bool>();
-            Dictionary<Vertice, int> tempoDeDescoberta = new Dictionary<Vertice, int>();
-            Dictionary<Vertice, int> menorTempoDeDescoberta = new Dictionary<Vertice, int>();
-            Dictionary<Vertice, Vertice> pai = new Dictionary<Vertice, Vertice>();
-            Dictionary<Vertice, int> filhos = new Dictionary<Vertice, int>(); // Contagem de filhos
-
-            // Inicialização das estruturas auxiliares
-            var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
-            foreach (var vertice in verticesOrdenados)
-            {
-                visitado[vertice] = false;
-                tempoDeDescoberta[vertice] = -1;
-                menorTempoDeDescoberta[vertice] = -1;
-                pai[vertice] = null;
-                filhos[vertice] = 0;
-            }
-
-            // Tempo usado no cálculo do tempo de descoberta
-            int tempo = 0;
-
-            // Itera por todos os vértices ordenados para garantir que todos os componentes sejam processados
-            foreach (var vertice in verticesOrdenados)
-            {
-                if (!visitado[vertice])
-                {
-                    buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
-                }
-            }
-
+            articulacoes = grafoConvertidoParaDirecionado.encontrarArticulacoesTarjan();
             return articulacoes;
-        }
-
-        private void buscaEmProfundidadeParaArticulacoes
-        (
-            Vertice u,
-            Dictionary<Vertice, bool> visitado,
-            Dictionary<Vertice, int> tempoDeDescoberta,
-            Dictionary<Vertice, int> menorTempoDeDescoberta,
-            Dictionary<Vertice, Vertice> pai,
-            Dictionary<Vertice, int> filhos,
-            ref int tempo,
-            List<Vertice> articulacoes
-        )
-        {
-            // Marca o vértice como visitado
-            visitado[u] = true;
-
-            // Define tempo de descoberta e o menor tempo do vértice atual
-            tempoDeDescoberta[u] = menorTempoDeDescoberta[u] = ++tempo;
-
-            // Percorre todas as arestas do vértice atual
-            Aresta arestaAtual = u.arestas;
-            while (arestaAtual != null)
-            {
-                Vertice v = arestaAtual.destino;
-
-                // Em grafos não direcionados, devemos ignorar a aresta que leva ao pai
-                if (!visitado[v] && v != pai[u])
-                {
-                    // Marca o vértice atual como pai do próximo vértice
-                    pai[v] = u;
-
-                    // Chamada recursiva para o próximo vértice
-                    buscaEmProfundidadeParaArticulacoes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
-
-                    // Atualiza o menor tempo de descoberta do vértice atual com base no filho
-                    menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
-
-                    // Se o vértice u for a raiz e tiver mais de um filho, é uma articulação
-                    if (pai[u] == null && filhos[u] > 1)
-                    {
-                        articulacoes.Add(u);
-                    }
-                    // Se o vértice u não for raiz e o menor tempo de descoberta do v for maior ou igual ao tempo de descoberta de u, é uma articulação
-                    else if (pai[u] != null && menorTempoDeDescoberta[v] >= tempoDeDescoberta[u])
-                    {
-                        articulacoes.Add(u);
-                    }
-
-                    // Incrementa a contagem de filhos de u
-                    filhos[u]++;
-                }
-                else if (v != pai[u])
-                {
-                    // Atualiza o menor tempo de descoberta do vértice atual com base em arestas de retorno
-                    menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
-                }
-
-                arestaAtual = arestaAtual.proxima;
-            }
         }
 
         public void lerArquivo()
@@ -1897,7 +1776,7 @@ public class GrafoDirecionado
         }
     }
 
-    public List<Vertice> encontrarArticulacoes()
+    public List<Vertice> encontrarArticulacoesTarjan()
     {
         List<Vertice> articulacoes = new List<Vertice>();
 
@@ -1909,8 +1788,8 @@ public class GrafoDirecionado
         Dictionary<Vertice, int> filhos = new Dictionary<Vertice, int>(); // Contagem de filhos
 
         // Inicialização das estruturas auxiliares
-        var verticesOrdenados = obterTodosOsVertices().OrderBy(v => v.nome).ToList();
-        foreach (var vertice in verticesOrdenados)
+
+        foreach (var vertice in obterTodosOsVertices())
         {
             visitado[vertice] = false;
             tempoDeDescoberta[vertice] = -1;
@@ -1923,18 +1802,18 @@ public class GrafoDirecionado
         int tempo = 0;
 
         // Itera por todos os vértices ordenados para garantir que todos os componentes sejam processados
-        foreach (var vertice in verticesOrdenados)
+        foreach (var vertice in obterTodosOsVertices())
         {
             if (!visitado[vertice])
             {
-                buscaEmProfundidadeParaArticulacoes(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+                buscaEmProfundidadeParaArticulacoesTarjan(vertice, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
             }
         }
 
         return articulacoes;
     }
 
-    private void buscaEmProfundidadeParaArticulacoes
+    private void buscaEmProfundidadeParaArticulacoesTarjan
     (
         Vertice u,
         Dictionary<Vertice, bool> visitado,
@@ -1962,9 +1841,11 @@ public class GrafoDirecionado
             {
                 // Marca o vértice atual como pai do próximo vértice
                 pai[v] = u;
+                // Incrementa a contagem de filhos de u
+                filhos[u]++;
 
                 // Chamada recursiva para o próximo vértice
-                buscaEmProfundidadeParaArticulacoes(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
+                buscaEmProfundidadeParaArticulacoesTarjan(v, visitado, tempoDeDescoberta, menorTempoDeDescoberta, pai, filhos, ref tempo, articulacoes);
 
                 // Atualiza o menor tempo de descoberta do vértice atual com base no filho
                 menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], menorTempoDeDescoberta[v]);
@@ -1980,8 +1861,6 @@ public class GrafoDirecionado
                     articulacoes.Add(u);
                 }
 
-                // Incrementa a contagem de filhos de u
-                filhos[u]++;
             }
             else if (v != pai[u])
             {
@@ -1989,7 +1868,7 @@ public class GrafoDirecionado
                 menorTempoDeDescoberta[u] = Math.Min(menorTempoDeDescoberta[u], tempoDeDescoberta[v]);
             }
 
-            arestaAtual = arestaAtual.proxima;
+            arestaAtual = arestaAtual.anterior;
         }
     }
 

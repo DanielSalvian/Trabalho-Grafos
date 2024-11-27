@@ -218,7 +218,7 @@ class Program
 
             case 14:
 
-                var articulacoes = grafoD.encontrarArticulacoes();
+                var articulacoes = grafoD.encontrarArticulacoesTarjan();
                 Console.WriteLine("===== CHECAGEM DE ARTICULAÇÕES =====");
                 Console.WriteLine("Articulações encontradas:");
                 foreach (var articulacao in articulacoes)
@@ -517,7 +517,7 @@ class Program
 
             case 14:
 
-                var articulacoes = grafoND.encontrarArticulacoes();
+                var articulacoes = grafoND.encontrarArticulacoesTarjan();
                 Console.WriteLine("===== CHECAGEM DE ARTICULAÇÕES =====");
                 Console.WriteLine("Articulações encontradas:");
                 foreach (var articulacao in articulacoes)
