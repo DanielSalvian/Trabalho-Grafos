@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using biblioteca;
 
@@ -140,7 +141,8 @@ namespace biblioteca
                     ultimoVerticeAdicionado = null;
                 }
 
-                if(ultimoVerticeAdicionado == alvo){
+                if (ultimoVerticeAdicionado == alvo)
+                {
                     ultimoVerticeAdicionado = alvo.anterior;
                 }
 
@@ -507,56 +509,56 @@ namespace biblioteca
         cada vértice, e um foreach pra cada aresta, olhando vertice de origem e destino, caso true pros 2 adiciona a aresta. */
         public List<Aresta> gerarGrafo(int numVertices, int numArestas)
         {
-           
-           
-                Vertice[] vertices = new Vertice[numVertices];
-                for (int i = 0; i < numVertices; i++)
-                {
-                    vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
-                    adicionarVertice(vertices[i].nome, vertices[i].valor);
-                }
-
-                Random random = new Random();
-                List<Aresta> arestas = new List<Aresta>();
-
-                while (numArestas > 0)
-                {
-                    int origemIndex = random.Next(0, numVertices);
-                    int destinoIndex = random.Next(0, numVertices);
 
 
-                    while (origemIndex == destinoIndex)
-                    {
-                        destinoIndex = random.Next(0, numVertices);
-                    }
-
-                    Vertice origem = vertices[origemIndex];
-                    Vertice destino = vertices[destinoIndex];
-
-                    string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
-                    string arestaValor = $"ValorAresta{numArestas}";
-
-
-                    bool arestaExistente = arestas.Any(a =>
-                        (a.origem == origem && a.destino == destino) ||
-                        (a.origem == destino && a.destino == origem));
-
-                    if (!arestaExistente)
-                    {
-                        Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
-
-                        arestas.Add(novaAresta);
-                        adicionarAresta(novaAresta.nome, novaAresta.valor, encontrarVertice(novaAresta.origem.nome), encontrarVertice(novaAresta.destino.nome));
-                        //adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
-
-
-                        numArestas--;
-                    }
-                }
-
-                return arestas;
+            Vertice[] vertices = new Vertice[numVertices];
+            for (int i = 0; i < numVertices; i++)
+            {
+                vertices[i] = new Vertice($"Vertice{i}", $"Valor{i}");
+                adicionarVertice(vertices[i].nome, vertices[i].valor);
             }
-        
+
+            Random random = new Random();
+            List<Aresta> arestas = new List<Aresta>();
+
+            while (numArestas > 0)
+            {
+                int origemIndex = random.Next(0, numVertices);
+                int destinoIndex = random.Next(0, numVertices);
+
+
+                while (origemIndex == destinoIndex)
+                {
+                    destinoIndex = random.Next(0, numVertices);
+                }
+
+                Vertice origem = vertices[origemIndex];
+                Vertice destino = vertices[destinoIndex];
+
+                string arestaNome = $"Aresta{origemIndex}_{destinoIndex}";
+                string arestaValor = $"ValorAresta{numArestas}";
+
+
+                bool arestaExistente = arestas.Any(a =>
+                    (a.origem == origem && a.destino == destino) ||
+                    (a.origem == destino && a.destino == origem));
+
+                if (!arestaExistente)
+                {
+                    Aresta novaAresta = new Aresta(arestaNome, arestaValor, origem, destino);
+
+                    arestas.Add(novaAresta);
+                    adicionarAresta(novaAresta.nome, novaAresta.valor, encontrarVertice(novaAresta.origem.nome), encontrarVertice(novaAresta.destino.nome));
+                    //adicionarAresta(novaAresta.nome, novaAresta.valor, novaAresta.destino, novaAresta.origem);
+
+
+                    numArestas--;
+                }
+            }
+
+            return arestas;
+        }
+
 
         //Funções de teste para saber se tudo foi adicionado corretamente
         public void imprimirDados()
@@ -684,9 +686,59 @@ namespace biblioteca
 
         }
 
-        public bool metodoNaive()
+        public void naive()
         {
-            Vertice verticeAtual = ultimoVerticeAdicionado;
+            GrafoNaoDirecionado grafoDasRemocoes = copiarGrafo(this);
+
+            List<Aresta> listaDeArestas = new List<Aresta>();
+            adicionarArestasALista(grafoDasRemocoes, listaDeArestas);
+            List<Aresta> listaDePontes = new List<Aresta>();
+
+            foreach (Aresta aresta in listaDeArestas)
+            {
+                grafoDasRemocoes.removerAresta(aresta.nome, aresta.origem);
+
+                if (!grafoDasRemocoes.semifortConexo())
+                {
+                    // Console.WriteLine(">>>Ponte Encontrada"+aresta.nome);
+                    listaDePontes.Add(aresta);
+                }
+
+                grafoDasRemocoes = copiarGrafo(this);
+                //listaDePontes = grafoDasRemocoesDirecionado.encontrarPontes();
+            }
+
+            if (listaDePontes.Count() != 0)
+            {
+                Console.WriteLine("Ponte Encontrada");
+
+                foreach (Aresta ponte in listaDePontes)
+                {
+                    Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Nenhuma Ponte Encontrada");
+            }
+
+        }
+
+
+        public GrafoNaoDirecionado copiarGrafo(GrafoNaoDirecionado grafoASerCopiado)
+        {
+            GrafoNaoDirecionado grafoCopiado = new GrafoNaoDirecionado();
+
+            Vertice verticeAtual = grafoASerCopiado.ultimoVerticeAdicionado;
+
+            while (verticeAtual != null)
+            {
+                grafoCopiado.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+
+                verticeAtual = verticeAtual.anterior;
+            }
+
+            verticeAtual = grafoASerCopiado.ultimoVerticeAdicionado;
 
             while (verticeAtual != null)
             {
@@ -694,27 +746,34 @@ namespace biblioteca
 
                 while (arestaAtual != null)
                 {
-
-                    removerAresta(arestaAtual.nome, arestaAtual.origem);
-
-
-                    if (!simpconexo())
-                    {
-
-                        adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
-                        return false;
-                    }
-
-
-                    adicionarAresta(arestaAtual.nome, arestaAtual.valor, arestaAtual.origem, arestaAtual.destino);
-
+                    grafoCopiado.adicionarAresta(arestaAtual.nome, arestaAtual.valor, grafoCopiado.encontrarVertice(arestaAtual.origem.nome), grafoCopiado.encontrarVertice(arestaAtual.destino.nome));
                     arestaAtual = arestaAtual.anterior;
                 }
 
                 verticeAtual = verticeAtual.anterior;
             }
 
-            return true;
+            return grafoCopiado;
+        }
+
+        public void adicionarArestasALista(GrafoNaoDirecionado grafo, List<Aresta> lista)
+        {
+            Vertice verticeAtual = grafo.ultimoVerticeAdicionado;//pegando vertices do grafo especifico
+
+
+            while (verticeAtual != null)
+            {
+                Aresta arestaAtual = verticeAtual.arestas;
+
+                while (arestaAtual != null)
+                {
+                    lista.Add(arestaAtual);
+                    arestaAtual = arestaAtual.anterior;
+                }
+
+                verticeAtual = verticeAtual.anterior;
+            }
+
         }
 
         public GrafoDirecionado converterEmDirecionado()
@@ -967,7 +1026,7 @@ namespace biblioteca
             {
                 dados = linha.Split(",");
 
-                adicionarAresta("Aresta"+dados[0]+""+dados[1],dados[2],encontrarVertice(dados[0]),encontrarVertice(dados[1]));
+                adicionarAresta("Aresta" + dados[0] + "" + dados[1], dados[2], encontrarVertice(dados[0]), encontrarVertice(dados[1]));
 
                 linha = leitor.ReadLine();
             }
@@ -1127,11 +1186,11 @@ public class GrafoDirecionado
                 ultimoVerticeAdicionado = null;
             }
 
-            if(ultimoVerticeAdicionado == alvo)
+            if (ultimoVerticeAdicionado == alvo)
             {
                 ultimoVerticeAdicionado = alvo.anterior;
             }
-            
+
             //alvo.proximo = null;
             //alvo.anterior = null;
 
@@ -1358,7 +1417,6 @@ public class GrafoDirecionado
         }
 
         GrafoDirecionado grafoInvertido = InverterGrafo();
-        grafoInvertido.imprimirDados();
         List<Vertice> visitaDestino = new List<Vertice>();
         grafoInvertido.buscaEmProfundidade(grafoInvertido.encontrarVertice(verticeInicial.nome), visitaDestino);
 
@@ -1777,7 +1835,7 @@ public class GrafoDirecionado
 
         while (stack.Count() >= 0)
         {
-            Console.WriteLine("---" + verticeAtual.nome);
+            //Console.WriteLine("---" + verticeAtual.nome);
             if (!visitados.Contains(verticeAtual))
             {
                 grafoInvertido.pesquisaEmProfundidadeKosarajuInvertido(grafoInvertido, verticeAtual, visitados, stack);
@@ -2061,6 +2119,96 @@ public class GrafoDirecionado
 
         return true;
     }
+
+    public void naive()
+    {
+        GrafoDirecionado grafoDasRemocoes = copiarGrafo(this);
+
+        List<Aresta> listaDeArestas = new List<Aresta>();
+        adicionarArestasALista(grafoDasRemocoes, listaDeArestas);
+        List<Aresta> listaDePontes = new List<Aresta>();
+
+        foreach (Aresta aresta in listaDeArestas)
+        {
+            grafoDasRemocoes.RemoverAresta(aresta.nome);
+
+            if (!grafoDasRemocoes.semifortConexo())
+            {
+                // Console.WriteLine(">>>Ponte Encontrada"+aresta.nome);
+                listaDePontes.Add(aresta);
+            }
+
+            grafoDasRemocoes = copiarGrafo(this);
+            //listaDePontes = grafoDasRemocoesDirecionado.encontrarPontes();
+        }
+
+        if (listaDePontes.Count() != 0)
+        {
+            Console.WriteLine("Ponte Encontrada");
+
+            foreach (Aresta ponte in listaDePontes)
+            {
+                Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Nenhuma Ponte Encontrada");
+        }
+
+    }
+
+    public GrafoDirecionado copiarGrafo(GrafoDirecionado grafoASerCopiado)
+    {
+        GrafoDirecionado grafoCopiado = new GrafoDirecionado();
+
+        Vertice verticeAtual = grafoASerCopiado.ultimoVerticeAdicionado;
+
+        while (verticeAtual != null)
+        {
+            grafoCopiado.adicionarVertice(verticeAtual.nome, verticeAtual.valor);
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        verticeAtual = grafoASerCopiado.ultimoVerticeAdicionado;
+
+        while (verticeAtual != null)
+        {
+            Aresta arestaAtual = verticeAtual.arestas;
+
+            while (arestaAtual != null)
+            {
+                grafoCopiado.adicionarAresta(arestaAtual.nome, arestaAtual.valor, grafoCopiado.encontrarVertice(arestaAtual.origem.nome), grafoCopiado.encontrarVertice(arestaAtual.destino.nome));
+                arestaAtual = arestaAtual.anterior;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+        return grafoCopiado;
+    }
+
+    public void adicionarArestasALista(GrafoDirecionado grafo, List<Aresta> lista)
+    {
+        Vertice verticeAtual = grafo.ultimoVerticeAdicionado;//pegando vertices do grafo especifico
+
+
+        while (verticeAtual != null)
+        {
+            Aresta arestaAtual = verticeAtual.arestas;
+
+            while (arestaAtual != null)
+            {
+                lista.Add(arestaAtual);
+                arestaAtual = arestaAtual.anterior;
+            }
+
+            verticeAtual = verticeAtual.anterior;
+        }
+
+    }
+
 
     public void lerArquivo()
     {
