@@ -690,17 +690,14 @@ namespace biblioteca
 
             if (listaDePontes.Count() != 0)
             {
-                Console.WriteLine("Ponte Encontrada");
+                //Console.WriteLine("Ponte Encontrada");
 
-                foreach (Aresta ponte in listaDePontes)
-                {
-                    Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
-                }
+                
                 return pontes;
             }
             else
             {
-                Console.WriteLine("Nenhuma Ponte Encontrada");
+                //Console.WriteLine("Nenhuma Ponte Encontrada");
                 return pontes;
             }
 
@@ -2208,17 +2205,12 @@ public class GrafoDirecionado
 
         if (listaDePontes.Count() != 0)
         {
-            Console.WriteLine("Ponte Encontrada");
-
-            foreach (var ponte in pontes)
-            {
-                Console.WriteLine("ponte: " + ponte.origem.nome + "->" + ponte.destino.nome);
-            }
+            //Console.WriteLine("Ponte Encontrada");
             return pontes;
         }
         else
         {
-            Console.WriteLine("Nenhuma Ponte Encontrada");
+            //Console.WriteLine("Nenhuma Ponte Encontrada");
             return pontes;
         }
 

@@ -364,18 +364,6 @@ class Program
                 grafo.CSV(arestt);
 
                 break;
-
-                case 24:
-                if (grafoD.semifortConexo())
-                {
-                    grafoD.naive();
-                }
-                else{
-                    Console.WriteLine("O grafo deve ser conexo para poder executar Naive");
-                }
-
-                break;
-
         }
     }
 
@@ -671,17 +659,6 @@ class Program
                 break;
 
             case 24:
-                if (grafoND.converterEmDirecionado().semifortConexo())
-                {
-                    grafoND.naive();
-                }
-                else{
-                    Console.WriteLine("O grafo deve ser conexo para poder executar Naive");
-                }
-
-                break;
-
-            case 25:
                 List<Vertice> caminhoEulerianoTarjan = grafoND.encontrarCaminhoEulerianoComTarjan();
                 // Imprimir o caminho euleriano encontrado
                 Console.WriteLine("Caminho Euleriano com Tarjan:");
@@ -693,7 +670,7 @@ class Program
 
                 break;
 
-            case 26:
+            case 25:
                 List<Vertice> caminhoEulerianoNaive = grafoND.encontrarCaminhoEulerianoComNaive();
                 // Imprimir o caminho euleriano encontrado
                 Console.WriteLine("Caminho Euleriano com Naive:");
@@ -735,9 +712,8 @@ class Program
         Console.WriteLine("21 - Imprimir dados do grafo");
         Console.WriteLine("22 - Gerar CSV");
         Console.WriteLine("23 - Gerar CSV aleatório");
-        Console.WriteLine("24 - Naive");
-        Console.WriteLine("25 - Algoritmo de Fleury com Tarjan");
-        Console.WriteLine("26 - Algoritmo de Fleury com Naive");
+        Console.WriteLine("24 - Algoritmo de Fleury com Tarjan");
+        Console.WriteLine("25 - Algoritmo de Fleury com Naive");
         Console.WriteLine("0 - ENCERRAR PROGRAMA");
         Console.WriteLine("");
         aux = int.Parse(Console.ReadLine());
@@ -755,6 +731,7 @@ class Program
 
         while (tipo > 1 || tipo < 0)
         {
+            Console.Clear();
             Console.WriteLine("===== BIBLIOTECA DE GRAFOS  =====");
             Console.WriteLine("===== TIPO DE GRAFO =====");
             Console.WriteLine("0 - Grafo direcionado ");
