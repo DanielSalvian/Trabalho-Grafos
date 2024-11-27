@@ -365,6 +365,17 @@ class Program
 
                 break;
 
+                case 24:
+                if (grafoD.semifortConexo())
+                {
+                    grafoD.naive();
+                }
+                else{
+                    Console.WriteLine("O grafo deve ser conexo para poder executar Naive");
+                }
+
+                break;
+
         }
     }
 
@@ -658,6 +669,18 @@ class Program
                 grafo.CSV(arestt);
 
                 break;
+
+            case 24:
+                if (grafoND.converterEmDirecionado().semifortConexo())
+                {
+                    grafoND.naive();
+                }
+                else{
+                    Console.WriteLine("O grafo deve ser conexo para poder executar Naive");
+                }
+
+                break;
+
         }
     }
 
@@ -689,6 +712,7 @@ class Program
         Console.WriteLine("21 - Imprimir dados do grafo");
         Console.WriteLine("22 - Gerar CSV");
         Console.WriteLine("23 - Gerar CSV aleatório");
+        Console.WriteLine("24 - Naive");
         Console.WriteLine("0 - ENCERRAR PROGRAMA");
         Console.WriteLine("");
         aux = int.Parse(Console.ReadLine());
@@ -769,7 +793,7 @@ class Program
         aux = -1;
         while (aux != 0)
         {
-            while (tipo == 0 && (aux > 0 || aux < 24))
+            while (tipo == 0 && (aux > 0 || aux < 25))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesDirecionado(aux);
@@ -778,7 +802,7 @@ class Program
                     break;
             }
 
-            while (tipo == 1 && (aux > 0 || aux < 24))
+            while (tipo == 1 && (aux > 0 || aux < 25))
             {
                 aux = ExibicaoMenu();
                 ChamadaFuncoesNãoDirecionado(aux);
@@ -788,4 +812,6 @@ class Program
             }
         }
     }
+
+
 }
