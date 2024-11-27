@@ -772,9 +772,9 @@ class Program
 
             else
             {
-                List<Aresta> list = new List<Aresta>();
+                
 
-                list = grafoND.gerarGrafo(aux1, aux2);
+             grafoND.gerarGrafo(aux1, aux2);
             }
         }
         else

@@ -419,13 +419,15 @@ namespace biblioteca
                 return;
             }
 
-
             visitados.Add(vertice);
 
             Aresta arestaAtual = vertice.arestas;
             while (arestaAtual != null)
             {
-                buscaEmProfundidade(arestaAtual.destino, visitados);
+                if (!visitados.Contains(arestaAtual.destino)) 
+                {
+                    buscaEmProfundidade(arestaAtual.destino, visitados);
+                }
                 arestaAtual = arestaAtual.proxima;
             }
         }
